@@ -1,562 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aryan Poonacha — AI engineer, science-fiction novelist, San Francisco</title>
-  <meta name="description" content="Aryan Poonacha is a founding AI engineer in San Francisco (Tomex, previously Lightfield), a science-fiction novelist since fifteen (Cure Bereft), and the person who got Empire Earth running in a browser. Duke M.Eng. AI; Duke Kunshan dual degree; Bangalore-born." />
-  <meta name="author" content="Aryan Poonacha" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" href="https://aryan-poonacha.github.io/" />
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Aryan Poonacha — AI engineer and science-fiction author in the San Francisco Bay Area. Projects, research, and writing." />
+        <meta name="author" content="Aryan Poonacha" />
+        <title>Aryan Poonacha</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
 
-  <meta property="og:type" content="profile" />
-  <meta property="og:title" content="Aryan Poonacha" />
-  <meta property="og:description" content="Engineer by trade. Novelist since fifteen. Strategist by temperament. Founding AI engineer in San Francisco; author of Cure Bereft; Empire Earth in the browser." />
-  <meta property="og:url" content="https://aryan-poonacha.github.io/" />
-  <meta property="og:image" content="https://aryan-poonacha.github.io/assets/portrait.jpg" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="@aryan_poonacha" />
-  <meta name="twitter:creator" content="@aryan_poonacha" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/site.css" />
+        <!-- extra reqd resources -->
+        <script src="https://use.fontawesome.com/ad915976bb.js"></script>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Aryan Poonacha",
-    "url": "https://aryan-poonacha.github.io/",
-    "image": "https://aryan-poonacha.github.io/assets/portrait.jpg",
-    "jobTitle": "Founding AI Engineer",
-    "worksFor": { "@type": "Organization", "name": "Tomex" },
-    "homeLocation": { "@type": "Place", "name": "San Francisco, California" },
-    "birthPlace": { "@type": "Place", "name": "Bangalore, India" },
-    "alumniOf": [
-      { "@type": "CollegeOrUniversity", "name": "Duke University" },
-      { "@type": "CollegeOrUniversity", "name": "Duke Kunshan University" }
-    ],
-    "knowsAbout": ["Artificial intelligence", "Large language models", "Agentic software", "Science fiction", "Grand strategy", "Game development", "WebAssembly"],
-    "sameAs": [
-      "https://github.com/Aryan-Poonacha",
-      "https://x.com/aryan_poonacha",
-      "https://bsky.app/profile/aryan-poonacha.bsky.social",
-      "https://www.linkedin.com/in/aryanpoonacha/",
-      "https://www.youtube.com/@aryanpoonacha1662",
-      "https://books.google.com/books?id=3Dg6DQAAQBAJ",
-      "https://www.dukechronicle.com/staff/aryan-poonacha"
-    ]
-  }
-  </script>
-</head>
-<body>
+        <style type="text/css">
+        #whoiam_img {
+            background-image: url('assets/whoiam.png');
+            background-size: cover;
+                }  
 
-  <header class="nav">
-    <div class="wrap nav__inner">
-      <a class="nav__brand" href="#top">Aryan Poonacha</a>
-      <nav class="nav__links" aria-label="Sections">
-        <a href="#now">Now</a>
-        <a href="#story">Story</a>
-        <a href="#work">Work</a>
-        <a href="#projects">Projects</a>
-        <a href="#writing">Writing</a>
-        <a href="#fronts">Fronts</a>
-        <a class="nav__ext" href="#elsewhere">Elsewhere ↗</a>
-      </nav>
-      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-sheet">Index ≡</button>
-    </div>
-    <div class="nav__sheet" id="nav-sheet" data-open="false">
-      <a href="#now"><span>01</span><span>Now</span></a>
-      <a href="#story"><span>02</span><span>Story</span></a>
-      <a href="#work"><span>03</span><span>Work</span></a>
-      <a href="#projects"><span>04</span><span>Projects</span></a>
-      <a href="#writing"><span>05</span><span>Writing</span></a>
-      <a href="#fronts"><span>06</span><span>Fronts</span></a>
-      <a href="#recognition"><span>07</span><span>Recognition</span></a>
-      <a href="#elsewhere"><span>08</span><span>Elsewhere</span></a>
-    </div>
-  </header>
+        #header_img
+        {
+            background-image: url('assets/datascience.jpeg');
+            background-size: cover;
+        }
 
-  <main id="top">
+        </style>
 
-    <!-- ======================= HERO ======================= -->
-    <section class="hero wrap" aria-labelledby="hero-title">
-      <div class="hero__grid">
-        <div class="hero__copy">
-          <p class="label hero__label">AI engineer · Science-fiction novelist · San Francisco</p>
-          <h1 class="display hero__title" id="hero-title">Engineer by trade. Novelist <em>since fifteen.</em> Strategist by temperament.</h1>
-          <p class="hero__lead">Founding AI engineer at Tomex, after a founding seat at Lightfield. Before San Francisco: an AI master's at Duke, a dual degree split between Durham and Kunshan, and a Bangalore childhood that began with Empire Earth at five and a published thriller at fifteen.</p>
-        </div>
-        <aside class="hero__portrait">
-          <picture>
-            <source srcset="assets/portrait.webp" type="image/webp" />
-            <img src="assets/portrait.jpg" width="800" height="800" alt="Aryan Poonacha in a navy blazer in front of Duke's stone arches." fetchpriority="high" />
-          </picture>
-          <div class="hero__meta"><span class="label">Now</span><span class="label label--ink">Founding AI Engineer, Tomex</span></div>
-          <div class="hero__meta"><span class="label">Prev</span><span class="label label--ink">Lightfield · Duke · DKU</span></div>
-        </aside>
-      </div>
 
-      <ol class="coords" aria-label="Places, in order">
-        <li><span class="label label--ink">12.97° N · 77.59° E</span><span class="label">Bangalore — 2001</span></li>
-        <li><span class="label label--ink">31.38° N · 120.98° E</span><span class="label">Kunshan — 2019</span></li>
-        <li><span class="label label--ink">35.99° N · 78.90° W</span><span class="label">Durham — 2021</span></li>
-        <li><span class="label label--cobalt"><i class="dot" aria-hidden="true"></i>37.77° N · 122.42° W</span><span class="label">San Francisco — 2025, now</span></li>
-      </ol>
-    </section>
-
-    <!-- ======================= 01 NOW / LATEST ======================= -->
-    <section class="plate" id="now" aria-labelledby="now-title">
-      <div class="wrap">
-        <div class="plate__head">
-          <p class="label">01 — Latest · October 2026</p>
-          <p class="label live">Live · desktop Chrome</p>
-        </div>
-        <div class="plate__grid">
-          <div class="plate__copy">
-            <h2 class="display plate__title" id="now-title">Empire Earth (2001), running in Chrome.</h2>
-            <p class="plate__body">My first real game, at about five. I got the original Windows executable running in a WebAssembly x86 emulator, with DirectDraw and Direct3D 7 reimplemented on WebGPU. Single-player and multiplayer, public and private lobbies, no install. BottleShip did most of the graphics work; I filled in the Win32 pieces Empire Earth needed and sent them upstream.</p>
-            <ol class="specs">
-              <li><span>01</span><span>Win32 + message-queue fixes · merged into BottleShip</span></li>
-              <li><span>02</span><span>Two-player relay · up to eight over direct WebRTC</span></li>
-              <li><span>03</span><span>Saves and game files stay in your browser</span></li>
-            </ol>
-            <div class="plate__cta">
-              <a class="btn" href="https://empire-earth.pages.dev/" target="_blank" rel="noopener">Play it · empire-earth.pages.dev ↗</a>
-              <a class="link--label" href="https://github.com/jenissimo/bottleship/pull/38" target="_blank" rel="noopener">The upstream PR ↗</a>
-              <a class="link--label" href="https://bsky.app/profile/aryan-poonacha.bsky.social/post/3myiladxjlc2l" target="_blank" rel="noopener">Launch thread ↗</a>
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">Aryan Poonacha</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link" href="#whoiam">Who I Am</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#whatido">What I Do</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#myprojects">My Projects</a></li>
+                    </ul>
+                </div>
             </div>
-          </div>
-          <div class="plate__media">
-            <figure>
-              <picture>
-                <source srcset="assets/empire-earth-menu.webp" type="image/webp" />
-                <img src="assets/empire-earth-menu.jpg" width="1199" height="608" alt="Empire Earth's original main menu, running in a browser tab: the game logo and a sword over a battlefield painting, with Single Player, Multiplayer and Game Settings buttons." loading="lazy" />
-              </picture>
-              <figcaption class="label">The original main menu, drawn from the game's own files</figcaption>
-            </figure>
-            <figure>
-              <img src="assets/empire-earth-lobby.webp" width="1199" height="608" alt="The browser multiplayer page: a public-lobby list, a Host a Lobby form and a Join by Invitation form in the game's own gold-framed style." loading="lazy" />
-              <figcaption class="label">Host a lobby, send the link, a friend joins from Chrome</figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
+        </nav>
+        <!-- Header-->
+        <header id = "header_img" class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Aryan Poonacha</h1>
+                    <p style="color:white" class="lead fw-normal mb-0">AI Engineer &amp; Science-Fiction Author</p>
+                    <p style="color:white" class="lead fw-normal mb-0">M. Eng. Artificial Intelligence, Duke University '24</p>
+                    <p style="color:white" class="lead fw-normal mb-0">B.Sc Data Science, Duke & Duke Kunshan University '23</p>
+                </div>
+            </div>
+        </header>
 
-    <!-- ======================= 02 STORY ======================= -->
-    <section class="section story wrap" id="story" aria-labelledby="story-title">
-      <div class="section__head">
-        <div class="section__title">
-          <p class="label">02 — Story</p>
-          <h2 class="display" id="story-title">Four epochs so far.</h2>
-        </div>
-        <p class="small section__intro">Named after the game. Every epoch changed the tools, the country and the problem; the habit of shipping did not.</p>
-      </div>
 
-      <ol class="route" aria-hidden="true">
-        <li><span class="route__line"></span></li>
-        <li><span class="route__line"></span></li>
-        <li><span class="route__line"></span></li>
-        <li><span class="route__line"></span><span class="label label--cobalt route__next">Next →</span></li>
-      </ol>
+        <!-- Who I Am Section-->
+        <section id="whoiam" class="py-5">
+            <div class="container px-lg-5">
+                <div id= 'whoiam_img' class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                    <div class="m-4 m-lg-5">
+                        <h1 class="display-5 fw-bold">Who I Am </h1>
+                        <p class="fs-4">AI Engineering · San Francisco Bay Area</p>
+                        <p class="fs-9">I build AI software. My interests span reliable agents, evaluation, interaction design, and the occasional science-fiction detour.</p>
+                        <a class="btn btn-primary btn-sm" href="https://github.com/Aryan-Poonacha/"> <i class="bi bi-github"></i> My Github </a>
+                        <br>
+                        <br>
+                        <a class="btn btn-primary btn-sm" href="https://www.linkedin.com/in/aryanpoonacha/"> <i class="bi bi-linkedin"></i> My LinkedIn </a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <ol class="epochs">
-        <li class="epoch reveal">
-          <p class="label label--cobalt">I · Bangalore · 2001–2019</p>
-          <h3 class="display">First game at five, first novel at fifteen.</h3>
-          <p><em>Cure Bereft</em>, a science-fiction thriller, drafted between eleven and thirteen and published at fifteen; the Deccan Chronicle called it a thrilling debut.</p>
-          <p>First JavaScript at fifteen, then sites for a school MUN, a basketball tournament and Voitheia, a crowdfunding platform for the Abhivruddi Foundation.</p>
-          <p>Also, briefly, a child model in a Crax commercial.</p>
-        </li>
-        <li class="epoch reveal">
-          <p class="label label--cobalt">II · Kunshan · 2019–2021</p>
-          <h3 class="display">A kid from India, on a Chinese scholarship, at an American university.</h3>
-          <p>Duke Kunshan University dual degree, B.Sc. Data Science, with a cohort drawn from forty countries.</p>
-          <p>Columnist for The Duke Chronicle's Kunshan Report. National finalist, Alibaba GET Global Startup Challenge, for a mental-health startup for Chinese high-schoolers.</p>
-          <p>First deep learning: a Bollywood music generator and a laugh-track remover.</p>
-        </li>
-        <li class="epoch reveal">
-          <p class="label label--cobalt">III · Durham · 2021–2024</p>
-          <h3 class="display">Research, hackathons, and a master's in AI.</h3>
-          <p>Data+ dashboard for Durham Public Schools, 3,000+ monthly visits, featured by Duke. Bass Connections fluid simulation of housing inequality, shown in a gallery.</p>
-          <p>Best Overall Hack at GeorgiaTech Robotech 2022, then Agronomy VR in the CreateX accelerator. TA for CS 307/308: 40+ students, 200+ code reviews.</p>
-          <p>M.Eng. Artificial Intelligence, Duke, 2024.</p>
-        </li>
-        <li class="epoch reveal">
-          <p class="label label--cobalt">IV · San Francisco · 2025–</p>
-          <h3 class="display">Founding engineer, twice. Founder next.</h3>
-          <p>Lightfield (from the team behind Tome): founding AI product engineer, shipping the agentic chat, RAG and tool calling inside the product, daily.</p>
-          <p>Tomex: founding AI engineer, owning the agentic chat application, agent sandboxes, an in-house PR review bot and the engineering culture around them.</p>
-          <p>October 2026: Empire Earth in the browser. Next: a company, and the next novels.</p>
-        </li>
-      </ol>
-    </section>
 
-    <!-- ======================= 03 WORK ======================= -->
-    <section class="section wrap" id="work" aria-labelledby="work-title">
-      <div class="section__head section__head--bare">
-        <p class="label" id="work-title">03 — Work</p>
-        <a class="link--label" href="https://www.linkedin.com/in/aryanpoonacha/" target="_blank" rel="noopener">Full history on LinkedIn ↗</a>
-      </div>
-      <ul class="rows">
-        <li class="row row--work">
-          <span class="label">2026 — now</span>
-          <span class="row__title">Founding AI Engineer, Tomex</span>
-          <span class="row__body">Owns the agentic chat application and cross-product integrations. Built isolated sandboxes where agents test their own code changes, an in-house PR review bot tuned to the production codebase, and the CI/CD around both.</span>
-        </li>
-        <li class="row row--work">
-          <span class="label">2025 — 2026</span>
-          <span class="row__title">Founding AI Product Engineer, Lightfield</span>
-          <span class="row__body">Shipped product weekly, PRs daily, no PMs. Context engineering, tool calling, vector search and RAG for an agent that lives inside the CRM. Owned the customer feedback loop with design.</span>
-        </li>
-        <li class="row row--work">
-          <span class="label">2024</span>
-          <span class="row__title">AI Engineer Intern, Demandly</span>
-          <span class="row__body">Architected the core agentic LLM flow: a custom fine-tuned model plus context construction over RAG and external APIs.</span>
-        </li>
-        <li class="row row--work">
-          <span class="label">2024</span>
-          <span class="row__title">Product Intern, Origin AI</span>
-          <span class="row__body">Customer interviews and company data, turned into go-to-market recommendations for the newest products.</span>
-        </li>
-        <li class="row row--work">
-          <span class="label">2022 — 2024</span>
-          <span class="row__title">Teaching Assistant, Duke Computer Science</span>
-          <span class="row__body">CS 307 and 308, Advanced Software Design. Mentored 40+ students through team projects, 200+ code reviews, rehired every semester.</span>
-        </li>
-        <li class="row row--work">
-          <span class="label">2022</span>
-          <span class="row__title">Data+ Research Assistant, Rhodes iiD at Duke</span>
-          <span class="row__body">Built the Visualizing Durham Public Schools dashboard with school administrators in two-week sprints; 3,000+ monthly visits.</span>
-        </li>
-      </ul>
-    </section>
+        <!-- What I do -->
+        <section id = 'whatido' class="pt-4">
+            <div class="container px-lg-5">
+                <div class="m-4 m-lg-5">
+                        <h1 class="display-5 fw-bold">What I Do</h1>
+                </div>
+                <!-- Page Features-->
+                <div class="row gx-lg-5">
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-book"></i></div>
+                                <h2 class="fs-4 fw-bold">M.Eng AI & B.Sc. Data Science</h2>
+                                <p class="mb-0">I completed my Master of Engineering degree in Artificial Intelligence at Duke University in 2024. I completed my dual-degree program at Duke & Duke Kunshan University majoring in Data Science in May 2023.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-file-bar-graph"></i></div>
+                                <h2 class="fs-4 fw-bold">Machine Learning & Deep Learning</h2>
+                                <p class="mb-0">My most significant interests and projects are in DL & ML. I have worked on an object detection model CNN for the Borsuk lab at Duke and various other research assistantship positions at Duke. I've worked on a Bollywood music generation DL model, training an open source DL laughter classifier, dataset analysis, etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-code-slash"></i></div>
+                                <h2 class="fs-4 fw-bold">Experience</h2>
+                                <p class="mb-0">I have conducted data science research with Bass Connections and Data+ research programs at Duke. I have worked as a CS TA for CS 307 and CS 308 - Advanced Software Design & Implementation, and had research assistant roles at various Data Science labs at Duke University, and under Prof. Andrew MacDonald at Duke Kunshan University. I have interned at Acuizen in Bangalore, India, and done freelance web development from 2017-2019.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-graph-up"></i></div>
+                                <h2 class="fs-4 fw-bold">Entrepreneurship</h2>
+                                <p class="mb-0">In 2022, my team and I won first place at GeorgiaTech's Robotech 2022 hackathon, and founded a VR Gaming Startup to join the CreateX startup accelerator program. In 2020, my team and I reached the finals of the Alibaba GET Startup Challenge, for our startup focusing on the mental health needs of Chinese high school students.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-lightbulb"></i></div>
+                                <h2 class="fs-4 fw-bold">Research</h2>
+                                <p class="mb-0">I have done research at Duke through Data+ and Bass Connections programs, and been a research assistant at the Borsuk lab, The EdTech team, under Dr. Nick Carnes, and others. My team and I researched the economic impact of Covid-19 for the 2021 Duke Datathon.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div href = "" class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-brush-fill"></i></div>
+                                <h2 class="fs-4 fw-bold">Creativity</h2>
+                                <p class="mb-0">I like to write in my free time and have published a science fiction novel entitled <em>'Cure Bereft'</em>.</p>
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://www.leadstartcorp.com/thrillers/cure-bereft/"><i class="bi bi-link-45deg"></i> Book Link</a></div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- ======================= 04 PROJECTS ======================= -->
-    <section class="section wrap" id="projects" aria-labelledby="projects-title">
-      <div class="section__head">
-        <div class="section__title">
-          <p class="label">04 — Projects</p>
-          <h2 class="display" id="projects-title">Twenty things, newest first.</h2>
-        </div>
-        <p class="small section__intro projects__intro">Hover a row to watch the original screen recording. Most of these still run.</p>
-      </div>
+        <!-- Section-->
+        <section id = 'myprojects' class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
 
-      <div class="plist" data-all="false">
-        <div class="plist__cols" aria-hidden="true">
-          <span class="label">№</span><span class="label">Project</span><span class="label">Stack</span><span class="label">Year</span><span class="label">Links</span>
-        </div>
 
-        <ol class="plist__items">
+                <div class="m-4 m-lg-5">
+                        <h1 class="display-5 fw-bold">My Projects</h1>
+                </div>
 
-          <li class="project" data-poster="assets/empire-earth-menu.webp" data-caption="Main menu · browser build">
-            <div class="project__meta"><span class="label project__num">01 · 2026</span><span class="project__links project__links--mobile"><a class="link--label" href="https://empire-earth.pages.dev/" target="_blank" rel="noopener">Play ↗</a></span></div>
-            <div class="project__name"><strong>Empire Earth in the browser</strong><span>the 2001 RTS, playable in Chrome with friends</span></div>
-            <span class="label project__stack">WASM x86 · WebGPU · Win32</span>
-            <span class="label project__year">2026</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://empire-earth.pages.dev/" target="_blank" rel="noopener">Play ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/jenissimo/bottleship/pull/38" target="_blank" rel="noopener">PR ↗</a></span>
-          </li>
+                <br>
 
-          <li class="project" data-video="assets/media/dukeaichat.mp4" data-poster="assets/media/dukeaichat.webp" data-caption="▶ Screen recording · 0:22">
-            <div class="project__meta"><span class="label project__num">02 · 2024</span><span class="project__links project__links--mobile"><a class="link--label" href="https://dukeaichat.streamlit.app/" target="_blank" rel="noopener">Chat ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/duke-ai-chatbot" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Duke AI Chatbot</strong><span>RAG assistant for the Duke M.Eng. AI program</span></div>
-            <span class="label project__stack">LLMs · RAG · vector DB</span>
-            <span class="label project__year">2024</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://dukeaichat.streamlit.app/" target="_blank" rel="noopener">Chat ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/duke-ai-chatbot" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
 
-          <li class="project" data-video="assets/media/yakuza.mp4" data-poster="assets/media/yakuza.webp" data-caption="▶ Screen recording · 0:20">
-            <div class="project__meta"><span class="label project__num">03 · 2024</span><span class="project__links project__links--mobile"><a class="link--label" href="https://yakuza.streamlit.app/" target="_blank" rel="noopener">Chat ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/wiki_llm_chatbot" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Wiki-to-Chatbot pipeline</strong><span>any wiki becomes a chatbot with a custom knowledge base</span></div>
-            <span class="label project__stack">LLMs · data pipelines</span>
-            <span class="label project__year">2024</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://yakuza.streamlit.app/" target="_blank" rel="noopener">Chat ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/wiki_llm_chatbot" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/dukeaichat.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Duke AI Chatbot - AI-590 (Large Language Models) Final Project</h5>
+                                    <!-- Product price-->
+                                    Large Language Models, Retrieval-Augmented Generation
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://dukeaichat.streamlit.app/"><i class="bi bi-chat"></i> Chat Now</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/Aryan-Poonacha/duke-ai-chatbot"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project">
-            <div class="project__meta"><span class="label project__num">04 · 2024</span><span class="project__links project__links--mobile"><span class="label">Private repo</span></span></div>
-            <div class="project__name"><strong>ScriptScouts</strong><span>self-healing scraper that opens its own pull requests when a page changes</span></div>
-            <span class="label project__stack">LLMs · GitHub API</span>
-            <span class="label project__year">2024</span>
-            <span class="project__links project__links--desktop"><span class="label">Private repo</span></span>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/yakuza.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Wiki-To-Chatbot Data Pipeline - AI-540 (Deep Learning Applications) Final Project</h5>
+                                    <!-- Product price-->
+                                    Large Language Models, Custom Knowledge Base, Productionizable Data Pipelines
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://yakuza.streamlit.app/"><i class="bi bi-chat"></i> Chat Now</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/Aryan-Poonacha/wiki_llm_chatbot"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project">
-            <div class="project__meta"><span class="label project__num">05 · 2024</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/rishabhshah13/quantization-workbench" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Quantization Workbench</strong><span>benchmark quantized LLMs side by side</span></div>
-            <span class="label project__stack">PyTorch · LLMs</span>
-            <span class="label project__year">2024</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/rishabhshah13/quantization-workbench" target="_blank" rel="noopener">Code ↗</a></span>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/agronomyvr.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">GeorgiaTech CreateX Startup Accelerator - Agronomy VR, A Farming VR Game Startup</h5>
+                                    <!-- Product price-->
+                                    Unity, C#
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://www.youtube.com/watch?v=W0y4Fptv5Ds/"><i class="bi bi-link-45deg"></i> Pitch Video</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-video="assets/media/agronomyvr.mp4" data-poster="assets/media/agronomyvr.webp" data-caption="▶ Gameplay · 0:30">
-            <div class="project__meta"><span class="label project__num">06 · 2022</span><span class="project__links project__links--mobile"><a class="link--label" href="https://www.youtube.com/watch?v=W0y4Fptv5Ds" target="_blank" rel="noopener">Pitch ↗</a></span></div>
-            <div class="project__name"><strong>Agronomy VR</strong><span>farming VR game startup, GeorgiaTech CreateX accelerator</span></div>
-            <span class="label project__stack">Unity · C#</span>
-            <span class="label project__year">2022</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://www.youtube.com/watch?v=W0y4Fptv5Ds" target="_blank" rel="noopener">Pitch ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/data+.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Duke Data+ Summer Research Program - Durham School Statistics Data Dashboard</h5>
+                                    <!-- Product price-->
+                                    R, RStudio, ggplot, Rshiny, tidyverse
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://visualizingdps.shinyapps.io/dps_dashboard2/"><i class="bi bi-link-45deg"></i> Dashboard Link</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://www.youtube.com/watch?v=AkzBLhaZhyA/"><i class="bi bi-link-45deg"></i> Duke Feature</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project">
-            <div class="project__meta"><span class="label project__num">07 · 2022</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/Aryan-Poonacha/source_tracker" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Source Tracker</strong><span>spatial audio isolation and live captions; Best Overall Hack, Robotech 2022</span></div>
-            <span class="label project__stack">Java · audio DSP</span>
-            <span class="label project__year">2022</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/Aryan-Poonacha/source_tracker" target="_blank" rel="noopener">Code ↗</a></span>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/healthcarolina.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">HealthCarolina - Interactive Portal For NC Health Info & Statistics</h5>
+                                    <!-- Product price-->
+                                    Flask, Postgresql, MySQL
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="http://irevia.pythonanywhere.com/"><i class="bi bi-link-45deg"></i> Website Link</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/nadiabey/nchealthmap"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-video="assets/media/dataplus.mp4" data-poster="assets/media/dataplus.webp" data-caption="▶ Screen recording · 0:45">
-            <div class="project__meta"><span class="label project__num">08 · 2022</span><span class="project__links project__links--mobile"><a class="link--label" href="https://visualizingdps.shinyapps.io/dps_dashboard2/" target="_blank" rel="noopener">Dashboard ↗</a><span class="sep">·</span><a class="link--label" href="https://www.youtube.com/watch?v=AkzBLhaZhyA" target="_blank" rel="noopener">Duke feature ↗</a></span></div>
-            <div class="project__name"><strong>Visualizing Durham Public Schools</strong><span>Data+ dashboard, 3,000+ monthly visits</span></div>
-            <span class="label project__stack">R · Shiny · tidyverse</span>
-            <span class="label project__year">2022</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://visualizingdps.shinyapps.io/dps_dashboard2/" target="_blank" rel="noopener">Dashboard ↗</a><span class="sep">·</span><a class="link--label" href="https://www.youtube.com/watch?v=AkzBLhaZhyA" target="_blank" rel="noopener">Feature ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/voting.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder"> Modeling & Analyzing Willingness To Vote in Asian Democracies</h5>
+                                    <!-- Product price-->
+                                    Pandas, scikit-learn
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://drive.google.com/file/d/1t_ZGizSx7A9HDQjJvKs4LPPPqA-m0URv/view?usp=sharing"><i class="bi bi-file-earmark-pdf"></i> Detailed Paper</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/cs582/DukeDatathon2021"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-video="assets/media/fluid.mp4" data-poster="assets/media/fluid.webp" data-caption="▶ Simulation · 0:13">
-            <div class="project__meta"><span class="label project__num">09 · 2021</span><span class="project__links project__links--mobile"><a class="link--label" href="https://youtu.be/-aY_Dl56Zjs" target="_blank" rel="noopener">Video ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/stable-fluids" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Housing inequality as fluid</strong><span>Bass Connections simulation, exhibited in a gallery</span></div>
-            <span class="label project__stack">Python · NumPy · TensorFlow</span>
-            <span class="label project__year">2021</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://youtu.be/-aY_Dl56Zjs" target="_blank" rel="noopener">Video ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/stable-fluids" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/fluid.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Bass Connections @ Duke - Fluid Simulation Model To Visualize Systemic Housing Inequality</h5>
+                                    <!-- Product price-->
+                                    Pandas, fluidsim
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://youtu.be/-aY_Dl56Zjs"> <i class="bi bi-youtube"></i> Publicly Exhibited Video Of Simulation Analogy</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/Aryan-Poonacha/stable-fluids"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-video="assets/media/healthcarolina.mp4" data-poster="assets/media/healthcarolina.webp" data-caption="▶ Screen recording · 0:17">
-            <div class="project__meta"><span class="label project__num">10 · 2021</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/nadiabey/nchealthmap" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>HealthCarolina</strong><span>interactive map of North Carolina health statistics</span></div>
-            <span class="label project__stack">Flask · PostgreSQL · GIS</span>
-            <span class="label project__year">2021</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/nadiabey/nchealthmap" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/quantum.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Quantum Gambler - Qiskit-Based Web Card Game</h5>
+                                    <!-- Product price-->
+                                    Qiskit, Flask
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <!-- <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="http://irevia.pythonanywhere.com/"><i class="bi bi-link-45deg"></i> Website Link</a></div>
+                                <br> -->
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/Aryan-Poonacha/quantum_gambler"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-video="assets/media/quantum.mp4" data-poster="assets/media/quantum.webp" data-caption="▶ Screen recording · 0:18">
-            <div class="project__meta"><span class="label project__num">11 · 2021</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/Aryan-Poonacha/quantum_gambler" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Quantum Gambler</strong><span>a card game whose deck is a quantum circuit</span></div>
-            <span class="label project__stack">Qiskit · Flask</span>
-            <span class="label project__year">2021</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/Aryan-Poonacha/quantum_gambler" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem"></div>
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/audio.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Applying DL Model To Remove Laugh Tracks From Audio</h5>
+                                    <!-- Product price-->
+                                    Keras, Tensorflow
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://www.youtube.com/watch?v=aLJciDjjWI4"><i class="bi bi-youtube"></i> Clip With Laughter Removed</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/jeffgreenca/laughr/"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-extra data-video="assets/media/voting.mp4" data-poster="assets/media/voting.webp" data-caption="▶ Model walkthrough · 0:04">
-            <div class="project__meta"><span class="label project__num">12 · 2021</span><span class="project__links project__links--mobile"><a class="link--label" href="https://drive.google.com/file/d/1t_ZGizSx7A9HDQjJvKs4LPPPqA-m0URv/view" target="_blank" rel="noopener">Paper ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/cs582/DukeDatathon2021" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Willingness to vote in Asian democracies</strong><span>Duke Datathon 2021: modelling turnout intent across the region</span></div>
-            <span class="label project__stack">pandas · scikit-learn</span>
-            <span class="label project__year">2021</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://drive.google.com/file/d/1t_ZGizSx7A9HDQjJvKs4LPPPqA-m0URv/view" target="_blank" rel="noopener">Paper ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/cs582/DukeDatathon2021" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem"><div class="bi-star-fill"></div></div> -->
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/socialmedia.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Regression Model For Social Media Following Optimization</h5>
+                                    <!-- Product price-->
+                                    R & Rstudio
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/Aryan-Poonacha/predict_follower_count_vk/blob/master/Report.pdf"><i class="bi bi-file-earmark-pdf"></i> Project Paper</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/Aryan-Poonacha/predict_follower_count_vk"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
 
-          <li class="project" data-extra data-video="assets/media/economic.mp4" data-poster="assets/media/economic.webp" data-caption="▶ Analysis · 0:10">
-            <div class="project__meta"><span class="label project__num">13 · 2021</span><span class="project__links project__links--mobile"><a class="link--label" href="https://drive.google.com/file/d/1Ntg6Se_z_Y_uHCUuF6_qzaTT92LZ6jFN/view" target="_blank" rel="noopener">Paper ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/cs582/The-Economic-Impact-of-Covid-19_Duke_Datathon" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>The economic impact of Covid-19</strong><span>Duke Datathon 2021 analysis</span></div>
-            <span class="label project__stack">pandas · Matplotlib</span>
-            <span class="label project__year">2021</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://drive.google.com/file/d/1Ntg6Se_z_Y_uHCUuF6_qzaTT92LZ6jFN/view" target="_blank" rel="noopener">Paper ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/cs582/The-Economic-Impact-of-Covid-19_Duke_Datathon" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra data-video="assets/media/audio.mp4" data-poster="assets/media/audio.webp" data-caption="▶ Before and after · 0:10">
-            <div class="project__meta"><span class="label project__num">14 · 2020</span><span class="project__links project__links--mobile"><a class="link--label" href="https://www.youtube.com/watch?v=aLJciDjjWI4" target="_blank" rel="noopener">Clip ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/laughtrackanalysis" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Laugh-track removal</strong><span>a deep-learning model that strips canned laughter, plus a study of whether it matters</span></div>
-            <span class="label project__stack">Keras · TensorFlow</span>
-            <span class="label project__year">2020</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://www.youtube.com/watch?v=aLJciDjjWI4" target="_blank" rel="noopener">Clip ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/laughtrackanalysis" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra data-video="assets/media/musicgen.mp4" data-poster="assets/media/musicgen.webp" data-caption="▶ Generated music · 0:09">
-            <div class="project__meta"><span class="label project__num">15 · 2020</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/Aryan-Poonacha/bollywoodmusicgenerator" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Bollywood music generator</strong><span>an LSTM that writes film music</span></div>
-            <span class="label project__stack">Keras · LSTM</span>
-            <span class="label project__year">2020</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/Aryan-Poonacha/bollywoodmusicgenerator" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra data-video="assets/media/socialmedia.mp4" data-poster="assets/media/socialmedia.webp" data-caption="▶ Model output · 0:05">
-            <div class="project__meta"><span class="label project__num">16 · 2020</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/Aryan-Poonacha/predict_follower_count_vk/blob/master/Report.pdf" target="_blank" rel="noopener">Paper ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/predict_follower_count_vk" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Predicting VK follower counts</strong><span>regression model, the infamous DKU Stats 101 final</span></div>
-            <span class="label project__stack">R</span>
-            <span class="label project__year">2020</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/Aryan-Poonacha/predict_follower_count_vk/blob/master/Report.pdf" target="_blank" rel="noopener">Paper ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/predict_follower_count_vk" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra data-video="assets/media/lumino.mp4" data-poster="assets/media/lumino.webp" data-caption="▶ Screen recording · 0:20">
-            <div class="project__meta"><span class="label project__num">17 · 2019</span><span class="project__links project__links--mobile"><a class="link--label" href="https://aryan-poonacha.github.io/lumino/" target="_blank" rel="noopener">Site ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/lumino" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Lumino</strong><span>website for a literacy nonprofit</span></div>
-            <span class="label project__stack">HTML · CSS · jQuery</span>
-            <span class="label project__year">2019</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://aryan-poonacha.github.io/lumino/" target="_blank" rel="noopener">Site ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/lumino" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra data-video="assets/media/collector.mp4" data-poster="assets/media/collector.webp" data-caption="▶ Gameplay · 0:20">
-            <div class="project__meta"><span class="label project__num">18 · 2018</span><span class="project__links project__links--mobile"><a class="link--label" href="https://aryan-poonacha.github.io/Collector-Onslaught/" target="_blank" rel="noopener">Play ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/Collector-Onslaught" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Collector Onslaught</strong><span>browser game: how long can you hold off the collector forces?</span></div>
-            <span class="label project__stack">JavaScript · jQuery</span>
-            <span class="label project__year">2018</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://aryan-poonacha.github.io/Collector-Onslaught/" target="_blank" rel="noopener">Play ↗</a><span class="sep">·</span><a class="link--label" href="https://github.com/Aryan-Poonacha/Collector-Onslaught" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra data-video="assets/media/blazing.mp4" data-poster="assets/media/blazing.webp" data-caption="▶ Screen recording · 0:22">
-            <div class="project__meta"><span class="label project__num">19 · 2017</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/Aryan-Poonacha/blazing_hoops" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Blazing Hoops</strong><span>official site for a Bangalore school basketball tournament</span></div>
-            <span class="label project__stack">HTML · CSS · jQuery</span>
-            <span class="label project__year">2017</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/Aryan-Poonacha/blazing_hoops" target="_blank" rel="noopener">Code ↗</a></span>
-            <button class="project__play" type="button">▶ Recording</button><div class="project__inline"></div>
-          </li>
-
-          <li class="project" data-extra>
-            <div class="project__meta"><span class="label project__num">20 · 2017</span><span class="project__links project__links--mobile"><a class="link--label" href="https://github.com/Aryan-Poonacha/voitheia" target="_blank" rel="noopener">Code ↗</a></span></div>
-            <div class="project__name"><strong>Voitheia</strong><span>nonprofit crowdfunding platform, built at sixteen for the Abhivruddi Foundation</span></div>
-            <span class="label project__stack">Python</span>
-            <span class="label project__year">2017</span>
-            <span class="project__links project__links--desktop"><a class="link--label" href="https://github.com/Aryan-Poonacha/voitheia" target="_blank" rel="noopener">Code ↗</a></span>
-          </li>
-
-        </ol>
-
-        <div class="plist__more">
-          <button type="button">+ Nine more, back to 2017 · Show all ↓</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Floating preview (desktop, pointer devices). -->
-    <div class="preview" data-on="false" data-mode="video" aria-hidden="true">
-      <video muted loop playsinline preload="none"></video>
-      <img alt="" />
-      <p class="label preview__cap"></p>
-    </div>
-
-    <!-- ======================= 05 WRITING ======================= -->
-    <section class="section wrap" id="writing" aria-labelledby="writing-title">
-      <div class="section__head">
-        <div class="section__title">
-          <p class="label">05 — Writing</p>
-          <h2 class="display" id="writing-title">One novel, a column, and more drafts.</h2>
-        </div>
-      </div>
-
-      <div class="writing__grid">
-        <a class="book" href="https://books.google.com/books?id=3Dg6DQAAQBAJ" target="_blank" rel="noopener" aria-label="Cure Bereft on Google Books">
-          <span class="book__spine" aria-hidden="true"></span>
-          <span class="book__cover">
-            <span class="book__title">CURE<br />BEREFT</span>
-            <span class="book__author">Aryan Poonacha</span>
-          </span>
-        </a>
-        <div class="writing__copy">
-          <h3 class="display"><em>Cure Bereft</em>, a science-fiction thriller. Leadstart / Frog Books, 2016.</h3>
-          <p>Jack Reach, a nanorobotics scientist in Los Angeles, learns what happens when the power to remake the world lands in the wrong hands. Plotted at eleven, finished at thirteen, published at fifteen. 320 pages. More manuscripts are in progress.</p>
-          <div class="writing__links">
-            <a class="link--label" href="https://books.google.com/books?id=3Dg6DQAAQBAJ" target="_blank" rel="noopener">Google Books ↗</a>
-            <a class="link--label" href="https://www.deccanchronicle.com/lifestyle/books-and-art/091116/a-thrilling-debut.html" target="_blank" rel="noopener">Deccan Chronicle profile ↗</a>
-          </div>
-        </div>
-        <div class="columns">
-          <p class="label">The Duke Chronicle · The Kunshan Report</p>
-          <ul class="rows">
-            <li class="row"><span class="label">2022</span><a href="https://www.dukechronicle.com/article/05c4398c-3f92-47f9-a9d3-a5f829ab7ed6" target="_blank" rel="noopener">Limited opportunities and visa hell for DKU students at Duke</a></li>
-            <li class="row"><span class="label">2020</span><a href="https://www.dukechronicle.com/article/241c1094-bc28-4a7a-b51e-c702a17ca54b" target="_blank" rel="noopener">The hybrid degree and institutional clout</a></li>
-            <li class="row"><span class="label">2020</span><a href="https://www.dukechronicle.com/article/6633a52a-9f81-4648-8698-a09c523bd295" target="_blank" rel="noopener">Behind the 'quiet and shy' Asian student stereotype</a></li>
-            <li class="row"><span class="label">2020</span><a href="https://www.dukechronicle.com/article/7fdca92e-4777-4ffd-9721-49ed56d8471f" target="_blank" rel="noopener">Scattered to the wind</a></li>
-            <li class="row"><span class="label">2020</span><a href="https://www.dukechronicle.com/article/630cd792-0532-4e3b-9c1b-f9357ecdb740" target="_blank" rel="noopener">Word soup for the soul</a></li>
-          </ul>
-          <a class="link--label" href="https://www.dukechronicle.com/staff/aryan-poonacha" target="_blank" rel="noopener">All columns ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================= 06 FRONTS ======================= -->
-    <section class="section wrap" id="fronts" aria-labelledby="fronts-title">
-      <div class="section__head">
-        <div class="section__title">
-          <p class="label">06 — Fronts</p>
-          <h2 class="display" id="fronts-title">What I'm building toward.</h2>
-        </div>
-        <p class="small section__intro">Six open fronts. Each one gets a page here when it has something to show.</p>
-      </div>
-      <ol class="fronts">
-        <li class="front reveal"><p class="label label--cobalt">A</p><h3 class="display">An AI company</h3><p>Founder next. Two founding-engineer seats were the apprenticeship.</p></li>
-        <li class="front reveal"><p class="label label--cobalt">B</p><h3 class="display">The next novels</h3><p><em>Cure Bereft</em> was the first draft of a career. New manuscripts are in progress.</p></li>
-        <li class="front reveal"><p class="label label--cobalt">C</p><h3 class="display">Grand strategy and political economy</h3><p>History as a systems problem. Papers for strategy and intelligence journals, with collaborators.</p></li>
-        <li class="front reveal"><p class="label label--cobalt">D</p><h3 class="display">A one-person game studio</h3><p>Design, build and publish my own games. Empire Earth was the warm-up.</p></li>
-        <li class="front reveal"><p class="label label--cobalt">E</p><h3 class="display">AI on physics data</h3><p>Language models over particle-accelerator and astrophysics archives, looking for what was missed.</p></li>
-        <li class="front reveal"><p class="label label--cobalt">F</p><h3 class="display">Explainers and essays</h3><p>A YouTube channel and a newsletter on AI, engineering, games and strategy. Deep math on the side.</p></li>
-      </ol>
-    </section>
-
-    <!-- ======================= 07 RECOGNITION ======================= -->
-    <section class="section wrap" id="recognition" aria-labelledby="recog-title">
-      <div class="section__head section__head--bare">
-        <p class="label" id="recog-title">07 — Recognition</p>
-      </div>
-      <div class="recog">
-        <ul class="rows">
-          <li class="row row--recog"><span class="label">2022</span><span><span class="row__title">Best Overall Hack, Second Best Design, Most Accessible Hack</span><br /><span class="row__body">GeorgiaTech Robotech. $3,000 in prizes and $5,000 in seed funding.</span></span></li>
-          <li class="row row--recog"><span class="label">2022</span><span><span class="row__title">GeorgiaTech CreateX startup accelerator</span><br /><span class="row__body">Agronomy VR, the farming VR game studio founded after Robotech.</span></span></li>
-          <li class="row row--recog"><span class="label">2020</span><span><span class="row__title">National finalist, Alibaba GET Global Startup Challenge</span><br /><span class="row__body">A mental-health product for Chinese high-school students.</span></span></li>
-        </ul>
-        <ul class="rows">
-          <li class="row row--recog"><span class="label">2022</span><span><span class="row__title"><a class="prose-link" href="https://www.youtube.com/watch?v=AkzBLhaZhyA" target="_blank" rel="noopener">Featured by Duke University</a></span><br /><span class="row__body">Video feature on the Data+ Visualizing Durham Public Schools dashboard.</span></span></li>
-          <li class="row row--recog"><span class="label">2020–22</span><span><span class="row__title"><a href="https://www.dukechronicle.com/staff/aryan-poonacha" target="_blank" rel="noopener">Columnist, The Duke Chronicle</a>; <a href="https://news.dukekunshan.edu.cn/dku-in-the-media/word-soup-for-the-soul/" target="_blank" rel="noopener">republished by Duke Kunshan</a></span><br /><span class="row__body">The Kunshan Report and opinion pieces on the dual-degree experience.</span></span></li>
-          <li class="row row--recog"><span class="label">2016</span><span><span class="row__title"><a href="https://www.deccanchronicle.com/lifestyle/books-and-art/091116/a-thrilling-debut.html" target="_blank" rel="noopener">"A thrilling debut", Deccan Chronicle</a></span><br /><span class="row__body">Profile of the fifteen-year-old author of <em>Cure Bereft</em>.</span></span></li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ======================= 08 ELSEWHERE ======================= -->
-    <section class="elsewhere wrap" id="elsewhere" aria-labelledby="hello-title">
-      <div class="elsewhere__grid">
-        <div class="elsewhere__copy">
-          <p class="label">08 — Elsewhere</p>
-          <h2 class="display elsewhere__title" id="hello-title">Say hello.</h2>
-          <a class="elsewhere__mail" href="mailto:aryanpoonacha01@gmail.com">aryanpoonacha01@gmail.com</a>
-        </div>
-        <div class="linkcols">
-          <ul>
-            <li><span>Build</span></li>
-            <li><a href="https://github.com/Aryan-Poonacha" target="_blank" rel="noopener">GitHub ↗</a></li>
-            <li><a href="https://www.linkedin.com/in/aryanpoonacha/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
-            <li><a href="assets/Aryan-Poonacha-Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a></li>
-          </ul>
-          <ul>
-            <li><span>Talk</span></li>
-            <li><a href="https://x.com/aryan_poonacha" target="_blank" rel="noopener">X ↗</a></li>
-            <li><a href="https://bsky.app/profile/aryan-poonacha.bsky.social" target="_blank" rel="noopener">Bluesky ↗</a></li>
-            <li><a href="https://www.youtube.com/@aryanpoonacha1662" target="_blank" rel="noopener">YouTube ↗</a></li>
-          </ul>
-          <ul>
-            <li><span>Read</span></li>
-            <li><a href="https://books.google.com/books?id=3Dg6DQAAQBAJ" target="_blank" rel="noopener">Cure Bereft ↗</a></li>
-            <li><a href="https://www.dukechronicle.com/staff/aryan-poonacha" target="_blank" rel="noopener">The Duke Chronicle ↗</a></li>
-            <li><span>Newsletter · soon</span></li>
-          </ul>
-        </div>
-      </div>
-      <footer class="footer">
-        <p class="label">Bangalore → Kunshan → Durham → San Francisco</p>
-        <p class="label">© 2026 Aryan Poonacha · Hand-built, no framework</p>
-      </footer>
-    </section>
-
-  </main>
-
-  <script src="js/site.js" defer></script>
-</body>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/lumino.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Literacy NonProfit Website</h5>
+                                    <!-- Product reviews-->
+                                    <!-- Product price-->
+                                    HTML, CSS, JS, jQuery, Bootstrap
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://aryan-poonacha.github.io/lumino/"><i class="bi bi-link-45deg"></i> Website Link</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/blazing.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Basketball Tournament Website</h5>
+                                    <!-- Product price-->
+                                    HTML, CSS, JS, jQuery, Bootstrap
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://d2c99kev9mr0qi.cloudfront.net/"><i class="bi bi-link-45deg"></i> Website Link</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/collector.gif" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Collector Onslaught - Web-based Video Game</h5>
+                                    <!-- Product price-->
+                                    HTML, CSS, JS, jQuery, Bootstrap
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://aryan-poonacha.github.io/Collector-Onslaught/"><i class="bi bi-link-45deg"></i> Website Link</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/economic.gif"  alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Economic Impact of Covid-19 Analysis</h5>
+                                    <!-- Product price-->
+                                    Pandas, Matplotlib
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://drive.google.com/file/d/1Ntg6Se_z_Y_uHCUuF6_qzaTT92LZ6jFN/view?usp=sharing"><i class="bi bi-file-earmark-pdf"></i> Project Paper</a></div>
+                                <br>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://github.com/cs582/The-Economic-Impact-of-Covid-19_Duke_Datathon"><i class="bi bi-github"></i> Project Github</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="assets/resume.gif"  alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">My Resume!</h5>
+                                    Interested to find out more? Check out my resume!
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="https://docs.google.com/document/d/1O0Ns0q2g2S8Nf97FXk1V7Z0ypxnBqUvk/edit?usp=sharing&ouid=116670210410591893795&rtpof=true&sd=true"><i class="bi bi-link-45deg"></i> Resume Link</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container">
+                <p class="m-0 text-center text-white"><a class="btn btn-outline-light btn-social mx-1" href="https://github.com/Aryan-Poonacha/"><i class="bi bi-github"></i></a>
+                        <a class="btn btn-outline-light btn-social mx-1" href="https://www.linkedin.com/in/aryanpoonacha/"><i class="bi bi-linkedin"></i></i></a></p>
+                        <br>
+                <p class="m-0 text-center text-white">Aryan Poonacha · 2026</p>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
 </html>
