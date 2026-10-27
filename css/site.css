@@ -153,8 +153,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoratio
 .dial .years text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; fill: var(--muted); }
 .dial .sector-labels text { font-family: var(--mono); font-weight: 500; font-size: 12px; letter-spacing: 0.1em; }
 @media (max-width: 719px) {
-  .dial .years { display: none; }
-  .dial .sector-labels text { font-size: 22px; }
+  .dial .years, .dial .sector-labels { display: none; } /* the legend above carries the fields on phones */
 }
 .dial .dot {
   cursor: pointer;
