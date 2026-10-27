@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Aryan Poonacha</title>
-  <meta name="description" content="Aryan Poonacha: founding AI engineer at Tomex, San Francisco (Lightfield before that); novelist since fifteen; games, research and ventures from Bangalore, Kunshan, Durham and San Francisco. Everything, by field and year." />
+  <meta name="description" content="Everything Aryan Poonacha has made since 2016, as one galaxy: software, games, writing, research, ventures. Bangalore, Kunshan, Durham, San Francisco." />
   <meta name="author" content="Aryan Poonacha" />
-  <meta name="theme-color" content="#0d0d0f" />
+  <meta name="theme-color" content="#06070b" />
   <link rel="canonical" href="https://aryan-poonacha.github.io/" />
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <meta property="og:type" content="profile" />
   <meta property="og:title" content="Aryan Poonacha" />
-  <meta property="og:description" content="Founding AI engineer at Tomex, San Francisco. Novelist since fifteen. Software, games, writing, research, ventures: everything, by field and year." />
+  <meta property="og:description" content="Software, games, writing, research, ventures: everything made since 2016, as one galaxy." />
   <meta property="og:url" content="https://aryan-poonacha.github.io/" />
   <meta property="og:image" content="https://aryan-poonacha.github.io/assets/portrait.jpg" />
   <meta name="twitter:card" content="summary" />
@@ -19,353 +19,65 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/site.css" />
+  <link rel="stylesheet" href="css/galaxy.css" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Aryan Poonacha","url":"https://aryan-poonacha.github.io/","image":"https://aryan-poonacha.github.io/assets/portrait.jpg","jobTitle":"Founding AI Engineer","worksFor":{"@type":"Organization","name":"Tomex","url":"https://tomex.ai"},"homeLocation":{"@type":"Place","name":"San Francisco, California"},"birthPlace":{"@type":"Place","name":"Bangalore, India"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Duke University"},{"@type":"CollegeOrUniversity","name":"Duke Kunshan University"}],"sameAs":["https://github.com/Aryan-Poonacha","https://x.com/aryan_poonacha","https://bsky.app/profile/aryan-poonacha.bsky.social","https://www.linkedin.com/in/aryanpoonacha/","https://www.youtube.com/@aryanpoonacha1662","https://books.google.com/books?id=3Dg6DQAAQBAJ","https://www.dukechronicle.com/staff/aryan-poonacha"]}
   </script>
 </head>
 <body>
 
-<header class="nav">
-  <div class="wrap nav__inner">
-    <a class="nav__brand" href="#top">Aryan Poonacha</a>
-    <nav class="nav__links" aria-label="Fields">
-      <a class="f-software" href="#software">Software</a>
-      <a class="f-games" href="#games">Games</a>
-      <a class="f-writing" href="#writing">Writing</a>
-      <a class="f-research" href="#research">Research</a>
-      <a class="f-ventures" href="#ventures">Ventures</a>
-      <a class="quiet" href="#now">Now</a>
-      <a class="f-software" href="#elsewhere">Elsewhere ↗</a>
-    </nav>
-    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-sheet">Fields ≡</button>
-  </div>
-  <div class="nav__sheet" id="nav-sheet" data-open="false">
-    <a href="#software"><span>01</span><span>Software</span></a>
-    <a href="#games"><span>02</span><span>Games</span></a>
-    <a href="#writing"><span>03</span><span>Writing</span></a>
-    <a href="#research"><span>04</span><span>Research</span></a>
-    <a href="#ventures"><span>05</span><span>Ventures</span></a>
-    <a href="#now"><span>06</span><span>Now</span></a>
-    <a href="#elsewhere"><span>07</span><span>Elsewhere</span></a>
-  </div>
+<canvas id="sky" tabindex="0" aria-label="A galaxy of everything made since 2016. Drag to pan, scroll to zoom, click a star. Press I for a plain list." role="application"></canvas>
+
+<header class="hud brand">
+  <h1><a href="#" id="home-link">Aryan Poonacha</a></h1>
+  <p class="label">Bangalore · Kunshan · Durham · San Francisco</p>
 </header>
 
-<main id="top">
+<nav class="hud elsewhere label" aria-label="Elsewhere">
+  <a href="https://github.com/Aryan-Poonacha">GitHub</a>
+  <a href="https://x.com/aryan_poonacha">X</a>
+  <a href="https://bsky.app/profile/aryan-poonacha.bsky.social">Bluesky</a>
+  <a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn</a>
+  <a href="https://www.youtube.com/@aryanpoonacha1662">YouTube</a>
+  <a href="mailto:aryanpoonacha01@gmail.com">Email</a>
+  <a href="assets/Aryan-Poonacha-Resume.pdf">CV</a>
+</nav>
 
-<!-- ================= HERO: the instrument ================= -->
-<section class="hero wrap" aria-labelledby="name">
-  <div class="hero__grid">
-    <div class="hero__copy">
-      <h1 class="display hero__name" id="name">Aryan Poonacha</h1>
-      <p class="hero__bio">Founding AI engineer at <a href="https://tomex.ai">Tomex</a>, San Francisco; <a href="https://lightfield.com">Lightfield</a> before that. I grew up in Bangalore and studied in Kunshan and Durham. I published a science-fiction novel at fifteen; since then, dashboards, simulations, games, agents in production, and a 2001 strategy game revived in a browser.</p>
-      <ul class="legend" aria-label="Fields">
-        <li class="f-software"><a href="#software" data-field="software"><i class="swatch"></i>Software 13</a></li>
-        <li class="f-games"><a href="#games" data-field="games"><i class="swatch"></i>Games 5</a></li>
-        <li class="f-writing"><a href="#writing" data-field="writing"><i class="swatch"></i>Writing 3</a></li>
-        <li class="f-research"><a href="#research" data-field="research"><i class="swatch"></i>Research 7</a></li>
-        <li class="f-ventures"><a href="#ventures" data-field="ventures"><i class="swatch"></i>Ventures 4</a></li>
-      </ul>
-      <p class="label hint">Rings are years, 2016 at the centre · hollow dots are interests not yet shipped · hover a dot, click to jump</p>
-      <nav class="links hero__links" aria-label="Elsewhere">
-        <a href="https://github.com/Aryan-Poonacha">GitHub</a><span class="sep">·</span>
-        <a href="https://x.com/aryan_poonacha">X</a><span class="sep">·</span>
-        <a href="https://bsky.app/profile/aryan-poonacha.bsky.social">Bluesky</a><span class="sep">·</span>
-        <a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn</a><span class="sep">·</span>
-        <a href="https://www.youtube.com/@aryanpoonacha1662">YouTube</a><span class="sep">·</span>
-        <a href="mailto:aryanpoonacha01@gmail.com">Email</a><span class="sep">·</span>
-        <a href="assets/Aryan-Poonacha-Resume.pdf">CV</a>
-      </nav>
-    </div>
-    <div class="dial-wrap">
-      <div class="dial" aria-label="Everything made, by field and year">
-        <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Dial of everything made, by field and year">
-<g class="rings" fill="none" stroke="#EDE9E2" stroke-opacity="0.12" stroke-width="1">
-<circle cx="400" cy="400" r="112.0"/>
-<circle cx="400" cy="400" r="154.0"/>
-<circle cx="400" cy="400" r="196.0"/>
-<circle cx="400" cy="400" r="238.0"/>
-<circle cx="400" cy="400" r="280.0"/>
-<circle cx="400" cy="400" r="322.0"/>
-<circle class="outer-ring" cx="400" cy="400" r="352" stroke-dasharray="2 5"/>
-</g>
-<g class="spokes" stroke="#EDE9E2" stroke-opacity="0.18" stroke-width="1">
-<line x1="400.0" y1="319.4" x2="400.0" y2="48.0"/>
-<line x1="476.7" y1="375.1" x2="734.8" y2="291.2"/>
-<line x1="447.4" y1="465.2" x2="606.9" y2="684.8"/>
-<line x1="352.6" y1="465.2" x2="193.1" y2="684.8"/>
-<line x1="323.3" y1="375.1" x2="65.2" y2="291.2"/>
-</g>
-<g class="years" font-size="10" fill="#9B968D" letter-spacing="0.08em">
-<text x="404" y="284.0">2016</text>
-<text x="404" y="242.0">2018</text>
-<text x="404" y="200.0">2020</text>
-<text x="404" y="158.0">2022</text>
-<text x="404" y="116.0">2024</text>
-<text x="404" y="74.0">2026</text>
-</g>
-<g class="sector-labels" font-size="12" font-weight="500" letter-spacing="0.1em">
-<text x="622.2" y="98.2" text-anchor="start" fill="#F0A33A">SOFTWARE</text>
-<text x="759.5" y="520.8" text-anchor="start" fill="#7BD88F">GAMES</text>
-<text x="400.0" y="782.0" text-anchor="middle" fill="#E86A5A">WRITING</text>
-<text x="40.5" y="520.8" text-anchor="end" fill="#6FC3DF">RESEARCH</text>
-<text x="177.8" y="98.2" text-anchor="end" fill="#EDE9E2">VENTURES</text>
-</g>
-<g class="dots">
-<circle class="dot dot--work" data-id="blazing" cx="416.2" cy="268.0" r="6" fill="#F0A33A"/>
-<circle class="dot dot--work" data-id="firstjs" cx="427.3" cy="269.8" r="6" fill="#F0A33A"/>
-<circle class="dot dot--work" data-id="lumino" cx="450.2" cy="232.4" r="6" fill="#F0A33A"/>
-<circle class="dot dot--work" data-id="healthcarolina" cx="479.5" cy="198.1" r="6" fill="#F0A33A"/>
-<circle class="dot dot--role" data-id="ta" cx="514.9" cy="167.9" r="5" fill="#F0A33A" stroke="#0D0D0F" stroke-width="1.5"/>
-<circle class="dot dot--role" data-id="demandly" cx="544.9" cy="160.4" r="5" fill="#F0A33A" stroke="#0D0D0F" stroke-width="1.5"/>
-<circle class="dot dot--work" data-id="dukechat" cx="564.6" cy="173.5" r="6" fill="#F0A33A"/>
-<circle class="dot dot--work" data-id="quantbench" cx="583.1" cy="188.1" r="6" fill="#F0A33A"/>
-<circle class="dot dot--work" data-id="scriptscouts" cx="600.3" cy="204.3" r="6" fill="#F0A33A"/>
-<circle class="dot dot--work" data-id="wikichat" cx="616.1" cy="221.9" r="6" fill="#F0A33A"/>
-<circle class="dot dot--role" data-id="lightfield" cx="647.6" cy="228.8" r="5" fill="#F0A33A" stroke="#0D0D0F" stroke-width="1.5"/>
-<circle class="dot dot--role" data-id="tomex" cx="679.3" cy="239.8" r="5" fill="#F0A33A" stroke="#0D0D0F" stroke-width="1.5"/>
-<circle class="dot dot--work" data-id="bottleship" cx="691.8" cy="263.9" r="6" fill="#F0A33A"/>
-<circle class="dot dot--interest" data-id="i-agents" cx="606.9" cy="115.2" r="5" fill="none" stroke="#F0A33A" stroke-width="1.5"/>
-<circle class="dot dot--work" data-id="firstgames" cx="530.6" cy="374.6" r="6" fill="#7BD88F"/>
-<circle class="dot dot--work" data-id="collector" cx="553.7" cy="409.4" r="6" fill="#7BD88F"/>
-<circle class="dot dot--work" data-id="quantum" cx="606.4" cy="467.1" r="6" fill="#7BD88F"/>
-<circle class="dot dot--work" data-id="agronomy" cx="600.7" cy="527.9" r="6" fill="#7BD88F"/>
-<circle class="dot dot--work" data-id="ee" cx="619.6" cy="635.5" r="6" fill="#7BD88F"/>
-<circle class="dot dot--interest" data-id="i-strategy" cx="734.8" cy="508.8" r="5" fill="none" stroke="#7BD88F" stroke-width="1.5"/>
-<circle class="dot dot--work" data-id="curebereft" cx="454.3" cy="498.0" r="6" fill="#E86A5A"/>
-<circle class="dot dot--work" data-id="columns" cx="400.0" cy="617.0" r="6" fill="#E86A5A"/>
-<circle class="dot dot--work" data-id="eenote" cx="243.9" cy="681.6" r="6" fill="#E86A5A"/>
-<circle class="dot dot--interest" data-id="i-scifi" cx="459.1" cy="747.0" r="5" fill="none" stroke="#E86A5A" stroke-width="1.5"/>
-<circle class="dot dot--interest" data-id="i-novel" cx="340.9" cy="747.0" r="5" fill="none" stroke="#E86A5A" stroke-width="1.5"/>
-<circle class="dot dot--work" data-id="musicgen" cx="266.3" cy="543.3" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--work" data-id="laugh" cx="244.2" cy="518.9" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--work" data-id="vk" cx="226.4" cy="491.0" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--work" data-id="covid" cx="193.6" cy="467.1" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--work" data-id="fluid" cx="185.3" cy="431.5" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--work" data-id="voting" cx="183.1" cy="395.0" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--work" data-id="dps" cx="166.4" cy="354.6" r="6" fill="#6FC3DF"/>
-<circle class="dot dot--interest" data-id="i-physics" cx="103.1" cy="589.1" r="5" fill="none" stroke="#6FC3DF" stroke-width="1.5"/>
-<circle class="dot dot--interest" data-id="i-math" cx="65.2" cy="508.8" r="5" fill="none" stroke="#6FC3DF" stroke-width="1.5"/>
-<circle class="dot dot--interest" data-id="i-history" cx="48.7" cy="421.5" r="5" fill="none" stroke="#6FC3DF" stroke-width="1.5"/>
-<circle class="dot dot--work" data-id="voitheia" cx="279.5" cy="343.8" r="6" fill="#EDE9E2"/>
-<circle class="dot dot--work" data-id="frontiers" cx="259.8" cy="263.0" r="6" fill="#EDE9E2"/>
-<circle class="dot dot--work" data-id="createx" cx="294.4" cy="186.7" r="6" fill="#EDE9E2"/>
-<circle class="dot dot--work" data-id="robotech" cx="371.0" cy="163.8" r="6" fill="#EDE9E2"/>
-</g>
-<circle cx="400" cy="400" r="46" fill="none" stroke="#EDE9E2" stroke-opacity="0.25"/>
-</svg>
-        <picture>
-          <source srcset="assets/portrait.webp" type="image/webp" />
-          <img class="dial__centre" src="assets/portrait.jpg" width="800" height="800" alt="" />
-        </picture>
-      </div>
-      <div class="dial__card" data-on="false" aria-live="polite"><img alt="" /><div class="t"></div><div class="m"></div></div>
-    </div>
-  </div>
-</section>
+<ul class="hud legend label" id="legend" aria-label="Fields"></ul>
 
-<!-- ================= 01 SOFTWARE ================= -->
-<section class="chapter wrap f-software" id="software" aria-labelledby="h-software">
-  <div class="chapter__head">
-    <p class="label"><i class="swatch"></i>01 — Software · 13 pieces · 2017–2026</p>
-    <h2 class="display chapter__title" id="h-software">Agents in production, and the plumbing under them.</h2>
-    <p class="chapter__intro">Two founding seats at AI-native companies, a run of retrieval and agent projects from the Duke years, and the websites that started it all at fifteen.</p>
-  </div>
-  <div class="cards">
-    <article class="card" id="item-tomex">
-      <div class="card__head"><span class="label">2026 — now · San Francisco</span><a class="links" href="https://tomex.ai">tomex.ai ↗</a></div>
-      <h3 class="display">Agent platform at Tomex</h3>
-      <p>Founding AI engineer. I own the agentic chat application and its integrations across the product, and built the infrastructure around agents: isolated sandboxes where they test their own code changes, a pull-request review bot tuned to the production codebase, and the CI/CD that runs both.</p>
-    </article>
-    <article class="card" id="item-lightfield">
-      <div class="card__head"><span class="label">2025 — 2026 · San Francisco</span><a class="links" href="https://lightfield.com">lightfield.com ↗</a></div>
-      <h3 class="display">In-product agent at Lightfield</h3>
-      <p>Founding AI product engineer on an AI-native CRM from the team behind Tome. Shipped weekly, PRs daily, no PM: context engineering, tool calling, vector retrieval, and the customer feedback loop with design, working directly with customers on their issues.</p>
-    </article>
-  </div>
-  <article class="feature" id="item-bottleship">
-    <div class="media"><img src="assets/empire-earth-lobby.webp" width="1199" height="608" alt="The browser multiplayer lobby page for Empire Earth, drawn in the game's own style." loading="lazy" /></div>
-    <div class="body">
-      <p class="label">2026 · systems</p>
-      <h3 class="display">Win32 fixes upstream in BottleShip</h3>
-      <p>To run a 2001 game on an emulator that reimplements Windows in the browser, something had to fill the gaps: Visual C++ 6 runtime shims, a Direct3D 7 loader module, a DirectDraw device-context fix that brought the menu art back, a message-queue bug that crashed one quit in three, a WebGPU depth-clear fix, and a regression harness. Twelve commits, merged 21 October 2026.</p>
-      <p class="links"><a href="https://github.com/jenissimo/bottleship/pull/38">Upstream PR ↗</a><span class="sep">·</span><a href="notes/empire-earth-in-the-browser.html">Write-up</a><span class="quiet">draft</span></p>
-    </div>
-  </article>
-  <ul class="rows">
-    <li class="row" id="item-dukechat" data-video="assets/media/dukeaichat.mp4" data-poster="assets/media/dukeaichat.webp"><span class="year">2024</span><span class="what"><strong>Duke AI chatbot</strong><span>retrieval assistant for the Duke M.Eng. AI program</span></span><span class="links"><a href="https://dukeaichat.streamlit.app/">Chat</a><a href="https://github.com/Aryan-Poonacha/duke-ai-chatbot">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:22</p></div></li>
-    <li class="row" id="item-wikichat" data-video="assets/media/yakuza.mp4" data-poster="assets/media/yakuza.webp"><span class="year">2024</span><span class="what"><strong>Wiki-to-chatbot pipeline</strong><span>any wiki becomes a chatbot with its own knowledge base</span></span><span class="links"><a href="https://yakuza.streamlit.app/">Chat</a><a href="https://github.com/Aryan-Poonacha/wiki_llm_chatbot">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:20</p></div></li>
-    <li class="row" id="item-scriptscouts"><span class="year">2024</span><span class="what"><strong>ScriptScouts</strong><span>a self-healing web scraper that opens its own pull requests when a page changes; Duke Engineering Consulting</span></span><span class="links"><span class="quiet">private</span></span></li>
-    <li class="row" id="item-quantbench"><span class="year">2024</span><span class="what"><strong>Quantization workbench</strong><span>benchmark quantized LLMs side by side</span></span><span class="links"><a href="https://github.com/rishabhshah13/quantization-workbench">Code</a></span></li>
-    <li class="row" id="item-demandly"><span class="year">2024</span><span class="what"><strong>Agentic flow at Demandly</strong><span>a fine-tuned model plus retrieval and external tools, as an intern</span></span><span class="links"></span></li>
-    <li class="row" id="item-ta"><span class="year">2022–24</span><span class="what"><strong>Teaching CS 307 and 308 at Duke</strong><span>40+ students through team projects, 200+ code reviews, rehired every semester</span></span><span class="links"></span></li>
-    <li class="row" id="item-healthcarolina" data-video="assets/media/healthcarolina.mp4" data-poster="assets/media/healthcarolina.webp"><span class="year">2021</span><span class="what"><strong>HealthCarolina</strong><span>an interactive map of North Carolina health statistics; 300+ monthly visits</span></span><span class="links"><a href="https://github.com/nadiabey/nchealthmap">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:17</p></div></li>
-    <li class="row" id="item-lumino" data-video="assets/media/lumino.mp4" data-poster="assets/media/lumino.webp"><span class="year">2019</span><span class="what"><strong>Lumino</strong><span>website for a literacy nonprofit</span></span><span class="links"><a href="https://aryan-poonacha.github.io/lumino/">Site</a><a href="https://github.com/Aryan-Poonacha/lumino">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:20</p></div></li>
-    <li class="row" id="item-blazing" data-video="assets/media/blazing.mp4" data-poster="assets/media/blazing.webp"><span class="year">2017</span><span class="what"><strong>Blazing Hoops</strong><span>the site for a Bangalore school basketball tournament, at fifteen</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/blazing_hoops">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:22</p></div></li>
-    <li class="row" id="item-firstjs"><span class="year">2017</span><span class="what"><strong>First JavaScript</strong><span>a clicker, a quiz template, a scoreboard, the Sishu Griha MUN site</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha?tab=repositories&type=source&sort=&q=2017">Code</a></span></li>
-    <li class="row row--interest"><span class="year"><i class="swatch swatch--hollow"></i></span><span class="what"><span>Interest, not yet shipped: LLM agents and how to evaluate them, read and built on my own time.</span></span><span class="links"></span></li>
-  </ul>
-</section>
+<div class="hud tools label">
+  <span class="hint" id="hint" data-on="true">Drag · scroll to zoom · click a star</span>
+  <span class="zoom" aria-label="Zoom">
+    <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+    <button type="button" id="zoom-home" aria-label="Whole galaxy">○</button>
+    <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+  </span>
+  <button type="button" id="index-toggle" aria-expanded="false" aria-controls="index">Index</button>
+</div>
 
-<!-- ================= 02 GAMES ================= -->
-<section class="chapter wrap f-games" id="games" aria-labelledby="h-games">
-  <div class="chapter__head">
-    <p class="label"><i class="swatch"></i>02 — Games · 5 pieces · 2017–2026</p>
-    <h2 class="display chapter__title" id="h-games">Old worlds, new runtimes.</h2>
-    <p class="chapter__intro">The first game I took seriously was Empire Earth, at about five. Since then I have shipped small games on the web and in VR, and this year put the first one back on screen without an install.</p>
-  </div>
-  <article class="feature" id="item-ee">
-    <div class="media"><picture><source srcset="assets/empire-earth-menu.webp" type="image/webp" /><img src="assets/empire-earth-menu.jpg" width="1199" height="608" alt="Empire Earth's original main menu running in a browser tab." loading="lazy" /></picture></div>
-    <div class="body">
-      <p class="label">2026 · live · desktop Chrome</p>
-      <h3 class="display">Empire Earth in the browser</h3>
-      <p>The original 2001 RTS and its expansion, playable in desktop Chrome: single-player, and multiplayer with public and private lobbies over a two-player relay or direct WebRTC for up to eight. It runs the unmodified executable on BottleShip; saves stay in your browser.</p>
-      <p class="links"><a href="https://empire-earth.pages.dev/">Play ↗</a><span class="sep">·</span><a href="https://bsky.app/profile/aryan-poonacha.bsky.social/post/3myiladxjlc2l">Launch thread ↗</a><span class="sep">·</span><a href="https://github.com/jenissimo/bottleship/pull/38">Upstream PR ↗</a></p>
-    </div>
-  </article>
-  <article class="feature feature--flip" id="item-agronomy">
-    <div class="media" data-video="assets/media/agronomyvr.mp4" data-poster="assets/media/agronomyvr.webp"><img src="assets/media/agronomyvr.webp" width="960" height="540" alt="Agronomy VR gameplay: a farm field in virtual reality." loading="lazy" /><button type="button" class="media__play">▶ Gameplay · 0:30</button></div>
-    <div class="body">
-      <p class="label">2022 · Unity · VR</p>
-      <h3 class="display">Agronomy VR</h3>
-      <p>A farming game for VR, built in Unity after our team won Robotech 2022. The studio around it joined GeorgiaTech's CreateX accelerator.</p>
-      <p class="links"><a href="https://www.youtube.com/watch?v=W0y4Fptv5Ds">Pitch video ↗</a></p>
-    </div>
-  </article>
-  <ul class="rows">
-    <li class="row" id="item-quantum" data-video="assets/media/quantum.mp4" data-poster="assets/media/quantum.webp"><span class="year">2021</span><span class="what"><strong>Quantum Gambler</strong><span>a card game whose deck is a Qiskit circuit</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/quantum_gambler">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:18</p></div></li>
-    <li class="row" id="item-collector" data-video="assets/media/collector.mp4" data-poster="assets/media/collector.webp"><span class="year">2018</span><span class="what"><strong>Collector Onslaught</strong><span>a browser game: how long can you hold off the collector forces?</span></span><span class="links"><a href="https://aryan-poonacha.github.io/Collector-Onslaught/">Play</a><a href="https://github.com/Aryan-Poonacha/Collector-Onslaught">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:20</p></div></li>
-    <li class="row" id="item-firstgames"><span class="year">2017</span><span class="what"><strong>First games</strong><span>a clicker, a bombing game, a stock-trading game for a school science fair</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/bombing_game">Code</a></span></li>
-    <li class="row row--interest"><span class="year"><i class="swatch swatch--hollow"></i></span><span class="what"><span>Interest: grand-strategy and real-time strategy games, played with friends most weekends.</span></span><span class="links"></span></li>
-  </ul>
-</section>
+<aside class="card" id="card" data-on="false" aria-live="polite"></aside>
 
-<!-- ================= 03 WRITING ================= -->
-<section class="chapter wrap f-writing" id="writing" aria-labelledby="h-writing">
-  <div class="chapter__head">
-    <p class="label"><i class="swatch"></i>03 — Writing · 3 pieces · 2016–2026</p>
-    <h2 class="display chapter__title" id="h-writing">A novel at fifteen; columns, notes and drafts since.</h2>
-    <p class="chapter__intro">Fiction first, then opinion, then technical notes. The second novel is in draft.</p>
+<div class="index" id="index" data-on="false" role="dialog" aria-label="Everything, as a list">
+  <div class="index__top">
+    <h2>Everything, as a list</h2>
+    <button type="button" id="index-close" class="label">Close ×</button>
   </div>
-  <article class="feature feature--book" id="item-curebereft">
-    <a class="book" href="https://books.google.com/books?id=3Dg6DQAAQBAJ" aria-label="Cure Bereft on Google Books"><span class="book__spine"></span><span class="book__cover"><span class="book__title">CURE<br />BEREFT</span><span class="book__author">Aryan Poonacha</span></span></a>
-    <div class="body">
-      <p class="label">2016 · Leadstart / Frog Books · 320 pages</p>
-      <h3 class="display"><em>Cure Bereft</em></h3>
-      <p>A science-fiction thriller: Jack Reach, a nanorobotics scientist in Los Angeles, learns what happens when the power to remake the world lands in the wrong hands. Written between eleven and thirteen, published at fifteen; the Deccan Chronicle called it a thrilling debut.</p>
-      <p class="links"><a href="https://books.google.com/books?id=3Dg6DQAAQBAJ">Google Books ↗</a><span class="sep">·</span><a href="https://www.deccanchronicle.com/lifestyle/books-and-art/091116/a-thrilling-debut.html">Deccan Chronicle ↗</a></p>
-    </div>
-  </article>
-  <ul class="rows" id="item-columns">
-    <li class="row"><span class="year">Jan 2022</span><span class="what"><strong>Limited opportunities and visa hell for DKU students at Duke</strong><span>The Duke Chronicle, opinion</span></span><span class="links"><a href="https://www.dukechronicle.com/article/05c4398c-3f92-47f9-a9d3-a5f829ab7ed6">Read ↗</a></span></li>
-    <li class="row"><span class="year">Dec 2020</span><span class="what"><strong>The hybrid degree and institutional clout</strong><span>The Kunshan Report</span></span><span class="links"><a href="https://www.dukechronicle.com/article/241c1094-bc28-4a7a-b51e-c702a17ca54b">Read ↗</a></span></li>
-    <li class="row"><span class="year">Aug 2020</span><span class="what"><strong>Behind the 'quiet and shy' Asian student stereotype</strong><span>The Kunshan Report</span></span><span class="links"><a href="https://www.dukechronicle.com/article/6633a52a-9f81-4648-8698-a09c523bd295">Read ↗</a></span></li>
-    <li class="row"><span class="year">Apr 2020</span><span class="what"><strong>Scattered to the wind</strong><span>The Kunshan Report</span></span><span class="links"><a href="https://www.dukechronicle.com/article/7fdca92e-4777-4ffd-9721-49ed56d8471f">Read ↗</a></span></li>
-    <li class="row"><span class="year">Jan 2020</span><span class="what"><strong>Word soup for the soul</strong><span>The Duke Chronicle; republished by Duke Kunshan University</span></span><span class="links"><a href="https://www.dukechronicle.com/article/630cd792-0532-4e3b-9c1b-f9357ecdb740">Read ↗</a></span></li>
-    <li class="row" id="item-eenote"><span class="year">Oct 2026</span><span class="what"><strong>Empire Earth in the browser: what it took</strong><span>technical note, draft</span></span><span class="links"><a href="notes/empire-earth-in-the-browser.html">Read</a></span></li>
-    <li class="row row--interest"><span class="year"><i class="swatch swatch--hollow"></i></span><span class="what"><span>Interests: science fiction, read and written. A second novel is in draft.</span></span><span class="links"></span></li>
-  </ul>
-</section>
+  <div class="index__body" id="index-body"></div>
+  <nav class="index__links label" aria-label="Elsewhere">
+    <a href="https://github.com/Aryan-Poonacha">GitHub ↗</a>
+    <a href="https://x.com/aryan_poonacha">X ↗</a>
+    <a href="https://bsky.app/profile/aryan-poonacha.bsky.social">Bluesky ↗</a>
+    <a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn ↗</a>
+    <a href="https://www.youtube.com/@aryanpoonacha1662">YouTube ↗</a>
+    <a href="https://tomex.ai">tomex.ai ↗</a>
+    <a href="https://lightfield.com">lightfield.com ↗</a>
+    <a href="https://empire-earth.pages.dev/">empire-earth.pages.dev ↗</a>
+    <a href="mailto:aryanpoonacha01@gmail.com">aryanpoonacha01@gmail.com</a>
+    <a href="assets/Aryan-Poonacha-Resume.pdf">CV (PDF)</a>
+  </nav>
+</div>
 
-<!-- ================= 04 RESEARCH ================= -->
-<section class="chapter wrap f-research" id="research" aria-labelledby="h-research">
-  <div class="chapter__head">
-    <p class="label"><i class="swatch"></i>04 — Research · 7 pieces · 2020–2022</p>
-    <h2 class="display chapter__title" id="h-research">Data that had to be shown to be believed.</h2>
-    <p class="chapter__intro">A public dashboard, a gallery simulation, two datathons and three early deep-learning studies, at Duke and Duke Kunshan.</p>
-  </div>
-  <div class="pair">
-    <article class="body" id="item-dps">
-      <div class="media" data-video="assets/media/dataplus.mp4" data-poster="assets/media/dataplus.webp"><img src="assets/media/dataplus.webp" width="960" height="540" alt="The Visualizing Durham Public Schools dashboard." loading="lazy" /><button type="button" class="media__play">▶ Screen recording · 0:45</button></div>
-      <p class="label">2022 · Data+ · Rhodes Information Initiative at Duke</p>
-      <h3 class="display">Visualizing Durham Public Schools</h3>
-      <p>A public dashboard of school statistics, built with Durham Public Schools administrators, students and staff in two-week sprints. 3,000+ monthly visits in its first year, and a video feature by Duke.</p>
-      <p class="links"><a href="https://visualizingdps.shinyapps.io/dps_dashboard2/">Dashboard ↗</a><span class="sep">·</span><a href="https://www.youtube.com/watch?v=AkzBLhaZhyA">Duke feature ↗</a></p>
-    </article>
-    <article class="body" id="item-fluid">
-      <div class="media" data-video="assets/media/fluid.mp4" data-poster="assets/media/fluid.webp"><img src="assets/media/fluid.webp" width="600" height="338" alt="A fluid simulation visualizing housing inequality." loading="lazy" /><button type="button" class="media__play">▶ Simulation · 0:13</button></div>
-      <p class="label">2021 · Bass Connections · exhibited</p>
-      <h3 class="display">Housing inequality as a fluid</h3>
-      <p>Under Thomas DeFrantz: a fluid-simulation visualization of racial housing inequality in Durham, shown publicly in a gallery.</p>
-      <p class="links"><a href="https://youtu.be/-aY_Dl56Zjs">Video ↗</a><span class="sep">·</span><a href="https://github.com/Aryan-Poonacha/stable-fluids">Code ↗</a></p>
-    </article>
-  </div>
-  <ul class="rows">
-    <li class="row" id="item-voting" data-video="assets/media/voting.mp4" data-poster="assets/media/voting.webp"><span class="year">2021</span><span class="what"><strong>Willingness to vote in Asian democracies</strong><span>Duke Datathon</span></span><span class="links"><a href="https://drive.google.com/file/d/1t_ZGizSx7A9HDQjJvKs4LPPPqA-m0URv/view">Paper</a><a href="https://github.com/cs582/DukeDatathon2021">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:04</p></div></li>
-    <li class="row" id="item-covid" data-video="assets/media/economic.mp4" data-poster="assets/media/economic.webp"><span class="year">2021</span><span class="what"><strong>The economic impact of Covid-19</strong><span>Duke Datathon</span></span><span class="links"><a href="https://drive.google.com/file/d/1Ntg6Se_z_Y_uHCUuF6_qzaTT92LZ6jFN/view">Paper</a><a href="https://github.com/cs582/The-Economic-Impact-of-Covid-19_Duke_Datathon">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:10</p></div></li>
-    <li class="row" id="item-laugh" data-video="assets/media/audio.mp4" data-poster="assets/media/audio.webp"><span class="year">2020</span><span class="what"><strong>Laugh-track removal</strong><span>a model that strips canned laughter, and a study of whether laugh tracks work</span></span><span class="links"><a href="https://www.youtube.com/watch?v=aLJciDjjWI4">Clip</a><a href="https://github.com/Aryan-Poonacha/laughtrackanalysis">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:10</p></div></li>
-    <li class="row" id="item-musicgen" data-video="assets/media/musicgen.mp4" data-poster="assets/media/musicgen.webp"><span class="year">2020</span><span class="what"><strong>Bollywood music generator</strong><span>an LSTM that writes film music</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/bollywoodmusicgenerator">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:09</p></div></li>
-    <li class="row" id="item-vk" data-video="assets/media/socialmedia.mp4" data-poster="assets/media/socialmedia.webp"><span class="year">2020</span><span class="what"><strong>Predicting VK follower counts</strong><span>a regression model; the Stats 101 final at Duke Kunshan</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/predict_follower_count_vk/blob/master/Report.pdf">Paper</a><a href="https://github.com/Aryan-Poonacha/predict_follower_count_vk">Code</a><button type="button" class="rec">Recording ▶</button></span><div class="clip"><p class="label">Original screen capture, 0:05</p></div></li>
-    <li class="row row--interest"><span class="year"><i class="swatch swatch--hollow"></i></span><span class="what"><span>Interests: what language models could find in particle-accelerator and astrophysics archives; mathematics; the history of grand strategy and political economy.</span></span><span class="links"></span></li>
-  </ul>
-</section>
-
-<!-- ================= 05 VENTURES ================= -->
-<section class="chapter wrap f-ventures" id="ventures" aria-labelledby="h-ventures">
-  <div class="chapter__head">
-    <p class="label"><i class="swatch"></i>05 — Ventures · 4 pieces · 2017–2022</p>
-    <h2 class="display chapter__title" id="h-ventures">Prizes, a studio, an accelerator, a finalist.</h2>
-    <p class="chapter__intro">A hackathon win that became a company, a national startup final, and a crowdfunding platform built at sixteen.</p>
-  </div>
-  <ul class="rows">
-    <li class="row row--big" id="item-robotech"><span class="year">2022</span><span class="what"><strong>Robotech, GeorgiaTech</strong><span>Best Overall Hack, Second Best Design and Most Accessible Hack for Source Tracker, a spatial-audio isolation and live-captioning tool. $3,000 in prizes, $5,000 in seed funding.</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/source_tracker">Code ↗</a></span></li>
-    <li class="row row--big" id="item-createx"><span class="year">2022</span><span class="what"><strong>CreateX accelerator, GeorgiaTech</strong><span>Agronomy VR, the farming VR game studio we founded after Robotech.</span></span><span class="links"><a href="https://www.youtube.com/watch?v=W0y4Fptv5Ds">Pitch ↗</a></span></li>
-    <li class="row row--big" id="item-frontiers"><span class="year">2020</span><span class="what"><strong>Alibaba GET Global Startup Challenge</strong><span>National finalist with Frontiers of Health, a mental-health product for Chinese high-school students.</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/frontiers_of_health">Prototype ↗</a></span></li>
-    <li class="row row--big" id="item-voitheia"><span class="year">2017</span><span class="what"><strong>Voitheia</strong><span>A crowdfunding platform built at sixteen, used to raise funds for the Abhivruddi Foundation and other causes across events in Bangalore.</span></span><span class="links"><a href="https://github.com/Aryan-Poonacha/voitheia">Code ↗</a></span></li>
-  </ul>
-</section>
-
-<!-- ================= NOW · CV · PRESS ================= -->
-<section class="tail wrap" id="now" aria-label="Now, experience and recognition">
-  <div>
-    <p class="label">Now — October 2026</p>
-    <ul class="now">
-      <li>Building the agent platform at Tomex.</li>
-      <li>Maintaining the Empire Earth port; the relay is live.</li>
-      <li>Drafting the next novel.</li>
-      <li>Reading the history of grand strategy and political economy.</li>
-    </ul>
-  </div>
-  <div>
-    <p class="label">Experience · Education</p>
-    <ul class="cv">
-      <li><span class="year">2026–</span><span>Founding AI Engineer, <a href="https://tomex.ai">Tomex</a></span></li>
-      <li><span class="year">2025–26</span><span>Founding AI Product Engineer, <a href="https://lightfield.com">Lightfield</a></span></li>
-      <li><span class="year">2024</span><span>AI Engineer Intern, Demandly · Product Intern, Origin AI</span></li>
-      <li><span class="year">2022–24</span><span>Teaching Assistant, Duke Computer Science</span></li>
-      <li><span class="year">2023–24</span><span>M.Eng. Artificial Intelligence, Duke University</span></li>
-      <li><span class="year">2019–23</span><span>B.Sc. Data Science, Duke University and Duke Kunshan University</span></li>
-    </ul>
-  </div>
-  <div>
-    <p class="label">Press · Recognition</p>
-    <ul class="cv">
-      <li><span class="year">2022</span><span>Best Overall Hack, GeorgiaTech Robotech</span></li>
-      <li><span class="year">2022</span><span><a href="https://www.youtube.com/watch?v=AkzBLhaZhyA">Video feature by Duke University</a></span></li>
-      <li><span class="year">2020</span><span>National finalist, Alibaba GET Global Startup Challenge</span></li>
-      <li><span class="year">2020–22</span><span><a href="https://www.dukechronicle.com/staff/aryan-poonacha">Columnist, The Duke Chronicle</a></span></li>
-      <li><span class="year">2016</span><span><a href="https://www.deccanchronicle.com/lifestyle/books-and-art/091116/a-thrilling-debut.html">"A thrilling debut", Deccan Chronicle</a></span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ================= ELSEWHERE ================= -->
-<section class="foot wrap" id="elsewhere" aria-labelledby="h-hello">
-  <div class="foot__copy">
-    <h2 class="display foot__title" id="h-hello">Say hello.</h2>
-    <a class="foot__mail" href="mailto:aryanpoonacha01@gmail.com">aryanpoonacha01@gmail.com</a>
-    <p class="label foot__meta">Updated October 2026 · Bangalore · Kunshan · Durham · San Francisco</p>
-  </div>
-  <div class="linkcols">
-    <ul><li><span>Build</span></li><li><a href="https://github.com/Aryan-Poonacha">GitHub ↗</a></li><li><a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn ↗</a></li><li><a href="assets/Aryan-Poonacha-Resume.pdf">CV (PDF) ↗</a></li></ul>
-    <ul><li><span>Talk</span></li><li><a href="https://x.com/aryan_poonacha">X ↗</a></li><li><a href="https://bsky.app/profile/aryan-poonacha.bsky.social">Bluesky ↗</a></li><li><a href="https://www.youtube.com/@aryanpoonacha1662">YouTube ↗</a></li></ul>
-    <ul><li><span>Work</span></li><li><a href="https://tomex.ai">tomex.ai ↗</a></li><li><a href="https://lightfield.com">lightfield.com ↗</a></li><li><a href="https://empire-earth.pages.dev/">empire-earth.pages.dev ↗</a></li></ul>
-  </div>
-</section>
-
-</main>
-
-<script id="dial-data" type="application/json">{"domains":[{"id":"software","name":"Software","color":"#F0A33A"},{"id":"games","name":"Games","color":"#7BD88F"},{"id":"writing","name":"Writing","color":"#E86A5A"},{"id":"research","name":"Research","color":"#6FC3DF"},{"id":"ventures","name":"Ventures","color":"#EDE9E2"}],"items":[{"id":"blazing","title":"Blazing Hoops","domain":"software","year":2017,"kind":"work","poster":"assets/media/blazing.webp","x":416.2,"y":268.0,"color":"#F0A33A"},{"id":"firstjs","title":"First JavaScript","domain":"software","year":2017,"kind":"work","poster":null,"x":427.3,"y":269.8,"color":"#F0A33A"},{"id":"lumino","title":"Lumino","domain":"software","year":2019,"kind":"work","poster":"assets/media/lumino.webp","x":450.2,"y":232.4,"color":"#F0A33A"},{"id":"healthcarolina","title":"HealthCarolina","domain":"software","year":2021,"kind":"work","poster":"assets/media/healthcarolina.webp","x":479.5,"y":198.1,"color":"#F0A33A"},{"id":"ta","title":"Teaching CS 307/308 at Duke","domain":"software","year":2023,"kind":"role","poster":null,"x":514.9,"y":167.9,"color":"#F0A33A"},{"id":"demandly","title":"Agentic flow at Demandly","domain":"software","year":2024,"kind":"role","poster":null,"x":544.9,"y":160.4,"color":"#F0A33A"},{"id":"dukechat","title":"Duke AI chatbot","domain":"software","year":2024,"kind":"work","poster":"assets/media/dukeaichat.webp","x":564.6,"y":173.5,"color":"#F0A33A"},{"id":"quantbench","title":"Quantization workbench","domain":"software","year":2024,"kind":"work","poster":null,"x":583.1,"y":188.1,"color":"#F0A33A"},{"id":"scriptscouts","title":"ScriptScouts","domain":"software","year":2024,"kind":"work","poster":null,"x":600.3,"y":204.3,"color":"#F0A33A"},{"id":"wikichat","title":"Wiki-to-chatbot pipeline","domain":"software","year":2024,"kind":"work","poster":"assets/media/yakuza.webp","x":616.1,"y":221.9,"color":"#F0A33A"},{"id":"lightfield","title":"In-product agent at Lightfield","domain":"software","year":2025,"kind":"role","poster":null,"x":647.6,"y":228.8,"color":"#F0A33A"},{"id":"tomex","title":"Agent platform at Tomex","domain":"software","year":2026,"kind":"role","poster":null,"x":679.3,"y":239.8,"color":"#F0A33A"},{"id":"bottleship","title":"Win32 fixes upstream in BottleShip","domain":"software","year":2026,"kind":"work","poster":"assets/empire-earth-lobby.webp","x":691.8,"y":263.9,"color":"#F0A33A"},{"id":"i-agents","title":"LLM agents and evals","domain":"software","year":null,"kind":"interest","poster":null,"x":606.9,"y":115.2,"color":"#F0A33A"},{"id":"firstgames","title":"First games","domain":"games","year":2017,"kind":"work","poster":null,"x":530.6,"y":374.6,"color":"#7BD88F"},{"id":"collector","title":"Collector Onslaught","domain":"games","year":2018,"kind":"work","poster":"assets/media/collector.webp","x":553.7,"y":409.4,"color":"#7BD88F"},{"id":"quantum","title":"Quantum Gambler","domain":"games","year":2021,"kind":"work","poster":"assets/media/quantum.webp","x":606.4,"y":467.1,"color":"#7BD88F"},{"id":"agronomy","title":"Agronomy VR","domain":"games","year":2022,"kind":"work","poster":"assets/media/agronomyvr.webp","x":600.7,"y":527.9,"color":"#7BD88F"},{"id":"ee","title":"Empire Earth in the browser","domain":"games","year":2026,"kind":"work","poster":"assets/empire-earth-menu.webp","x":619.6,"y":635.5,"color":"#7BD88F"},{"id":"i-strategy","title":"Grand-strategy and RTS games","domain":"games","year":null,"kind":"interest","poster":null,"x":734.8,"y":508.8,"color":"#7BD88F"},{"id":"curebereft","title":"Cure Bereft","domain":"writing","year":2016,"kind":"work","poster":null,"x":454.3,"y":498.0,"color":"#E86A5A"},{"id":"columns","title":"Duke Chronicle columns","domain":"writing","year":2021,"kind":"work","poster":null,"x":400.0,"y":617.0,"color":"#E86A5A"},{"id":"eenote","title":"Empire Earth write-up","domain":"writing","year":2026,"kind":"work","poster":null,"x":243.9,"y":681.6,"color":"#E86A5A"},{"id":"i-scifi","title":"Science fiction","domain":"writing","year":null,"kind":"interest","poster":null,"x":459.1,"y":747.0,"color":"#E86A5A"},{"id":"i-novel","title":"Second novel, in draft","domain":"writing","year":null,"kind":"interest","poster":null,"x":340.9,"y":747.0,"color":"#E86A5A"},{"id":"musicgen","title":"Bollywood music generator","domain":"research","year":2020,"kind":"work","poster":"assets/media/musicgen.webp","x":266.3,"y":543.3,"color":"#6FC3DF"},{"id":"laugh","title":"Laugh-track removal","domain":"research","year":2020,"kind":"work","poster":"assets/media/audio.webp","x":244.2,"y":518.9,"color":"#6FC3DF"},{"id":"vk","title":"Predicting VK follower counts","domain":"research","year":2020,"kind":"work","poster":"assets/media/socialmedia.webp","x":226.4,"y":491.0,"color":"#6FC3DF"},{"id":"covid","title":"Economic impact of Covid-19","domain":"research","year":2021,"kind":"work","poster":"assets/media/economic.webp","x":193.6,"y":467.1,"color":"#6FC3DF"},{"id":"fluid","title":"Housing inequality as a fluid","domain":"research","year":2021,"kind":"work","poster":"assets/media/fluid.webp","x":185.3,"y":431.5,"color":"#6FC3DF"},{"id":"voting","title":"Willingness to vote, Asian democracies","domain":"research","year":2021,"kind":"work","poster":"assets/media/voting.webp","x":183.1,"y":395.0,"color":"#6FC3DF"},{"id":"dps","title":"Visualizing Durham Public Schools","domain":"research","year":2022,"kind":"work","poster":"assets/media/dataplus.webp","x":166.4,"y":354.6,"color":"#6FC3DF"},{"id":"i-physics","title":"Physics and accelerator data","domain":"research","year":null,"kind":"interest","poster":null,"x":103.1,"y":589.1,"color":"#6FC3DF"},{"id":"i-math","title":"Mathematics","domain":"research","year":null,"kind":"interest","poster":null,"x":65.2,"y":508.8,"color":"#6FC3DF"},{"id":"i-history","title":"History of grand strategy and political economy","domain":"research","year":null,"kind":"interest","poster":null,"x":48.7,"y":421.5,"color":"#6FC3DF"},{"id":"voitheia","title":"Voitheia","domain":"ventures","year":2017,"kind":"work","poster":null,"x":279.5,"y":343.8,"color":"#EDE9E2"},{"id":"frontiers","title":"Frontiers of Health, Alibaba GET finalist","domain":"ventures","year":2020,"kind":"work","poster":null,"x":259.8,"y":263.0,"color":"#EDE9E2"},{"id":"createx","title":"Agronomy VR at CreateX","domain":"ventures","year":2022,"kind":"work","poster":"assets/media/agronomyvr.webp","x":294.4,"y":186.7,"color":"#EDE9E2"},{"id":"robotech","title":"Robotech 2022, Best Overall Hack","domain":"ventures","year":2022,"kind":"work","poster":null,"x":371.0,"y":163.8,"color":"#EDE9E2"}]}</script>
-<script src="js/site.js" defer></script>
+<script src="js/galaxy-data.js"></script>
+<script src="js/galaxy.js"></script>
 </body>
 </html>
