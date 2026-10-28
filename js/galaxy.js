@@ -30,7 +30,7 @@
     if (s.id === "me") return { w: 210, h: 210 };
     if (s.field === "life") return { w: 200, h: 112 };
     if (s.media && (s.media.video || s.media.image)) return { w: w, h: Math.round(w * 9 / 16) + 24 };
-    return { w: w, h: Math.round(w * 0.72) };
+    return { w: w, h: Math.round(w * 0.78) };
   }
 
   /* ---------- layout: loose clusters on arms, then rectangles pushed apart ---------- */

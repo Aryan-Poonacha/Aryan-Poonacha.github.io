@@ -50,7 +50,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoratio
 .tile--role, .tile--place, .tile--work:not(.tile--video):not(.tile--book) { background: color-mix(in srgb, var(--f) 9%, #0b0c12); }
 .tile--role .tile__cap, .tile--place .tile__cap, .tile--work:not(.tile--video):not(.tile--book):not(:has(.tile__media)) .tile__cap { position: absolute; inset: 0; justify-content: flex-end; background: none; border: 0; padding: 12px 14px 12px; }
 .tile--role .tile__t, .tile--place .tile__t, .tile--work:not(.tile--video):not(.tile--book):not(:has(.tile__media)) .tile__t { white-space: normal; font-size: clamp(20px, calc(12px / var(--z, 1)), 40px); line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-.tile--role .tile__m, .tile--place .tile__m, .tile--work:not(.tile--video):not(.tile--book):not(:has(.tile__media)) .tile__m { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
 .tile--life { border-radius: 10px; }
 .tile--me { border-radius: 50%; border-color: color-mix(in srgb, var(--f) 60%, transparent); box-shadow: 0 0 120px -10px color-mix(in srgb, var(--f) 70%, transparent); }
 .tile--me .tile__media { aspect-ratio: 1; height: 100%; }
