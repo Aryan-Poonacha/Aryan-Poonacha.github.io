@@ -26,7 +26,11 @@
 </head>
 <body>
 
-<canvas id="sky" tabindex="0" aria-label="A galaxy of everything made since 2016. Drag to pan, scroll to zoom, click a star. Press I for a plain list." role="application"></canvas>
+<div class="stage" id="stage">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="world" id="world" aria-label="Everything, as one galaxy. Drag to pan, scroll to zoom, click a tile. Press I for a plain list."></div>
+</div>
+<div class="tip" id="tip" data-on="false" aria-hidden="true"></div>
 
 <header class="hud brand">
   <h1><a href="#" id="home-link">Aryan Poonacha</a></h1>
@@ -45,8 +49,9 @@
 
 <ul class="hud legend label" id="legend" aria-label="Fields"></ul>
 
+<canvas id="minimap" aria-label="Map of the whole galaxy; click to go there"></canvas>
 <div class="hud tools label">
-  <span class="hint" id="hint" data-on="true">Drag · scroll to zoom · click a star</span>
+  <span class="hint" id="hint" data-on="true">Drag · scroll to zoom · click anything</span>
   <span class="zoom" aria-label="Zoom">
     <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
     <button type="button" id="zoom-home" aria-label="Whole galaxy">○</button>
