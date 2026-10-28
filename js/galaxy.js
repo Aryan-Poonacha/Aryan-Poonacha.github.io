@@ -30,7 +30,7 @@
     if (s.id === "me") return { w: 210, h: 210 };
     if (s.field === "life") return { w: 200, h: 112 };
     if (s.media && (s.media.video || s.media.image)) return { w: w, h: Math.round(w * 9 / 16) };
-    return { w: w, h: Math.round(w * 0.56) };
+    return { w: w, h: Math.round(w * 0.72) };
   }
 
   /* ---------- layout: loose clusters on arms, then rectangles pushed apart ---------- */
@@ -45,7 +45,7 @@
     var a = base + r * 0.00075 + (rng() - 0.5) * 0.6;
     return { x: Math.cos(a) * r * aspect.x, y: Math.sin(a) * r * aspect.y };
   }
-  var PAD = 36;
+  var PAD = 54;
   function layout() {
     aspect = narrow() ? { x: 0.46, y: 1.55 } : { x: 1, y: 0.74 };
     stars.forEach(function (s) { var z = sizeOf(s); s.w = z.w; s.h = z.h; var t = targetOf(s); s.tx = t.x; s.ty = t.y; s.x = t.x; s.y = t.y; s.r0 = Math.hypot(t.x, t.y); });
