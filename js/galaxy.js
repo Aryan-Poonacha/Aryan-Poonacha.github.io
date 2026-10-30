@@ -304,10 +304,10 @@
     }
     if (s.near.length) {
       var rel = h("p", "card__near"); rel.appendChild(h("span", "card__nearlabel", "Linked"));
-      s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--f", fieldById[o.field].color); rel.appendChild(b); });
+      s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--f", fieldById[o.field].color); b.addEventListener("click", function (e) { if (e.detail && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) b.blur(); }); rel.appendChild(b); });
       card.appendChild(rel);
     }
-    card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
+    card.inert = false; card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
     Object.keys(tiles).forEach(function (id) { tiles[id].classList.toggle("is-active", id === s.id); });
     if (location.hash !== "#" + s.id) history.replaceState(null, "", "#" + s.id);
     if (takeFocus) close.focus({ preventScroll: true });
@@ -316,7 +316,7 @@
     if (!active) return;
     if (card.contains(document.activeElement)) document.getElementById("index-toggle").focus({ preventScroll: true });
     var was = active; active = null;
-    card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
+    card.inert = true; card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
     document.body.removeAttribute("data-active"); tiles[was.id].classList.remove("is-active");
     var tv = tiles[was.id].querySelector("video"); if (tv && playing.has(tv)) { var p = tv.play(); if (p && p.catch) p.catch(function () {}); }
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
@@ -364,7 +364,7 @@
   function toggleIndex(force, keepFocus) {
     var toggle = document.getElementById("index-toggle"), was = index.getAttribute("data-on") === "true", on = typeof force === "boolean" ? force : !was;
     if (on === was) return;
-    index.setAttribute("data-on", on ? "true" : "false"); toggle.setAttribute("aria-expanded", on ? "true" : "false");
+    index.inert = !on; index.setAttribute("data-on", on ? "true" : "false"); toggle.setAttribute("aria-expanded", on ? "true" : "false");
     if (on) { indexOpener = document.activeElement; var first = index.querySelector("a"); if (first) first.focus(); }
     else if (!keepFocus) {
       indexOpener.focus({ preventScroll: true });

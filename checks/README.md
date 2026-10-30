@@ -14,3 +14,8 @@ panning after pointer selection. The first candidate failed all 28; these assert
 before the correction. The runner brings the task tab forward before input to prevent external
 app focus changes from invalidating the input. Same-project reselection and focus through resize
 are additional browser smoke checks.
+
+`index-transition-focus.js` adds 8 fast-Tab cases during closing animations; the preceding
+candidate failed the 4 cases with normal motion. `pointer-card-focus.js` adds 4 cases for arrow
+panning after clicking a linked card. A real-browser reproduction caught the preceding
+candidate stealing focus and suppressing that pan. All checks use genuine browser input.
