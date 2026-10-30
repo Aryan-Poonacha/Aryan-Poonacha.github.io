@@ -278,7 +278,8 @@
 
   /* ---------- card ---------- */
   var active = null;
-  function open(s) {
+  function panelFocus(panel, on) { if (on) panel.removeAttribute("tabindex"); else panel.tabIndex = -1; panel.querySelectorAll("a[href], button, video[controls]").forEach(function (el) { if (on) el.removeAttribute("tabindex"); else el.tabIndex = -1; }); }
+  function open(s, takeFocus) {
     if (!s) return; active = s; hideTip();
     var z = Math.max(camT.z, narrow() ? 0.62 : 0.95), freeW = narrow() ? W : W - 470 - 26, ax = freeW / 2, ay = narrow() ? Math.min(H * 0.26, 170) : H / 2;
     flyTo(s.x - (ax - W / 2) / z, s.y - (ay - H / 2) / z, z);
@@ -304,22 +305,25 @@
     }
     if (s.near.length) {
       var rel = h("p", "card__near"); rel.appendChild(h("span", "card__nearlabel", "Linked"));
-      s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--f", fieldById[o.field].color); rel.appendChild(b); });
+      s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--f", fieldById[o.field].color); b.addEventListener("click", function (e) { if (e.detail && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) b.blur(); }); rel.appendChild(b); });
       card.appendChild(rel);
     }
-    card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
+    panelFocus(card, true); card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
     Object.keys(tiles).forEach(function (id) { tiles[id].classList.toggle("is-active", id === s.id); });
     if (location.hash !== "#" + s.id) history.replaceState(null, "", "#" + s.id);
+    if (takeFocus) close.focus({ preventScroll: true });
   }
   function closeCard() {
     if (!active) return;
+    if (card.contains(document.activeElement)) document.getElementById("index-toggle").focus({ preventScroll: true });
     var was = active; active = null;
-    card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
+    panelFocus(card, false); card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
     document.body.removeAttribute("data-active"); tiles[was.id].classList.remove("is-active");
     var tv = tiles[was.id].querySelector("video"); if (tv && playing.has(tv)) { var p = tv.play(); if (p && p.catch) p.catch(function () {}); }
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   }
-  function onHash() { var id = location.hash.slice(1); if (id && byId[id]) { toggleIndex(false); open(byId[id]); } else if (!id) { closeCard(); } }
+  var indexPick = false; /* an index item was chosen and its hashchange is on the way */
+  function onHash() { var id = location.hash.slice(1), pick = indexPick; indexPick = false; if (id && byId[id]) { var takeFocus = pick || index.getAttribute("data-on") === "true" || card.contains(document.activeElement); toggleIndex(false, true); open(byId[id], takeFocus); } else if (!id) { closeCard(); } }
   window.addEventListener("hashchange", onHash);
 
   /* ---------- hud ---------- */
@@ -348,15 +352,26 @@
     stars.filter(function (s) { return s.field === f.id; }).sort(function (a, b) { return (b.year || 0) - (a.year || 0) || b.weight - a.weight; }).forEach(function (s) {
       var li = h("li"), a = h("a", "index__item" + (s.kind === "interest" ? " index__item--interest" : "")); a.href = "#" + s.id;
       a.appendChild(h("span", "t", s.title)); a.appendChild(h("span", "y", s.kind === "interest" ? "interest" : (s.when || "")));
-      a.addEventListener("click", function () { toggleIndex(false); if (location.hash === "#" + s.id) open(s); });
+      a.addEventListener("click", function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { toggleIndex(false); return; } /* opens elsewhere, no card here */
+        var keyboard = e.detail === 0;
+        toggleIndex(false, true); if (location.hash === "#" + s.id) open(s, keyboard); else indexPick = keyboard;
+      });
       li.appendChild(a); ul.appendChild(li);
     });
     sec.appendChild(ul); indexBody.appendChild(sec);
   });
-  function toggleIndex(force) {
-    var on = typeof force === "boolean" ? force : index.getAttribute("data-on") !== "true";
-    index.setAttribute("data-on", on ? "true" : "false"); document.getElementById("index-toggle").setAttribute("aria-expanded", on ? "true" : "false");
-    if (on) { var first = index.querySelector("a"); if (first) first.focus(); }
+  var indexOpener = null;
+  function toggleIndex(force, keepFocus) {
+    var toggle = document.getElementById("index-toggle"), was = index.getAttribute("data-on") === "true", on = typeof force === "boolean" ? force : !was;
+    if (on === was) return;
+    panelFocus(index, on); index.setAttribute("data-on", on ? "true" : "false"); toggle.setAttribute("aria-expanded", on ? "true" : "false");
+    if (on) { indexOpener = document.activeElement; var first = index.querySelector("a"); if (first) first.focus(); }
+    else if (!keepFocus) {
+      if (!indexOpener || index.contains(indexOpener) || (card.contains(indexOpener) && !active)) indexOpener = toggle;
+      indexOpener.focus({ preventScroll: true });
+      if (document.activeElement !== indexOpener || indexOpener === document.body) (active ? card.querySelector(".card__close") : toggle).focus({ preventScroll: true });
+    }
   }
   document.getElementById("index-toggle").addEventListener("click", function () { toggleIndex(); });
   document.getElementById("index-close").addEventListener("click", function () { toggleIndex(false); });
@@ -365,6 +380,10 @@
   document.addEventListener("keydown", function (e) {
     var typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
     if (e.key === "Escape") { if (index.getAttribute("data-on") === "true") toggleIndex(false); else if (active) { closeCard(); } return; }
+    if (e.key === "Tab" && index.getAttribute("data-on") === "true") {
+      var items = index.querySelectorAll("a[href], button"), at = Math.max(Array.prototype.indexOf.call(items, document.activeElement), e.shiftKey ? 0 : -1);
+      e.preventDefault(); items[(at + (e.shiftKey ? -1 : 1) + items.length) % items.length].focus(); return;
+    }
     if (typing || e.metaKey || e.ctrlKey) return;
     if (e.key === "i" || e.key === "I") { e.preventDefault(); toggleIndex(); }
     else if (e.key === "+" || e.key === "=") zoomAt(W / 2, H / 2, 1.4);
@@ -377,7 +396,7 @@
   resize(); layout(); build(); home(true);
   mini.width = Math.round(180 * dpr); mini.height = Math.round(120 * dpr);
   var wasNarrow = narrow();
-  window.addEventListener("resize", function () { resize(); if (narrow() !== wasNarrow) { wasNarrow = narrow(); layout(); place(); } if (!touched) home(true); else if (active) open(active); });
+  window.addEventListener("resize", function () { resize(); if (narrow() !== wasNarrow) { wasNarrow = narrow(); layout(); place(); } if (!touched) home(true); else if (active) open(active, card.contains(document.activeElement)); });
   if (qs.get("field") && fieldById[qs.get("field")]) { focusField = qs.get("field"); stars.forEach(function (s) { tiles[s.id].classList.toggle("is-dim", s.field !== focusField); }); }
   if (qs.get("hover") && byId[qs.get("hover")]) { hot = byId[qs.get("hover")]; showTip(hot); }
   if (qs.get("z")) { var fz = clampZ(parseFloat(qs.get("z")) || camT.z); camT.z = cam.z = fz; }
