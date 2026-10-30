@@ -19,3 +19,7 @@ are additional browser smoke checks.
 candidate failed the 4 cases with normal motion. `pointer-card-focus.js` adds 4 cases for arrow
 panning after clicking a linked card. A real-browser reproduction caught the preceding
 candidate stealing focus and suppressing that pan. All checks use genuine browser input.
+
+`panel-double-click.js` adds 4 normal-motion cases ensuring double-clicking either Close button
+does not reach the canvas and zoom it during the fade. Closed controls leave the Tab order;
+the panel keeps its existing pointer handling until the visual transition finishes.

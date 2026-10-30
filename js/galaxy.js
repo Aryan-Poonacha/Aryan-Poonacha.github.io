@@ -278,6 +278,7 @@
 
   /* ---------- card ---------- */
   var active = null;
+  function panelFocus(panel, on) { panel.querySelectorAll("a[href], button, video[controls]").forEach(function (el) { if (on) el.removeAttribute("tabindex"); else el.tabIndex = -1; }); }
   function open(s, takeFocus) {
     if (!s) return; active = s; hideTip();
     var z = Math.max(camT.z, narrow() ? 0.62 : 0.95), freeW = narrow() ? W : W - 470 - 26, ax = freeW / 2, ay = narrow() ? Math.min(H * 0.26, 170) : H / 2;
@@ -307,7 +308,7 @@
       s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--f", fieldById[o.field].color); b.addEventListener("click", function (e) { if (e.detail && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) b.blur(); }); rel.appendChild(b); });
       card.appendChild(rel);
     }
-    card.inert = false; card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
+    card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
     Object.keys(tiles).forEach(function (id) { tiles[id].classList.toggle("is-active", id === s.id); });
     if (location.hash !== "#" + s.id) history.replaceState(null, "", "#" + s.id);
     if (takeFocus) close.focus({ preventScroll: true });
@@ -316,7 +317,7 @@
     if (!active) return;
     if (card.contains(document.activeElement)) document.getElementById("index-toggle").focus({ preventScroll: true });
     var was = active; active = null;
-    card.inert = true; card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
+    panelFocus(card, false); card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
     document.body.removeAttribute("data-active"); tiles[was.id].classList.remove("is-active");
     var tv = tiles[was.id].querySelector("video"); if (tv && playing.has(tv)) { var p = tv.play(); if (p && p.catch) p.catch(function () {}); }
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
@@ -364,9 +365,10 @@
   function toggleIndex(force, keepFocus) {
     var toggle = document.getElementById("index-toggle"), was = index.getAttribute("data-on") === "true", on = typeof force === "boolean" ? force : !was;
     if (on === was) return;
-    index.inert = !on; index.setAttribute("data-on", on ? "true" : "false"); toggle.setAttribute("aria-expanded", on ? "true" : "false");
+    panelFocus(index, on); index.setAttribute("data-on", on ? "true" : "false"); toggle.setAttribute("aria-expanded", on ? "true" : "false");
     if (on) { indexOpener = document.activeElement; var first = index.querySelector("a"); if (first) first.focus(); }
     else if (!keepFocus) {
+      if (!indexOpener || index.contains(indexOpener) || (card.contains(indexOpener) && !active)) indexOpener = toggle;
       indexOpener.focus({ preventScroll: true });
       if (document.activeElement !== indexOpener || indexOpener === document.body) (active ? card.querySelector(".card__close") : toggle).focus({ preventScroll: true });
     }
