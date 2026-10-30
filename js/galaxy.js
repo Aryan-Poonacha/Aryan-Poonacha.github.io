@@ -314,6 +314,7 @@
   }
   function closeCard() {
     if (!active) return;
+    if (card.contains(document.activeElement)) document.getElementById("index-toggle").focus({ preventScroll: true });
     var was = active; active = null;
     card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
     document.body.removeAttribute("data-active"); tiles[was.id].classList.remove("is-active");
@@ -321,7 +322,7 @@
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   }
   var indexPick = false; /* an index item was chosen and its hashchange is on the way */
-  function onHash() { var id = location.hash.slice(1), pick = indexPick; indexPick = false; if (id && byId[id]) { toggleIndex(false); open(byId[id], pick); } else if (!id) { closeCard(); } }
+  function onHash() { var id = location.hash.slice(1), pick = indexPick; indexPick = false; if (id && byId[id]) { var takeFocus = pick || index.getAttribute("data-on") === "true" || card.contains(document.activeElement); toggleIndex(false, true); open(byId[id], takeFocus); } else if (!id) { closeCard(); } }
   window.addEventListener("hashchange", onHash);
 
   /* ---------- hud ---------- */
@@ -352,7 +353,8 @@
       a.appendChild(h("span", "t", s.title)); a.appendChild(h("span", "y", s.kind === "interest" ? "interest" : (s.when || "")));
       a.addEventListener("click", function (e) {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { toggleIndex(false); return; } /* opens elsewhere, no card here */
-        toggleIndex(false, true); if (location.hash === "#" + s.id) open(s, true); else indexPick = true;
+        var keyboard = e.detail === 0;
+        toggleIndex(false, true); if (location.hash === "#" + s.id) open(s, keyboard); else indexPick = keyboard;
       });
       li.appendChild(a); ul.appendChild(li);
     });
