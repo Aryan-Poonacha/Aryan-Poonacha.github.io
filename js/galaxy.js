@@ -308,7 +308,7 @@
       s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--f", fieldById[o.field].color); b.addEventListener("click", function (e) { if (e.detail && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) b.blur(); }); rel.appendChild(b); });
       card.appendChild(rel);
     }
-    card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
+    panelFocus(card, true); card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
     Object.keys(tiles).forEach(function (id) { tiles[id].classList.toggle("is-active", id === s.id); });
     if (location.hash !== "#" + s.id) history.replaceState(null, "", "#" + s.id);
     if (takeFocus) close.focus({ preventScroll: true });
