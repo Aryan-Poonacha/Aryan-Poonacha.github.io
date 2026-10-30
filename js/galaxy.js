@@ -278,7 +278,7 @@
 
   /* ---------- card ---------- */
   var active = null;
-  function panelFocus(panel, on) { panel.querySelectorAll("a[href], button, video[controls]").forEach(function (el) { if (on) el.removeAttribute("tabindex"); else el.tabIndex = -1; }); }
+  function panelFocus(panel, on) { if (on) panel.removeAttribute("tabindex"); else panel.tabIndex = -1; panel.querySelectorAll("a[href], button, video[controls]").forEach(function (el) { if (on) el.removeAttribute("tabindex"); else el.tabIndex = -1; }); }
   function open(s, takeFocus) {
     if (!s) return; active = s; hideTip();
     var z = Math.max(camT.z, narrow() ? 0.62 : 0.95), freeW = narrow() ? W : W - 470 - 26, ax = freeW / 2, ay = narrow() ? Math.min(H * 0.26, 170) : H / 2;
