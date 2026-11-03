@@ -35,6 +35,15 @@ async (page) => {
     rec(p + '-sort-by-when', years.every((y) => y === 2026), years);
     await page.locator('#index-map-order').click();
 
+    await page.locator('#index-body tr[data-id="healthcarolina"] .c-year').click();
+    await page.waitForTimeout(400);
+    const rowPick = await page.evaluate(() => ({ active: window.__galaxy().active, focusInCard: document.querySelector('#card').contains(document.activeElement), x: window.__galaxy().camT.x }));
+    await page.keyboard.press('ArrowRight');
+    const rowAfter = await page.evaluate(() => window.__galaxy().camT.x);
+    rec(p + '-row-click-keeps-arrow-pan', rowPick.active === 'healthcarolina' && !rowPick.focusInCard && rowAfter > rowPick.x, { ...rowPick, after: rowAfter });
+    await page.keyboard.press('i');
+    await page.waitForTimeout(300);
+
     await page.locator('#index-body a[href="#ee-mp"]').focus();
     await page.keyboard.press('Enter');
     await page.waitForTimeout(500);

@@ -352,7 +352,7 @@
   var hot = null, active = null, focusCl = null, focusAmt = 0;
   var hudEls = Array.prototype.slice.call(document.querySelectorAll(".brand, .elsewhere, .crumbs, .legend, .tools, #minimap"));
   function visibility() {
-    var z = cam.z, span = Math.min(W, H);
+    var fa = freeArea(), z = cam.z, span = Math.min(fa.x1 - fa.x0, fa.y1 - fa.y0);
     clusters.forEach(function (c) {
       var Rs = c.R * z; c.Rs = Rs;
       c.starA = smooth(span * 0.17, span * 0.3, Rs);
@@ -649,7 +649,7 @@
     var crumbs = h("p", "card__crumbs");
     var home = h("button", "crumb", "Galaxy"); home.type = "button"; home.addEventListener("click", function () { closeCard(); flyTo(homeView()); }); crumbs.appendChild(home);
     if (c) { crumbs.appendChild(h("span", "sep", "/")); var cb = h("button", "crumb", c.name); cb.type = "button"; cb.addEventListener("click", function () { closeCard(); flyTo(clusterView(c)); }); crumbs.appendChild(cb); }
-    if (s.planet) { crumbs.appendChild(h("span", "sep", "/")); var pa = h("a", "crumb", s.parent.title); pa.href = "#" + s.parent.id; crumbs.appendChild(pa); }
+    if (s.planet) { crumbs.appendChild(h("span", "sep", "/")); var pa = h("a", "crumb", s.parent.title); pa.href = "#" + s.parent.id; chipBlur(pa); crumbs.appendChild(pa); }
     card.appendChild(crumbs);
     var media = mediaFor(s, true);
     if (media) {
@@ -805,7 +805,10 @@
     tr.appendChild(h("td", "c-part", s.planet ? s.parent.title : (s.planets.length ? s.planets.length + " planets" : "")));
     tr.appendChild(h("td", "c-year", s.kind === "interest" ? "—" : (s.when || "")));
     tr.appendChild(h("td", "c-kind", KINDS[s.kind] || ""));
-    tr.addEventListener("click", function (e) { if (e.target.closest("a")) return; a.click(); });
+    tr.addEventListener("click", function (e) {
+      if (e.target.closest("a")) return;
+      toggleIndex(false, true); if (location.hash === "#" + s.id) open(s, false); else location.hash = s.id;
+    });
     rows[s.id] = tr;
     s.text = [s.title, s.short, s.meta, s.when, s.line, (s.facts || []).join(" "), s.tech, nameOf(s), s.planet ? s.parent.title : "", KINDS[s.kind]].join(" ").toLowerCase();
   });

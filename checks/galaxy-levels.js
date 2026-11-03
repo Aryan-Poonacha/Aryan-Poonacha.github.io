@@ -39,6 +39,13 @@ async (page) => {
     s = await state();
     rec(p + '-planet-opens-in-its-system', s.active === 'cb-press' && s.s === 'curebereft' && s.title === '“A thrilling debut”' && s.hash === '#cb-press', s);
 
+    await page.locator('#card a.crumb[href="#curebereft"]').click();
+    await page.waitForTimeout(400);
+    const crumbPan = await page.evaluate(() => ({ active: window.__galaxy().active, focusInCard: document.querySelector('#card').contains(document.activeElement), x: window.__galaxy().camT.x }));
+    await page.keyboard.press('ArrowRight');
+    const crumbAfter = await page.evaluate(() => window.__galaxy().camT.x);
+    rec(p + '-parent-link-keeps-arrow-pan', crumbPan.active === 'curebereft' && !crumbPan.focusInCard && crumbAfter > crumbPan.x, { ...crumbPan, after: crumbAfter });
+
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
     s = await state();
@@ -58,5 +65,12 @@ async (page) => {
     s = await state();
     rec(p + '-planet-deep-link', s.active === 'lf-agent' && s.s === 'lightfield' && s.card === 'true', s);
   }
+  /* a short phone: the card leaves little map, and the system's planets must still be there */
+  await page.setViewportSize({ width: 390, height: 667 });
+  await page.goto('http://127.0.0.1:4187/?galaxy-levels=3#curebereft', { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => typeof window.__galaxy === 'function');
+  await page.waitForTimeout(500);
+  const short = await state();
+  rec('390x667-system-planets-are-links', short.active === 'curebereft' && short.cbPlanets === 5, short);
   return { ok: cases.every((c) => c.ok), cases };
 }
