@@ -104,6 +104,7 @@ kbd { font: inherit; padding: 0 4px; margin-left: 4px; border: 1px solid var(--r
 .tools { bottom: 22px; right: 26px; display: flex; align-items: center; gap: 14px; }
 .tools .hint { color: var(--muted); transition: opacity 0.8s var(--ease); }
 .tools .hint[data-on="false"] { opacity: 0; }
+@media (max-width: 1379px) { .tools .hint { display: none; } }
 .tools button { color: var(--text); padding: 2px 4px; } .tools button:hover { color: var(--amber); }
 .tools .zoom { display: inline-flex; gap: 2px; border: 1px solid var(--rule); border-radius: 999px; padding: 2px 8px; }
 .tools .zoom button { width: 22px; text-align: center; font-size: 13px; }
@@ -275,7 +276,8 @@ body[data-active="true"] #minimap { opacity: 0; pointer-events: none; }
   .row[hidden] { display: none; }
   .row td { padding: 0; border: 0; }
   .row .c-part, .row .c-kind, .row .c-cluster { display: none; }
-  .row:not(.row--planet) .c-title::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); vertical-align: 2px; }
+  .row:not(.row--planet) .c-title { padding-left: 14px; position: relative; }
+  .row:not(.row--planet) .c-title::before { content: ""; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
   .row--planet:not(.is-flat) .c-title { padding-left: 22px; }
   .row .c-cluster { font-size: 10px; }
   .row .c-year { text-align: right; font-size: 10.5px; }

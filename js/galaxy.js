@@ -402,7 +402,8 @@
         /* try the right, the left, below and above; hide the label if none is free */
         var lw = e.w || (e.w = e.lab.offsetWidth || 120), lh = s.short && s.kind !== "interest" ? 34 : 20, gap = Math.max(hit / 2, r) + 6, y0 = p.y - lh / 2, vg = Math.max(hit / 2, r) + 3;
         var cands = [["r", [p.x + gap, y0, p.x + gap + lw, y0 + lh]], ["l", [p.x - gap - lw, y0, p.x - gap, y0 + lh]], ["d", [p.x - lw / 2, p.y + vg, p.x + lw / 2, p.y + vg + lh]], ["u", [p.x - lw / 2, p.y - vg - lh, p.x + lw / 2, p.y - vg]]];
-        var others = blocked.filter(function (q) { return q[4] !== s.id && q[5] !== s.id; }), must = s === hot || s === active, pick = null;
+        /* a cluster's heart may cover a small neighbour's dot, never a label */
+        var big = isHeart(s), others = blocked.filter(function (q) { return q[4] !== s.id && q[5] !== s.id && !(big && q[4] && !isHeart(byId[q[4]]) && (byId[q[4]].weight || 1) < 5); }), must = s === hot || s === active, pick = null;
         for (var ci = 0; ci < cands.length && !pick; ci++) { var q = cands[ci][1]; if (q[0] > 6 && q[2] < W - 6 && q[1] > 4 && q[3] < H - 4 && !overlaps(q, others)) pick = cands[ci]; }
         if (!pick && must) pick = cands[0][1][2] < W - 6 ? cands[0] : cands[1];
         if (pick) { side = pick[0]; blocked.push(pick[1]); } else la = 0;
@@ -422,6 +423,7 @@
       b.classList.toggle("is-off", a < 0.03);
     });
   }
+  function isHeart(s) { return !s.planet && (s.id === G.core || (s.cluster && clusterById[s.cluster].core === s.id)); }
   function prio(s) { return (s === active ? 1000 : 0) + (s === hot ? 900 : 0) + (s.id === G.core ? 500 : 0) + (s.cluster && clusterById[s.cluster].core === s.id ? 400 : 0) + (s.planet ? 0 : 100) + (s.weight || 1) * 10 - (s.planet ? s.i : 0); }
   function bodyPx(s) { var base = s.kind === "interest" ? 2.4 : 1.6 + (s.weight || 1) * 0.75; return clamp(s.wr * cam.z, base, 64); }
 
