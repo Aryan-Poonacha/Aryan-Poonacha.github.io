@@ -152,7 +152,7 @@
       "  } else {",
       "    vec2 p = aPos; float r = length(p) / 2400.0;",
       "    float e = uIntro; float rot = (1.0 - e) * (1.0 - e) * 2.6 * (1.25 - min(r, 1.25));",
-      "    float cs = cos(rot), sn = sin(rot); p = vec2(cs * p.x - sn * p.y, sn * p.x + cs * p.y) * mix(0.22, 1.0, e * e * (3.0 - 2.0 * e));",
+      "    float cs = cos(rot), sn = sin(rot); p = vec2(cs * p.x - sn * p.y, sn * p.x + cs * p.y) * mix(0.12, 1.0, 1.0 - (1.0 - e) * (1.0 - e) * (1.0 - e));",
       "    sp = uView * 0.5 + (p - uCam.xy) * uCam.z;",
       "    size = aSize * uCam.z * uDpr;",
       "    float minS = (kind > 0.5 ? 6.0 : 1.4) * uDpr;",
@@ -349,7 +349,8 @@
   }
 
   /* ---------- per-frame placement and semantic zoom ---------- */
-  var hot = null, active = null, focusCl = null, focusAmt = 0, labelRects = [];
+  var hot = null, active = null, focusCl = null, focusAmt = 0;
+  var hudEls = Array.prototype.slice.call(document.querySelectorAll(".brand, .elsewhere, .crumbs, .legend, .tools, #minimap"));
   function visibility() {
     var z = cam.z, span = Math.min(W, H);
     clusters.forEach(function (c) {
@@ -360,8 +361,8 @@
     stars.forEach(function (s) {
       var Ss = s.sysR * z; s.Ss = Ss;
       s.sysA = s.planets.length ? smooth(26, 70, Ss) : 0;          /* orbits and planet dots */
-      s.planetLinks = Ss > 150;                                   /* planets become links */
-      s.planetA = smooth(175, 245, Ss);                           /* planet labels */
+      s.planetLinks = Ss > span * 0.17;                           /* planets become links */
+      s.planetA = smooth(span * 0.19, span * 0.27, Ss);           /* planet labels */
     });
   }
   function labelAlpha(s) {
@@ -379,6 +380,7 @@
     var blocked = [];
     clusters.forEach(function (c) { var b = clusterEls[c.id]; if (c.labelA > 0.05 && !b.classList.contains("is-off")) { var r = b.getBoundingClientRect(); blocked.push([r.left, r.top, r.right, r.bottom]); } });
     var hd = heading.getBoundingClientRect(); if (heading.getAttribute("data-on") === "true") blocked.push([hd.left, hd.top, hd.right, hd.bottom]);
+    hudEls.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.width && getComputedStyle(el).opacity !== "0") blocked.push([r.left - 6, r.top - 6, r.right + 6, r.bottom + 6]); });
     var pos = {};
     seq.forEach(function (s) {
       var p = toScreen(s.x, s.y), r = s.planet ? Math.max(2, s.wr * cam.z) : bodyPx(s); pos[s.id] = { p: p, r: r };
@@ -543,9 +545,8 @@
     peekFor = s; peek.textContent = ""; peek.style.setProperty("--c", s.color);
     var media = mediaFor(s, false), fig = h("div", "peek__media");
     orbitPeek = null;
-    if (media) { fig.appendChild(media); if (media.tagName === "VIDEO") { peekVideo = media; var pl = media.play(); if (pl && pl.catch) pl.catch(function () {}); } if (s.media && s.media.square) fig.classList.add("is-square"); }
-    else if (s.planets.length) { var oc = h("canvas", "peek__orbits"); fig.appendChild(oc); orbitPeek = { c: oc, s: s }; }
-    else { fig.classList.add("is-type"); fig.appendChild(h("span", "peek__glyph", (KINDS[s.kind] || "").toUpperCase())); fig.appendChild(h("span", "peek__big", s.title)); }
+    if (media) { fig.appendChild(media); if (media.tagName === "VIDEO") { peekVideo = media; if (!reduced) { var pl = media.play(); if (pl && pl.catch) pl.catch(function () {}); } } if (s.media && s.media.square) fig.classList.add("is-square"); }
+    else { var oc = h("canvas", "peek__orbits"); fig.appendChild(oc); orbitPeek = { c: oc, s: s, mode: s.planets.length ? "system" : s.planet ? "planet" : "locator" }; }
     peek.appendChild(fig);
     var body = h("div", "peek__body");
     body.appendChild(h("p", "peek__kicker", (s.planet ? s.parent.title : nameOf(s)) + (s.when && s.kind !== "interest" ? " · " + s.when : "")));
@@ -574,24 +575,47 @@
     if (peekVideo) { peekVideo.pause(); peekVideo = null; }
     if (now) peekFor = null; else setTimeout(function () { if (peek.getAttribute("data-on") === "false") peekFor = null; }, 250);
   }
+  /* the hover card's live picture, when a body has no recording: its system, where a planet sits in its
+     system, or where a star sits in its domain */
   function drawOrbitPeek(t) {
     if (!orbitPeek) return;
-    var c = orbitPeek.c, s = orbitPeek.s, w = c.clientWidth, hh = c.clientHeight; if (!w) return;
+    var c = orbitPeek.c, s = orbitPeek.s, mode = orbitPeek.mode, w = c.clientWidth, hh = c.clientHeight; if (!w) return;
     if (c.width !== Math.round(w * dpr)) { c.width = Math.round(w * dpr); c.height = Math.round(hh * dpr); }
     var g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, hh);
-    var cx = w * 0.5, cy = hh * 0.5, k = (hh * 0.46) / (s.sysR * TILT);
-    k = Math.min(k, (w * 0.46) / s.sysR);
-    g.globalCompositeOperation = "lighter"; g.drawImage(glow(s.color), cx - 60, cy - 60, 120, 120); g.globalCompositeOperation = "source-over";
-    g.fillStyle = "#FFF6E6"; g.beginPath(); g.arc(cx, cy, 7, 0, 6.283); g.fill();
     g.font = "500 9.5px 'Geist Mono', ui-monospace, monospace"; g.textBaseline = "middle";
-    s.planets.forEach(function (p) {
-      var o = p.orbit * k, a = p.phase + (reduced ? 0 : t * p.omega * 2.2), x = cx + Math.cos(a) * o, y = cy + Math.sin(a) * o * TILT;
-      g.strokeStyle = "rgba(220,228,255,0.13)"; g.lineWidth = 1; g.beginPath(); g.ellipse(cx, cy, o, o * TILT, 0, 0, 6.283); g.stroke();
-      g.fillStyle = s.color; g.beginPath(); g.arc(x, y, 3.2, 0, 6.283); g.fill();
-      g.fillStyle = "rgba(237,233,226,0.86)"; var label = p.title.length > 26 ? p.title.slice(0, 25) + "…" : p.title;
-      var tx = x + 7, tw = g.measureText(label).width; if (tx + tw > w - 4) tx = x - 7 - tw;
-      g.fillText(label, tx, y);
+    function sun(x, y, col, r) { g.globalCompositeOperation = "lighter"; g.drawImage(glow(col), x - r * 8, y - r * 8, r * 16, r * 16); g.globalCompositeOperation = "source-over"; g.fillStyle = "#FFF6E6"; g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill(); }
+    function clip(str, n) { return str.length > n ? str.slice(0, n - 1) + "…" : str; }
+    if (mode === "locator") {
+      var cl = clusterOf(s), list = cl ? cl.stars : [s], b = cl ? cl.b : { x0: s.x - 200, y0: s.y - 200, x1: s.x + 200, y1: s.y + 200 };
+      var k = Math.min((w - 40) / (b.x1 - b.x0), (hh - 40) / (b.y1 - b.y0)), ox = w / 2 - (b.x0 + b.x1) / 2 * k, oy = hh / 2 - (b.y0 + b.y1) / 2 * k;
+      g.strokeStyle = rgba(s.color, 0.5); g.lineWidth = 1;
+      s.near.forEach(function (o) { var q = o.planet ? o.parent : o; if (q.cluster !== s.cluster) return; g.beginPath(); g.moveTo(ox + s.x * k, oy + s.y * k); g.lineTo(ox + q.x * k, oy + q.y * k); g.stroke(); });
+      list.forEach(function (q) { var x = ox + q.x * k, y = oy + q.y * k; if (q === s) return; g.fillStyle = rgba(q.color, 0.55); g.beginPath(); g.arc(x, y, q.weight >= 4 ? 3 : 2, 0, 6.283); g.fill(); });
+      var sx = ox + s.x * k, sy = oy + s.y * k, pulse = reduced ? 0 : (t * 0.6) % 1;
+      sun(sx, sy, s.color, 4.5);
+      g.strokeStyle = rgba(s.color, 0.8 * (1 - pulse)); g.beginPath(); g.arc(sx, sy, 8 + pulse * 18, 0, 6.283); g.stroke();
+      g.fillStyle = rgba(s.color, 0.95); g.fillText((cl ? cl.name : "Core").toUpperCase(), 14, 16);
+      return;
+    }
+    var host = mode === "planet" ? s.parent : s, list2 = mode === "system", cx = list2 ? w * 0.3 : w * 0.5, cy = hh * 0.52;
+    var R = host.sysR, kk = Math.min((hh * 0.44) / (R * TILT), ((list2 ? w * 0.27 : w * 0.44)) / R);
+    sun(cx, cy, host.color, 6);
+    host.planets.forEach(function (p, i) {
+      var o = p.orbit * kk, a = p.phase + (reduced ? 0 : t * p.omega * 2.2), x = cx + Math.cos(a) * o, y = cy + Math.sin(a) * o * TILT, me = p === s;
+      g.strokeStyle = me ? rgba(host.color, 0.6) : "rgba(220,228,255,0.12)"; g.lineWidth = 1; g.beginPath(); g.ellipse(cx, cy, o, o * TILT, 0, 0, 6.283); g.stroke();
+      g.fillStyle = me || mode !== "planet" ? host.color : rgba(host.color, 0.45); g.beginPath(); g.arc(x, y, me ? 4.5 : 2.8, 0, 6.283); g.fill();
+      if (me) {
+        g.strokeStyle = rgba(host.color, 0.9); g.beginPath(); g.arc(x, y, 9, 0, 6.283); g.stroke();
+        var lab = clip(p.title, 30), tw = g.measureText(lab).width, tx = x + 14; if (tx + tw > w - 6) tx = x - 14 - tw;
+        g.fillStyle = "#fff"; g.fillText(lab, tx, y);
+      }
+      if (list2) {
+        var ly = 18 + i * Math.min(20, (hh - 30) / host.planets.length);
+        g.fillStyle = host.color; g.beginPath(); g.arc(w * 0.62, ly, 2.5, 0, 6.283); g.fill();
+        g.fillStyle = "rgba(237,233,226,0.88)"; g.fillText(clip(p.name || p.title, Math.floor((w * 0.38 - 16) / 6)), w * 0.62 + 9, ly);
+      }
     });
+    if (mode === "planet") { g.fillStyle = rgba(host.color, 0.95); g.fillText((host.name || host.title).toUpperCase(), 14, 16); }
   }
 
   /* ---------- the card ---------- */
@@ -651,7 +675,10 @@
   function closeCard() {
     if (!active) return;
     if (card.contains(document.activeElement)) document.getElementById("index-toggle").focus({ preventScroll: true });
-    active = null;
+    var was = active; active = null;
+    /* the card no longer covers part of the map: what it framed settles into the middle, at the same zoom */
+    var host = was.planet ? was.parent : was, sp = toScreen(host.x, host.y);
+    if (sp.x > 0 && sp.x < W && sp.y > 0 && sp.y < H) flyTo({ x: host.x, y: host.y, z: camT.z });
     panelFocus(card, false); card.setAttribute("data-on", "false"); card.querySelectorAll("video").forEach(function (v) { v.pause(); });
     document.body.removeAttribute("data-active");
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
@@ -671,7 +698,7 @@
   function where() {
     if (active) return { c: clusterOf(active), s: active.planet ? active.parent : active, p: active.planet ? active : null };
     var span = Math.min(W, H), centre = toWorld((freeArea().x0 + freeArea().x1) / 2, H / 2), best = null, bd = 1e9;
-    stars.forEach(function (s) { if (!s.planets.length) return; var d = Math.hypot(s.x - centre.x, s.y - centre.y); if (d < s.sysR * 1.1 && s.Ss > span * 0.28 && d < bd) { bd = d; best = s; } });
+    stars.forEach(function (s) { if (!s.planets.length) return; var d = Math.hypot(s.x - centre.x, s.y - centre.y); if (d < s.sysR * 1.1 && s.Ss > span * 0.2 && d < bd) { bd = d; best = s; } });
     var c = null, cd = 1e9;
     clusters.forEach(function (k) { var d = Math.hypot(k.cx - centre.x, k.cy - centre.y); if (d < k.R * 1.1 && k.Rs > span * 0.3 && d < cd) { cd = d; c = k; } });
     if (best) return { c: clusterOf(best), s: best, p: null };
@@ -693,8 +720,8 @@
     crumb("Galaxy", function () { closeCard(); flyTo(homeView()); }, null, !w.c && !w.s);
     if (w.s && w.s.id === G.core) crumb("Core", function () { closeCard(); flyTo(systemView(w.s)); }, CORE, !w.p);
     if (w.c) crumb(w.c.name, function () { closeCard(); flyTo(clusterView(w.c)); }, w.c.color, !w.s);
-    if (w.s && w.s.id !== G.core) crumb(w.s.title, function () { location.hash = w.s.id; }, w.s.color, !w.p);
-    if (w.p) crumb(w.p.title, function () { open(w.p, false); }, w.p.color, true);
+    if (w.s && w.s.id !== G.core) crumb(w.s.name || w.s.title, function () { location.hash = w.s.id; }, w.s.color, !w.p);
+    if (w.p) crumb(w.p.name || w.p.title, function () { open(w.p, false); }, w.p.color, true);
   }
   function setFocus(id) { focusCl = id; stage.dataset.focus = id || ""; }
   var legend = document.getElementById("legend");
@@ -871,7 +898,7 @@
     }
     focusAmt += ((focusCl ? 1 : 0) - focusAmt) * (reduced ? 1 : 1 - Math.exp(-dt * 8));
     var ie = introE(now);
-    if (!introDone && ie >= 1 && now - introT0 > 4200) skipIntro();
+    if (!introDone && ie >= 1 && now - introT0 > 3900) skipIntro();
     planetsAt(clock);
     visibility();
     if (skyGL) skyGL.draw(clock, ie, focusCl ? clusterById[focusCl].i : (focusAmt > 0.01 ? lastFocusI : -1), focusAmt);
@@ -891,8 +918,8 @@
   mini.width = Math.round(184 * dpr); mini.height = Math.round(132 * dpr);
   var start = homeView(); camT = { x: start.x, y: start.y, z: start.z };
   if (introOn) {
-    cam = { x: 0, y: 0, z: start.z * 3.4 }; intro.setAttribute("data-on", "true");
-    flight = { f: zoomPath([0, 0, Math.min(W, H) / cam.z], [start.x, start.y, Math.min(W, H) / start.z]), t0: born + 250, dur: 3400, span: Math.min(W, H), to: { x: start.x, y: start.y, z: start.z } };
+    cam = { x: start.x * 0.6, y: start.y * 0.6, z: start.z * 1.3 }; intro.setAttribute("data-on", "true");
+    flight = { f: zoomPath([cam.x, cam.y, Math.min(W, H) / cam.z], [start.x, start.y, Math.min(W, H) / start.z]), t0: born, dur: 3200, span: Math.min(W, H), to: { x: start.x, y: start.y, z: start.z } };
   } else { cam = { x: start.x, y: start.y, z: start.z }; document.body.classList.add("is-in"); }
   var wasNarrow = narrow();
   window.addEventListener("resize", function () {
