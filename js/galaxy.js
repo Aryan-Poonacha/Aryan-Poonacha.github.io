@@ -561,16 +561,36 @@
     var hint = s.planets.length ? "Click to enter its system · " + s.planets.length + " worlds" : s.planet ? "Click to open · part of " + s.parent.title : "Click to open";
     body.appendChild(h("p", "peek__hint", hint));
     peek.appendChild(body);
-    positionPeek(); peek.setAttribute("data-on", "true");
+    choosePeekSide(); positionPeek(); peek.setAttribute("data-on", "true");
+  }
+  /* the hover card goes on the side of its star that covers the fewest other stars, so a neighbour
+     stays reachable; the side is chosen when it opens and kept while the camera moves */
+  var peekSide = "r";
+  function peekRect(side, p, pw, ph) {
+    var e = els[peekFor.id], lab = e && e.la > 0.05 ? Math.min(e.w || 0, 220) : 0, gap = Math.max(18, bodyPx(peekFor) + 16), x, y;
+    if (side === "r") { x = p.x + gap + (e && e.side === "r" ? lab : 0); y = p.y - ph * 0.35; }
+    else if (side === "l") { x = p.x - gap - pw - (e && e.side === "l" ? lab : 0); y = p.y - ph * 0.35; }
+    else if (side === "d") { x = p.x - pw / 2; y = p.y + gap + 22; }
+    else { x = p.x - pw / 2; y = p.y - gap - ph; }
+    return [clamp(x, 14, W - pw - 14), clamp(y, 70, H - ph - 14)];
+  }
+  function choosePeekSide() {
+    var p = toScreen(peekFor.x, peekFor.y), pw = peek.offsetWidth || 340, ph = peek.offsetHeight || 380, best = "r", bestScore = 1e9;
+    ["r", "l", "d", "u"].forEach(function (side, order) {
+      var r = peekRect(side, p, pw, ph), x0 = r[0] - 14, y0 = r[1] - 14, x1 = r[0] + pw + 14, y1 = r[1] + ph + 14, score = order * 0.1;
+      if (p.x > x0 && p.x < x1 && p.y > y0 && p.y < y1) score += 100;          /* never over its own star */
+      seq.forEach(function (b) {
+        if (b === peekFor || (b.planet && !b.parent.planetLinks)) return;
+        var q = toScreen(b.x, b.y); if (q.x > x0 && q.x < x1 && q.y > y0 && q.y < y1) score += b.planet ? 1 : 3;
+      });
+      if (score < bestScore) { bestScore = score; best = side; }
+    });
+    peekSide = best;
   }
   function positionPeek() {
     if (!peekFor) return;
-    var p = toScreen(peekFor.x, peekFor.y), pw = peek.offsetWidth || 340, ph = peek.offsetHeight || 380, gap = Math.max(18, bodyPx(peekFor) + 16);
-    var x = p.x + gap + (els[peekFor.id] ? Math.min(els[peekFor.id].w || 0, 220) : 0), y = p.y - ph * 0.35;
-    if (x + pw > W - 14) x = p.x - gap - pw;
-    if (x < 14) x = clamp(p.x - pw / 2, 14, W - pw - 14);
-    y = clamp(y, 70, H - ph - 14);
-    peek.style.transform = "translate3d(" + Math.round(x) + "px," + Math.round(y) + "px,0)";
+    var r = peekRect(peekSide, toScreen(peekFor.x, peekFor.y), peek.offsetWidth || 340, peek.offsetHeight || 380);
+    peek.style.transform = "translate3d(" + Math.round(r[0]) + "px," + Math.round(r[1]) + "px,0)";
   }
   function hidePeek(now) {
     clearTimeout(peekTimer); peek.setAttribute("data-on", "false"); orbitPeek = null;
