@@ -524,10 +524,11 @@
     clearTimeout(hideTimer); hot = s;
     if (!hoverable && pointer) return;
     if (s === active && card.getAttribute("data-on") === "true") return;
-    clearTimeout(peekTimer); peekTimer = setTimeout(function () { showPeek(s); }, peekFor ? 30 : 90);
+    /* with a card open, crossing another body on the way to the card must not replace it: switching needs a dwell */
+    clearTimeout(peekTimer); peekTimer = setTimeout(function () { showPeek(s); }, peek.getAttribute("data-on") === "true" ? 200 : 90);
   }
   function unhover(s) { if (hot === s) hot = null; clearTimeout(peekTimer); clearTimeout(hideTimer); hideTimer = setTimeout(function () { if (!peek.matches(":hover")) hidePeek(); }, 220); }
-  peek.addEventListener("mouseenter", function () { clearTimeout(hideTimer); });
+  peek.addEventListener("mouseenter", function () { clearTimeout(hideTimer); clearTimeout(peekTimer); });
   peek.addEventListener("mouseleave", function () { hideTimer = setTimeout(hidePeek, 160); });
   function mediaFor(s, big) {
     var m = s.media || {};
