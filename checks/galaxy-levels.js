@@ -66,11 +66,13 @@ async (page) => {
     rec(p + '-planet-deep-link', s.active === 'lf-agent' && s.s === 'lightfield' && s.card === 'true', s);
   }
   /* a short phone: the card leaves little map, and the system's planets must still be there */
-  await page.setViewportSize({ width: 390, height: 667 });
-  await page.goto('http://127.0.0.1:4187/?galaxy-levels=3#curebereft', { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => typeof window.__galaxy === 'function');
-  await page.waitForTimeout(500);
-  const short = await state();
-  rec('390x667-system-planets-are-links', short.active === 'curebereft' && short.cbPlanets === 5, short);
+  for (const width of [390, 720]) {
+    await page.setViewportSize({ width, height: 667 });
+    await page.goto('http://127.0.0.1:4187/?galaxy-levels=3#curebereft', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => typeof window.__galaxy === 'function');
+    await page.waitForTimeout(500);
+    const short = await state();
+    rec(width + 'x667-system-planets-are-links', short.active === 'curebereft' && short.cbPlanets === 5, short);
+  }
   return { ok: cases.every((c) => c.ok), cases };
 }

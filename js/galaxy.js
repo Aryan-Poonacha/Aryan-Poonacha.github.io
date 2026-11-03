@@ -363,6 +363,7 @@
       s.sysA = s.planets.length ? smooth(26, 70, Ss) : 0;          /* orbits and planet dots */
       s.planetLinks = Ss > span * 0.17;                           /* planets become links */
       s.planetA = smooth(span * 0.19, span * 0.27, Ss);           /* planet labels */
+      if (active && (active === s || active.parent === s)) { s.sysA = Math.max(s.sysA, 0.8); s.planetLinks = true; } /* the open system keeps its planets */
     });
   }
   function labelAlpha(s) {
