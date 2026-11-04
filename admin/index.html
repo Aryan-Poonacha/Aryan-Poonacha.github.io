@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Content editor · Aryan Poonacha</title>
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+<header class="top">
+  <a class="top__site" href="../" target="_blank" rel="noopener">Open the site ↗</a>
+  <h1 class="top__title">Content editor</h1>
+  <p class="top__status" id="status" aria-live="polite">Loading…</p>
+  <div class="top__actions">
+    <button type="button" id="undo" title="Undo (Ctrl+Z)" disabled>Undo</button>
+    <button type="button" id="redo" title="Redo (Ctrl+Shift+Z)" disabled>Redo</button>
+    <button type="button" id="toggle-preview" aria-pressed="true">Preview</button>
+    <button type="button" id="more" title="Save elsewhere, download, open a file">Save as…</button>
+    <button type="button" id="save" class="primary" title="Save (Ctrl+S)">Save</button>
+  </div>
+</header>
+<div class="banner" id="banner" hidden></div>
+
+<main class="shell" id="shell">
+  <nav class="side" aria-label="Content">
+    <input type="search" id="find" placeholder="Find a card…" autocomplete="off" spellcheck="false" />
+    <div class="tree" id="tree" role="tree"></div>
+  </nav>
+  <section class="edit" id="edit" aria-label="Editor"></section>
+  <section class="preview" id="preview" aria-label="Preview">
+    <div class="preview__bar">
+      <div class="seg" id="preview-mode" role="group" aria-label="Show">
+        <button type="button" data-mode="hover">Hover card</button>
+        <button type="button" data-mode="card">Card</button>
+        <button type="button" data-mode="map">Map</button>
+      </div>
+      <div class="seg" id="preview-device" role="group" aria-label="Screen">
+        <button type="button" data-device="desktop">Desktop</button>
+        <button type="button" data-device="phone">Phone</button>
+      </div>
+      <label class="check"><input type="checkbox" id="preview-auto" checked /> Live</label>
+      <button type="button" id="preview-reload" title="Reload the preview">↻</button>
+      <a id="preview-open" href="../?draft=1" target="_blank" rel="noopener" title="Open this preview in a tab">↗</a>
+    </div>
+    <div class="preview__stage" id="preview-stage"><iframe id="frame" title="Preview of the site with your changes"></iframe></div>
+    <p class="preview__note">The preview shows your unsaved changes. Visitors see only what you save and publish.</p>
+  </section>
+</main>
+
+<dialog class="dialog" id="save-dialog" aria-labelledby="save-title">
+  <form method="dialog" class="dialog__in">
+    <header class="dialog__top"><h2 id="save-title">Save as…</h2><button value="cancel" class="ghost" aria-label="Close">×</button></header>
+    <section class="dialog__part" id="save-disk">
+      <h3>This computer</h3>
+      <p class="help" id="save-disk-help"></p>
+      <button type="button" class="primary" id="save-disk-go">Save to content/galaxy.json</button>
+    </section>
+    <section class="dialog__part">
+      <h3>GitHub</h3>
+      <p class="help">Commits content/galaxy.json to a branch. Committing to <code>main</code> publishes the site within a minute or two; any other branch does not.
+        Use a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> for this repository only, with <b>Contents: read and write</b>.</p>
+      <div class="grid2">
+        <label class="field"><span class="field__l">Repository</span><input id="gh-repo" spellcheck="false" placeholder="owner/name" /></label>
+        <label class="field"><span class="field__l">Branch</span><input id="gh-branch" spellcheck="false" placeholder="main" /></label>
+      </div>
+      <label class="field"><span class="field__l">Commit message</span><input id="gh-message" /></label>
+      <label class="field"><span class="field__l">Token</span><input id="gh-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" /></label>
+      <label class="check"><input type="checkbox" id="gh-remember" /> Remember the token in this browser</label>
+      <p class="help warn" id="gh-main-warn" hidden>This branch is the live site: the commit publishes your changes.</p>
+      <button type="button" class="primary" id="gh-go">Commit</button>
+    </section>
+    <section class="dialog__part">
+      <h3>A file</h3>
+      <p class="help">Download the content to keep or to replace content/galaxy.json yourself, or open a galaxy.json to edit it here.</p>
+      <div class="hrow">
+        <button type="button" id="download">Download galaxy.json</button>
+        <label class="button"><input type="file" id="import" accept=".json,application/json" hidden />Open a file…</label>
+      </div>
+    </section>
+    <p class="dialog__msg" id="save-msg" role="status"></p>
+  </form>
+</dialog>
+
+<script src="../js/schema.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

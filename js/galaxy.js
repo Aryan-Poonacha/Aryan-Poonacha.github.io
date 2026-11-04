@@ -2,10 +2,11 @@
    Three zoom levels on one map: the galaxy (domains as clusters around the core), a cluster (its stars),
    and a star's solar system (its planets, each one part of the project). The sky is WebGL particles;
    stars, orbits and intersections are a 2D canvas; every star and planet is a real link in the DOM,
-   positioned each frame, so hover, focus, deep links (#id) and the index all work. No dependencies. */
-(function () {
+   positioned each frame, so hover, focus, deep links (#id) and the index all work. No dependencies.
+   js/content.js loads the content (content/galaxy.json) and calls startGalaxy with it. */
+window.startGalaxy = function (G) {
   "use strict";
-  var G = window.GALAXY, qs = new URLSearchParams(location.search);
+  var qs = new URLSearchParams(location.search), L = G.site.labels;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches || qs.get("still") === "1";
   var hoverable = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var stage = document.getElementById("stage"), world = document.getElementById("world");
@@ -24,6 +25,21 @@
   function smooth(a, b, x) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
   function ext(url) { return url.indexOf("http") === 0; }
   function linkEl(l, cls) { var a = h("a", cls || null, l[0] + (ext(l[1]) ? " ↗" : "")); a.href = l[1]; if (ext(l[1])) { a.target = "_blank"; a.rel = "noopener"; } return a; }
+  function fill(t, v) { return t.replace(/\{(\w+)\}/g, function (m, k) { return v[k] != null ? v[k] : m; }); }
+  /* card text: [words](address) is a link, **words** bold, *words* italic; the rest is plain text */
+  var RICH = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+  function rich(tag, cls, text) {
+    var el = h(tag, cls), last = 0, m; text = String(text || ""); RICH.lastIndex = 0;
+    while ((m = RICH.exec(text))) {
+      if (m.index > last) el.appendChild(document.createTextNode(text.slice(last, m.index)));
+      if (m[1]) el.appendChild(window.GalaxySchema.safeUrl(m[2]) ? linkEl([m[1], m[2]]) : document.createTextNode(m[1]));
+      else el.appendChild(h(m[3] ? "strong" : "em", null, m[3] || m[4]));
+      last = RICH.lastIndex;
+    }
+    if (last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
+    return el;
+  }
+  function plain(t) { return String(t || "").replace(RICH, function (m, a, u, b, i) { return a || b || i; }); }
 
   /* ---------- the model: clusters, stars, planets ---------- */
   var CORE = "#FFE3B8", KINDS = G.kinds;
@@ -48,12 +64,12 @@
   function pushStar(s) { seq.push(s); s.planets.forEach(function (p) { seq.push(p); }); }
   pushStar(byId[G.core]);
   clusters.forEach(function (c) {
-    c.stars.sort(function (a, b) { return (b.id === c.core) - (a.id === c.core) || b.weight - a.weight || (b.year || 0) - (a.year || 0); });
+    c.stars.sort(function (a, b) { return (b.id === c.core) - (a.id === c.core); }); /* the heart, then the editor's order */
     c.stars.forEach(pushStar);
   });
   seq.forEach(function (b, i) { b.seq = i; });
   function clusterOf(b) { return b.cluster ? clusterById[b.cluster] : null; }
-  function nameOf(b) { var c = clusterOf(b); return c ? c.name : "Core"; }
+  function nameOf(b) { var c = clusterOf(b); return c ? c.name : L.core; }
 
   /* ---------- layout ----------
      each cluster is laid out on its own around its heart, then set on a ring around the core,
@@ -538,7 +554,8 @@
     }
     if (m.image) { var im = h("img"); im.src = m.image; im.alt = ""; im.decoding = "async"; return im; }
     if (m.book) {
-      var bk = h("span", "book"); bk.innerHTML = '<span class="book__spine"></span><span class="book__cover"><span class="book__title">CURE<br>BEREFT</span><span class="book__by">Aryan Poonacha</span></span>';
+      var bk = h("span", "book"), cover = h("span", "book__cover"); bk.appendChild(h("span", "book__spine"));
+      cover.appendChild(h("span", "book__title", (m.bookTitle || "").toUpperCase().split(/\s+/).join("\n"))); cover.appendChild(h("span", "book__by", m.bookAuthor || "")); bk.appendChild(cover);
       var wrap = h("span", "media-book"); wrap.appendChild(bk); return wrap;
     }
     if (m.quote) { var qb = h("blockquote", "media-quote"); qb.appendChild(h("span", "q", "“" + m.quote + "”")); if (m.cite) qb.appendChild(h("span", "label", m.cite)); return qb; }
@@ -552,16 +569,19 @@
     if (media) { fig.appendChild(media); if (media.tagName === "VIDEO") { peekVideo = media; if (!reduced) { var pl = media.play(); if (pl && pl.catch) pl.catch(function () {}); } } if (s.media && s.media.square) fig.classList.add("is-square"); }
     else { var oc = h("canvas", "peek__orbits"); fig.appendChild(oc); orbitPeek = { c: oc, s: s, mode: s.planets.length ? "system" : s.planet ? "planet" : "locator" }; }
     peek.appendChild(fig);
-    var body = h("div", "peek__body");
-    body.appendChild(h("p", "peek__kicker", (s.planet ? s.parent.title : nameOf(s)) + (s.when && s.kind !== "interest" ? " · " + s.when : "")));
-    body.appendChild(h("h3", "peek__title", s.title));
-    if (s.meta && s.meta !== s.when) body.appendChild(h("p", "peek__meta", s.meta));
-    if (s.line) body.appendChild(h("p", "peek__line", s.line));
-    if (s.facts && s.facts[0]) body.appendChild(h("p", "peek__fact", s.facts[0]));
-    if (s.tech) body.appendChild(h("p", "peek__tech", s.tech));
-    if (s.links && s.links.length) { var ln = h("p", "peek__links"); s.links.slice(0, 3).forEach(function (l) { var a = linkEl(l); a.tabIndex = -1; ln.appendChild(a); }); body.appendChild(ln); }
-    var hint = s.planets.length ? "Click to enter its system · " + s.planets.length + " worlds" : s.planet ? "Click to open · part of " + s.parent.title : "Click to open";
-    body.appendChild(h("p", "peek__hint", hint));
+    /* the sections, in the order the content's card layout gives */
+    var body = h("div", "peek__body"), parts = {
+      kicker: function () { body.appendChild(h("p", "peek__kicker", (s.planet ? s.parent.title : nameOf(s)) + (s.when && s.kind !== "interest" ? " · " + s.when : ""))); },
+      title: function () { body.appendChild(h("h3", "peek__title", s.title)); },
+      subtitle: function () { if (s.meta && s.meta !== s.when) body.appendChild(h("p", "peek__meta", s.meta)); },
+      summary: function () { if (s.line) body.appendChild(rich("p", "peek__line", s.line)); },
+      firstParagraph: function () { if (s.facts && s.facts[0]) body.appendChild(rich("p", "peek__fact", s.facts[0])); },
+      builtWith: function () { if (s.tech) body.appendChild(h("p", "peek__tech", s.tech)); },
+      links: function () { if (s.links && s.links.length) { var ln = h("p", "peek__links"); s.links.slice(0, 3).forEach(function (l) { ln.appendChild(linkEl(l)); }); body.appendChild(ln); } },
+      hint: function () { body.appendChild(h("p", "peek__hint", s.planets.length ? fill(L.hoverSystem, { n: s.planets.length }) : s.planet ? fill(L.hoverPlanet, { star: s.parent.title }) : L.hoverStar)); }
+    };
+    G.site.card.hover.forEach(function (k) { if (parts[k]) parts[k](); });
+    body.querySelectorAll("a").forEach(function (a) { a.tabIndex = -1; });
     peek.appendChild(body);
     choosePeekSide(); positionPeek(); peek.setAttribute("data-on", "true");
   }
@@ -618,7 +638,7 @@
       var sx = ox + s.x * k, sy = oy + s.y * k, pulse = reduced ? 0 : (t * 0.6) % 1;
       sun(sx, sy, s.color, 4.5);
       g.strokeStyle = rgba(s.color, 0.8 * (1 - pulse)); g.beginPath(); g.arc(sx, sy, 8 + pulse * 18, 0, 6.283); g.stroke();
-      g.fillStyle = rgba(s.color, 0.95); g.fillText((cl ? cl.name : "Core").toUpperCase(), 14, 16);
+      g.fillStyle = rgba(s.color, 0.95); g.fillText((cl ? cl.name : L.core).toUpperCase(), 14, 16);
       return;
     }
     var host = mode === "planet" ? s.parent : s, list2 = mode === "system", cx = list2 ? w * 0.3 : w * 0.5, cy = hh * 0.52;
@@ -647,47 +667,56 @@
   function open(s, takeFocus) {
     if (!s) return; active = s; hidePeek(true); skipIntro();
     var c = clusterOf(s); card.textContent = ""; card.style.setProperty("--c", s.color);
-    var close = h("button", "card__close", "Close ×"); close.type = "button"; close.addEventListener("click", function () { closeCard(); }); card.appendChild(close);
+    var close = h("button", "card__close", L.close); close.type = "button"; close.addEventListener("click", function () { closeCard(); }); card.appendChild(close);
     var crumbs = h("p", "card__crumbs");
-    var home = h("button", "crumb", "Galaxy"); home.type = "button"; home.addEventListener("click", function () { closeCard(); flyTo(homeView()); }); crumbs.appendChild(home);
+    var home = h("button", "crumb", L.galaxy); home.type = "button"; home.addEventListener("click", function () { closeCard(); flyTo(homeView()); }); crumbs.appendChild(home);
     if (c) { crumbs.appendChild(h("span", "sep", "/")); var cb = h("button", "crumb", c.name); cb.type = "button"; cb.addEventListener("click", function () { closeCard(); flyTo(clusterView(c)); }); crumbs.appendChild(cb); }
     if (s.planet) { crumbs.appendChild(h("span", "sep", "/")); var pa = h("a", "crumb", s.parent.title); pa.href = "#" + s.parent.id; chipBlur(pa); crumbs.appendChild(pa); }
     card.appendChild(crumbs);
-    var media = mediaFor(s, true);
-    if (media) {
-      var fig = h("figure", "card__media" + (s.media.square ? " card__media--square" : "") + (s.media.book ? " card__media--book" : "") + (s.media.quote ? " card__media--quote" : ""));
-      fig.appendChild(media); if (s.media.caption) fig.appendChild(h("figcaption", "label", s.media.caption)); card.appendChild(fig);
-    }
-    card.appendChild(h("p", "card__meta", [KINDS[s.kind], s.kind === "interest" ? "" : s.when, s.meta && s.meta !== s.when ? s.meta : ""].filter(Boolean).join(" · ")));
-    card.appendChild(h("h2", "card__title", s.title));
-    if (s.line) card.appendChild(h("p", "card__lead", s.line));
-    (s.facts || []).forEach(function (p) { card.appendChild(h("p", "card__p", p)); });
-    if (s.tech) { var te = h("p", "card__tech"); te.appendChild(h("span", "label", "Built with")); te.appendChild(h("span", null, s.tech)); card.appendChild(te); }
-    if (s.links && s.links.length) { var ln = h("p", "card__links"); s.links.forEach(function (l, i) { if (i) ln.appendChild(h("span", "sep", "·")); ln.appendChild(linkEl(l)); }); card.appendChild(ln); }
-    var family = s.planet ? s.parent.planets : s.planets;
-    if (family.length) {
-      var sys = h("section", "card__system"), title = s.planet ? "The " + s.parent.title + " system" : "In this system";
-      sys.appendChild(h("h3", "card__label", title + " · " + family.length));
-      var ol = h("ol");
-      family.forEach(function (p) {
-        var li = h("li"), a = h("a", "chip chip--planet" + (p === s ? " is-here" : "")); a.href = "#" + p.id; a.style.setProperty("--c", p.color);
-        a.appendChild(h("span", "t", p.title)); if (p.short) a.appendChild(h("span", "s", p.short));
-        if (p === s) a.setAttribute("aria-current", "true");
-        chipBlur(a); li.appendChild(a); ol.appendChild(li);
-      });
-      sys.appendChild(ol); card.appendChild(sys);
-    }
-    if (s.near.length) {
-      var rel = h("section", "card__near"); rel.appendChild(h("h3", "card__label", "Where it meets"));
-      var wrap = h("p", "card__chips");
-      s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--c", o.color); b.title = nameOf(o); chipBlur(b); wrap.appendChild(b); });
-      rel.appendChild(wrap); card.appendChild(rel);
-    }
-    var step = h("nav", "card__step"), prev = seq[(s.seq - 1 + seq.length) % seq.length], next = seq[(s.seq + 1) % seq.length];
-    step.setAttribute("aria-label", "Previous and next");
-    var pv = h("a", "step step--prev"); pv.href = "#" + prev.id; pv.appendChild(h("span", "label", "← Previous")); pv.appendChild(h("span", "t", prev.title));
-    var nx = h("a", "step step--next"); nx.href = "#" + next.id; nx.appendChild(h("span", "label", "Next →")); nx.appendChild(h("span", "t", next.title));
-    chipBlur(pv); chipBlur(nx); step.appendChild(pv); step.appendChild(nx); card.appendChild(step);
+    /* the sections, in the order the content's card layout gives */
+    var sections = {
+      media: function () {
+        var media = mediaFor(s, true); if (!media) return;
+        var fig = h("figure", "card__media" + (s.media.square ? " card__media--square" : "") + (s.media.book ? " card__media--book" : "") + (s.media.quote ? " card__media--quote" : ""));
+        fig.appendChild(media); if (s.media.caption) fig.appendChild(h("figcaption", "label", s.media.caption)); card.appendChild(fig);
+      },
+      meta: function () { card.appendChild(h("p", "card__meta", [KINDS[s.kind], s.kind === "interest" ? "" : s.when, s.meta && s.meta !== s.when ? s.meta : ""].filter(Boolean).join(" · "))); },
+      title: function () { card.appendChild(h("h2", "card__title", s.title)); },
+      summary: function () { if (s.line) card.appendChild(rich("p", "card__lead", s.line)); },
+      body: function () { (s.facts || []).forEach(function (p) { card.appendChild(rich("p", "card__p", p)); }); },
+      builtWith: function () { if (s.tech) { var te = h("p", "card__tech"); te.appendChild(h("span", "label", L.builtWith)); te.appendChild(h("span", null, s.tech)); card.appendChild(te); } },
+      links: function () { if (s.links && s.links.length) { var ln = h("p", "card__links"); s.links.forEach(function (l, i) { if (i) ln.appendChild(h("span", "sep", "·")); ln.appendChild(linkEl(l)); }); card.appendChild(ln); } },
+      system: function () {
+        var family = s.planet ? s.parent.planets : s.planets;
+        if (!family.length) return;
+        var sys = h("section", "card__system"), title = s.planet ? fill(L.systemOf, { star: s.parent.title }) : L.system;
+        sys.appendChild(h("h3", "card__label", title + " · " + family.length));
+        var ol = h("ol");
+        family.forEach(function (p) {
+          var li = h("li"), a = h("a", "chip chip--planet" + (p === s ? " is-here" : "")); a.href = "#" + p.id; a.style.setProperty("--c", p.color);
+          a.appendChild(h("span", "t", p.title)); if (p.short) a.appendChild(h("span", "s", p.short));
+          if (p === s) a.setAttribute("aria-current", "true");
+          chipBlur(a); li.appendChild(a); ol.appendChild(li);
+        });
+        sys.appendChild(ol); card.appendChild(sys);
+      },
+      connections: function () {
+        if (!s.near.length) return;
+        var rel = h("section", "card__near"); rel.appendChild(h("h3", "card__label", L.near));
+        var wrap = h("p", "card__chips");
+        s.near.forEach(function (o) { var b = h("a", "chip", o.title); b.href = "#" + o.id; b.style.setProperty("--c", o.color); b.title = nameOf(o); chipBlur(b); wrap.appendChild(b); });
+        rel.appendChild(wrap); card.appendChild(rel);
+      },
+      steps: function () {
+        var step = h("nav", "card__step"), prev = seq[(s.seq - 1 + seq.length) % seq.length], next = seq[(s.seq + 1) % seq.length];
+        step.setAttribute("aria-label", "Previous and next");
+        var pv = h("a", "step step--prev"); pv.href = "#" + prev.id; pv.appendChild(h("span", "label", L.previous)); pv.appendChild(h("span", "t", prev.title));
+        var nx = h("a", "step step--next"); nx.href = "#" + next.id; nx.appendChild(h("span", "label", L.next)); nx.appendChild(h("span", "t", next.title));
+        chipBlur(pv); chipBlur(nx); step.appendChild(pv); step.appendChild(nx); card.appendChild(step);
+      }
+    };
+    G.site.card.detail.forEach(function (k) { if (sections[k]) sections[k](); });
+    card.querySelectorAll(".card__lead a, .card__p a").forEach(chipBlur);
     panelFocus(card, true); card.setAttribute("data-on", "true"); card.scrollTop = 0; document.body.setAttribute("data-active", "true");
     if (location.hash !== "#" + s.id) history.replaceState(null, "", "#" + s.id);
     flyTo(viewFor(s), { slow: 0.95 });
@@ -741,8 +770,8 @@
       if (current) b.setAttribute("aria-current", "location");
       b.addEventListener("click", fn); crumbsEl.appendChild(b);
     }
-    crumb("Galaxy", function () { closeCard(); flyTo(homeView()); }, null, !w.c && !w.s);
-    if (w.s && w.s.id === G.core) crumb("Core", function () { closeCard(); flyTo(systemView(w.s)); }, CORE, !w.p);
+    crumb(L.galaxy, function () { closeCard(); flyTo(homeView()); }, null, !w.c && !w.s);
+    if (w.s && w.s.id === G.core) crumb(L.core, function () { closeCard(); flyTo(systemView(w.s)); }, CORE, !w.p);
     if (w.c) crumb(w.c.name, function () { closeCard(); flyTo(clusterView(w.c)); }, w.c.color, !w.s);
     if (w.s && w.s.id !== G.core) crumb(w.s.name || w.s.title, function () { location.hash = w.s.id; }, w.s.color, !w.p);
     if (w.p) crumb(w.p.name || w.p.title, function () { open(w.p, false); }, w.p.color, true);
@@ -786,7 +815,7 @@
   var indexBody = document.getElementById("index-body"), search = document.getElementById("index-search"), filters = document.getElementById("index-filters");
   var sortKey = "map", sortDir = 1, onlyCl = null, rows = {};
   var table = h("table", "tbl"), thead = h("thead"), tbody = h("tbody"), hr = h("tr");
-  [["title", "Name"], ["cluster", "Domain"], ["part", "Part of"], ["year", "When"], ["kind", "Kind"]].forEach(function (col) {
+  [["title", L.colName], ["cluster", L.colDomain], ["part", L.colPart], ["year", L.colWhen], ["kind", L.colKind]].forEach(function (col) {
     var th = h("th"); th.scope = "col"; th.className = "c-" + col[0];
     var b = h("button", "sort", col[1]); b.type = "button"; b.dataset.key = col[0];
     b.addEventListener("click", function () { if (sortKey === col[0]) sortDir = -sortDir; else { sortKey = col[0]; sortDir = col[0] === "year" ? -1 : 1; } renderRows(); });
@@ -812,9 +841,9 @@
       toggleIndex(false, true); if (location.hash === "#" + s.id) open(s, false); else location.hash = s.id;
     });
     rows[s.id] = tr;
-    s.text = [s.title, s.short, s.meta, s.when, s.line, (s.facts || []).join(" "), s.tech, nameOf(s), s.planet ? s.parent.title : "", KINDS[s.kind]].join(" ").toLowerCase();
+    s.text = [s.title, s.short, s.meta, s.when, plain(s.line), plain((s.facts || []).join(" ")), s.tech, nameOf(s), s.planet ? s.parent.title : "", KINDS[s.kind]].join(" ").toLowerCase();
   });
-  var fAll = h("button", "filter is-on", "All"); fAll.type = "button"; fAll.setAttribute("aria-pressed", "true");
+  var fAll = h("button", "filter is-on", L.all); fAll.type = "button"; fAll.setAttribute("aria-pressed", "true");
   fAll.addEventListener("click", function () { onlyCl = null; renderRows(); }); filters.appendChild(fAll);
   clusters.forEach(function (c) {
     var b = h("button", "filter"); b.type = "button"; b.style.setProperty("--c", c.color); b.dataset.cluster = c.id; b.setAttribute("aria-pressed", "false");
@@ -967,7 +996,7 @@
   if (qs.get("hover") && byId[qs.get("hover")]) { skipIntro(); setTimeout(function () { hot = byId[qs.get("hover")]; showPeek(hot); }, 60); }
   var hint = document.getElementById("hint");
   if (hint) {
-    hint.textContent = hoverable ? "Scroll to zoom · drag to move · hover a star · I for the index" : "Pinch to zoom · drag to move · tap a star";
+    hint.textContent = (hoverable ? G.site.hint.pointer : G.site.hint.touch) || "";
     var hideHint = function () { hint.setAttribute("data-on", "false"); }; setTimeout(hideHint, 14000); stage.addEventListener("pointerdown", hideHint, { once: true }); stage.addEventListener("wheel", hideHint, { once: true });
   }
-})();
+};

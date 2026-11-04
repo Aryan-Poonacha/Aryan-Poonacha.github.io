@@ -1,6 +1,7 @@
 # Browser checks
 
-Serve this checkout on loopback port 4187 with `python3 -m http.server 4187 --bind 127.0.0.1`.
+Serve this checkout on loopback port 4187 with `python3 tools/edit.py --port 4187 --no-open --no-backups`
+(the editor's server; `admin.js` needs it to save, and the other checks run on it unchanged).
 `index-keyboard.js` is an async function accepting a Playwright `page`. Run it in an existing
 Playwright environment, or pass its contents to the Playwright browser tool's code runner.
 It returns `ok` and 40 per-case results covering 1280/390 widths and normal/reduced motion.
@@ -42,3 +43,21 @@ choosing a planet's row flies into its system and moves focus into its card.
 
 The earlier keyboard checks above run unchanged against the galaxy: the index, card, `.chip`
 links, `#home-link`, the `I` key and `window.__galaxy().camT` kept their contract.
+
+## The content and the editor
+
+The map reads `content/galaxy.json` through `js/content.js`. `admin.js` (16 cases, 1440 wide) drives the
+editor at `/admin/`. It checks that:
+
+- every card is listed;
+- an edit shows in the preview of the real site, and visitors don't see it;
+- undo restores the edit, IDs stay unique, and an error blocks a save;
+- a save writes `content/galaxy.json`;
+- moving a star to another domain, adding a planet (its ID follows its title), the card layout, and
+  hiding a card all reach the map;
+- the phone preview is 390 wide;
+- unsaved work survives a reload;
+- the site names the problem when the content isn't valid JSON.
+
+It puts `content/galaxy.json` back byte for byte at the end. Breaking the hand-off of the draft to the
+preview fails the five preview cases.
