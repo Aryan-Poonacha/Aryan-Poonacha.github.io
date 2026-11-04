@@ -1,9 +1,9 @@
 /* GitHub is the durable store. Each operation is one commit with an expected parent.
    A rejected ref update never overwrites another device's changes. No build service or secret backend. */
 (function (root, factory) {
-  if (typeof module === "object" && module.exports) module.exports = factory();
-  else root.PortfolioGitHub = factory();
-})(this, function () {
+  if (typeof module === "object" && module.exports) module.exports = factory(require("../js/schema.js"));
+  else root.PortfolioGitHub = factory(root.GalaxySchema);
+})(this, function (schema) {
   "use strict";
   const CONTENT = "content/galaxy.json", RELEASE = "content/release.json";
   function encode(text) {
@@ -27,15 +27,33 @@
     clean(c);
     return c;
   }
+  function galaxyHtml(template, doc) {
+    const site = doc.site || {};
+    const escape = value => String(value || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const title = escape(site.pageTitle || site.name), description = escape(site.description || site.tagline);
+    const image = site.socialImage && schema.safeUrl(site.socialImage) ? escape(new URL(site.socialImage, "https://aryan-poonacha.github.io/").href) : "";
+    const head = [
+      "<!--content-head:start-->", '<meta name="robots" content="index,follow" />', "<title>" + title + "</title>",
+      '<meta name="description" content="' + description + '" />',
+      '<meta property="og:title" content="' + title + '" />',
+      '<meta property="og:description" content="' + description + '" />',
+      '<meta name="twitter:card" content="' + (image ? "summary_large_image" : "summary") + '" />',
+      image ? '<meta property="og:image" content="' + image + '" />' : "",
+      site.socialHandle ? '<meta name="twitter:creator" content="' + escape(site.socialHandle) + '" />' : "",
+      "<!--content-head:end-->"
+    ].join("\n");
+    if (!template.includes("<!--content-head:start-->")) throw new Error("Galaxy template needs a content metadata block.");
+    return template.replace(/<!--content-head:start-->[\s\S]*?<!--content-head:end-->/, head);
+  }
   class Client {
     constructor(config, token, fetcher) {
-      this.config = config; this.token = token; this.fetcher = fetcher || fetch;
+      this.config = config; this.token = token; this.fetcher = fetcher || fetch.bind(globalThis);
       this.api = "https://api.github.com/repos/" + config.repository.split("/").map(encodeURIComponent).join("/");
       this.draft = null; this.live = null;
     }
     async request(path, method, body) {
       const res = await this.fetcher(this.api + path, {
-        method: method || "GET", cache: "no-store",
+        method: method || "GET", cache: "no-store", signal: AbortSignal.timeout(30000),
         headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + this.token,
           "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
         ...(body ? { body: JSON.stringify(body) } : {})
@@ -90,10 +108,10 @@
     }
     async save(text) {
       const next = await this.commit(this.draft, [{ path: CONTENT, mode: "100644", type: "blob", content: text }], "Save portfolio draft");
-      this.draft = await this.snapshotAt(next, CONTENT);
+      this.draft = await this.snapshotAt(next);
       return next.sha;
     }
-    async snapshotAt(next, path) {
+    async snapshotAt(next) {
       // Read by tree SHA rather than branch name, which another device could already have moved.
       const tree = await this.request("/git/trees/" + next.tree + "?recursive=1");
       if (tree.truncated) throw new Error("Repository tree is too large to load safely.");
@@ -117,7 +135,7 @@
     async publish(view, text) {
       if (!["legacy", "galaxy"].includes(view)) throw new Error("Choose legacy or galaxy.");
       // Galaxy releases always use the exact saved draft snapshot, not unsaved form values.
-      if (view === "galaxy" && await this.text(this.draft, CONTENT) !== text) throw new Error("Save this draft before publishing.");
+      if (view === "galaxy" && schema.format(JSON.parse(await this.text(this.draft, CONTENT))) !== schema.format(JSON.parse(text))) throw new Error("Save this draft before publishing.");
       const release = { view, publishedAt: new Date().toISOString(), draftCommit: view === "galaxy" ? this.draft.sha : null };
       const template = this.live.files.get(view + ".html");
       if (!template) throw new Error("The live branch has no " + view + " template. Deploy the admin first.");
@@ -126,6 +144,7 @@
         { path: RELEASE, type: "blob", mode: "100644", content: JSON.stringify(release, null, 2) + "\n" }
       ];
       if (view === "galaxy") {
+        entries[0] = { path: "index.html", type: "blob", mode: "100644", content: galaxyHtml(await this.text(this.live, "galaxy.html"), JSON.parse(text)) };
         entries.push({ path: CONTENT, type: "blob", mode: "100644", content: JSON.stringify(publicContent(JSON.parse(text)), null, 2) + "\n" });
         // Copy immutable media blobs from the saved draft in the same commit as its content.
         this.draft.files.forEach((file, path) => {
@@ -137,5 +156,5 @@
       return { ...release, commit: next.sha };
     }
   }
-  return { Client, encode, decode, publicContent, CONTENT, RELEASE };
+  return { Client, encode, decode, publicContent, galaxyHtml, CONTENT, RELEASE };
 });

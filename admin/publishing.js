@@ -96,6 +96,7 @@
     if (editor.hasRecovery()) { open(); message("Restore or discard the recovered browser changes first.", true); return; }
     if (editor.base() !== cloudText) { open(); message("This browser started from a different draft. Download your copy, then Load cloud draft. No cloud changes were overwritten.", true); return; }
     const text = editor.text();
+    editor.status("Syncing draft…");
     await operation(async () => {
       if (text !== cloudText) await client.save(text);
       cloudText = text; editor.saved(text, "cloud");
@@ -105,12 +106,12 @@
   }
   async function checkLive() {
     try {
-      const r = await fetch(new URL("content/release.json?check=" + Date.now(), editor.site()), { cache: "no-store" });
+      const r = await fetch(new URL("content/release.json?check=" + Date.now(), config.siteUrl), { cache: "no-store" });
       if (!r.ok) throw new Error("Live state unavailable (HTTP " + r.status + ").");
       const out = await r.json();
       if (!["legacy", "galaxy"].includes(out.view)) throw new Error("The live state file is invalid.");
       served = out;
-      $("open-live").href = editor.site() + "?release=" + encodeURIComponent(out.publishedAt || "legacy");
+      $("open-live").href = config.siteUrl + "?release=" + encodeURIComponent(out.publishedAt || "legacy");
       update();
     } catch (e) { $("live-state").textContent = "Live: could not verify"; $("release-state").textContent = "Could not verify live state. " + e.message; }
   }
@@ -178,7 +179,7 @@
       if (!response.ok) throw new Error("Publishing configuration is unavailable.");
       config = await response.json();
       if (!/^[\w.-]+\/[\w.-]+$/.test(config.repository || "")) throw new Error("Invalid repository configuration.");
-      $("token-link").href = "https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&repository_ids=&contents=write&target_name=" + encodeURIComponent(config.repository.split("/")[0]);
+      $("token-link").href = "https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&contents=write&target_name=" + encodeURIComponent(config.repository.split("/")[0]) + "&repository_ids=" + encodeURIComponent(config.repositoryId || "");
       await checkLive(); update();
       const token = readToken();
       if (token) await operation(() => connect(token, localStorage.getItem(REMEMBER) === "yes"));

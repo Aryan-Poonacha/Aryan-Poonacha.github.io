@@ -7,7 +7,19 @@
 
   function draft() { try { var d = localStorage.getItem("galaxy:draft" + (qs.get("editor") ? ":" + qs.get("editor") : "")); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
   function load() {
-    if (qs.get("draft") === "1" && draft()) return Promise.resolve(draft());
+    if (qs.get("draft") === "1") {
+      if (qs.get("editor") && window.parent !== window) return new Promise(function (resolve, reject) {
+        var timer = setTimeout(function () { window.removeEventListener("message", receive); reject(new Error("The draft preview timed out. Reload it from the admin.")); }, 5000);
+        function receive(e) {
+          if (e.origin !== location.origin || e.source !== window.parent || !e.data || e.data.type !== "galaxy-draft") return;
+          clearTimeout(timer); window.removeEventListener("message", receive); resolve(e.data.doc);
+        }
+        window.addEventListener("message", receive);
+        window.parent.postMessage({ type: "galaxy-draft-ready" }, location.origin);
+      });
+      if (draft()) return Promise.resolve(draft());
+      if (qs.get("editor")) return Promise.reject(new Error("This draft preview is no longer available. Open it again from the admin."));
+    }
     return fetch("content/galaxy.json", { cache: "no-cache" }).then(function (r) {
       if (!r.ok) throw new Error("content/galaxy.json: HTTP " + r.status);
       return r.text();
@@ -68,7 +80,7 @@
       kinds: c.kinds || {}, core: core.id, clusters: clusters, stars: stars, edges: edges,
       path: (c.path || []).filter(function (id) { return isBody[id]; }),
       site: {
-        name: site.name || "", tagline: site.tagline || "", intro: site.intro || {}, hint: site.hint || {}, indexTitle: site.indexTitle || "",
+        name: site.name || "", tagline: site.tagline || "", pageTitle: site.pageTitle, description: site.description, socialImage: site.socialImage, socialHandle: site.socialHandle, intro: site.intro || {}, hint: site.hint || {}, indexTitle: site.indexTitle || "",
         links: links(site.links), moreLinks: links(site.moreLinks), labels: labels,
         card: { hover: card.hover || S.HOVER, detail: card.detail || S.DETAIL }
       }
@@ -87,6 +99,11 @@
     });
   }
   function applySite(s) {
+    document.title = s.pageTitle || s.name;
+    function meta(selector, value) { var e = document.querySelector(selector); if (e) e.setAttribute("content", value || ""); }
+    meta('meta[name="description"]', s.description || s.tagline);
+    meta('meta[property="og:title"]', s.pageTitle || s.name);
+    meta('meta[property="og:description"]', s.description || s.tagline);
     text(".brand h1 a", s.name); text(".brand .label", s.tagline);
     text(".intro__name", s.name); text(".intro__kicker", s.intro.kicker); text(".intro__line", s.intro.line);
     text("#index-title", s.indexTitle || "Every star, as a table");

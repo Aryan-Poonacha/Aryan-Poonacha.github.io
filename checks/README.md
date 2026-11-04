@@ -46,7 +46,9 @@ links, `#home-link`, the `I` key and `window.__galaxy().camT` kept their contrac
 
 ## The content and the editor
 
-The map reads `content/galaxy.json` through `js/content.js`. `admin.js` (16 cases, 1440 wide) drives the
+Galaxy checks target `/galaxy.html`; `/` remains the legacy homepage until a deliberate release.
+
+The map reads `content/galaxy.json` through `js/content.js`. `admin.js` (21 cases, 1440 wide) drives the
 editor at `/admin/`. It checks that:
 
 - every card is listed;
@@ -61,3 +63,29 @@ editor at `/admin/`. It checks that:
 
 It puts `content/galaxy.json` back byte for byte at the end. Breaking the hand-off of the draft to the
 preview fails the five preview cases.
+
+
+## Drafts and publication
+
+`publishing.js` adds 23 hosted-admin browser cases. It uses an isolated GitHub API fixture with
+immutable trees, commits, blobs and guarded ref updates. It covers separate draft initialization,
+cross-device sync, stale saves, two-tab recovery, upload/create/duplicate/delete, typing during
+saving, reload recovery, failed publication, media and page metadata, editor-note stripping,
+served-versus-queued release status, Legacy restoration, disconnect, token expiry and phone layout.
+No fixture calls reach GitHub or production.
+
+Run `python3 tools/check-deploy.py` for three local-Git checks of deployment preservation,
+idempotency and exclusion of the removed CV PDF and editor notes. It leaves its isolated fixture
+under `~/.local/share/device-agent/work/portfolio-deploy-proof-*`.
+
+The opt-in real protocol proof uses the existing owning GitHub sign-in:
+
+```sh
+PORTFOLIO_API_PROOF=1 node tools/check-publishing-api.cjs
+```
+
+It makes two uniquely named `admin-proof-*` branches, exercises eight cases against the real
+GitHub API, and removes its branches in `finally`. It never writes the actual publishing branches,
+`main`, Pages settings or production. It proves first-run normalization, actual non-fast-forward
+rejection, unsaved-publication refusal, atomic content/media/metadata release, editor-note stripping
+and Legacy restoration. It needs Node 20+ and authenticated `gh` with repository write access.

@@ -7,7 +7,7 @@
 })(this, function () {
   "use strict";
   var TOP = ["site", "kinds", "path", "core", "domains", "connections"];
-  var SITE = ["name", "tagline", "intro", "hint", "links", "moreLinks", "indexTitle", "labels", "card"];
+  var SITE = ["name", "tagline", "pageTitle", "description", "socialImage", "socialHandle", "intro", "hint", "links", "moreLinks", "indexTitle", "labels", "card"];
   var DOMAIN = ["id", "name", "color", "angle", "heart", "blurb", "hidden", "notes", "stars"];
   var BODY = ["id", "kind", "title", "mapLabel", "mapNote", "when", "year", "subtitle", "size", "summary", "body", "builtWith",
     "media", "links", "reviewed", "hidden", "notes", "planets"];

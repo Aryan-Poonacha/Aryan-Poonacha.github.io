@@ -8,8 +8,12 @@
   var PREVIEW = new URL("galaxy.html", SITE).href;
   var P = window.PortfolioPublishing;
   var draftId = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
-  var KEY = { work: "galaxy:admin:work", draft: "galaxy:draft", ui: "galaxy:admin:ui", gh: "galaxy:admin:github", token: "galaxy:admin:token" };
-  var DEFAULT_REPO = /\.github\.io$/.test(location.hostname) ? location.hostname.split(".")[0] + "/" + location.hostname : "Aryan-Poonacha/Aryan-Poonacha.github.io";
+  try {
+    draftId = sessionStorage.getItem("galaxy:admin:preview-id") || draftId;
+    sessionStorage.setItem("galaxy:admin:preview-id", draftId);
+  } catch (e) { /* the iframe still receives drafts by message */ }
+  window.addEventListener("pagehide", function () { store(KEY.draft + ":" + draftId, undefined); });
+  var KEY = { work: "galaxy:admin:work:" + draftId, draft: "galaxy:draft", ui: "galaxy:admin:ui" };
   var CORE_COLOR = "#FFE3B8";
 
   /* ---------- small helpers ---------- */
@@ -34,7 +38,7 @@
     if (Array.isArray(c)) c.forEach(function (x) { add(e, x); });
     else e.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
   }
-  function store(k, v) { try { if (v === undefined) localStorage.removeItem(k); else localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); } catch (e) { /* full or blocked */ } }
+  function store(k, v) { try { if (v === undefined) localStorage.removeItem(k); else localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); return true; } catch (e) { return false; } }
   function stored(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
   function debounce(fn, ms) { var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); }; }
   function hashText(t) { var x = 2166136261; for (var i = 0; i < t.length; i++) { x ^= t.charCodeAt(i); x = Math.imul(x, 16777619); } return (x >>> 0).toString(36); }
@@ -89,7 +93,9 @@
     if (!doc) return;
     var text = S.format(doc);
     if (text === baseText) store(KEY.work, undefined);
-    else store(KEY.work, { at: Date.now(), base: hashText(baseText), doc: doc, savedVia: text === savedText ? savedVia : "" });
+    else if (!store(KEY.work, { at: Date.now(), base: hashText(baseText), doc: doc, savedVia: text === savedText ? savedVia : "" })) {
+      setStatus("Browser recovery storage unavailable. Save draft to keep these changes.", true);
+    }
   }
   var autosave = debounce(keepWork, 250);
 
@@ -740,6 +746,12 @@
       field("intro.line", "Opening line", "Under the name in the opening.", text(s.intro, "line", { rows: 2 })),
       el("div", { class: "grid2" }, field("hint.pointer", "Hint with a mouse", "Bottom right for a while.", text(s.hint, "pointer")), field("hint.touch", "Hint on touch screens", null, text(s.hint, "touch")))
     ]));
+    edit.appendChild(part("Page and sharing", "Applied to the published page and search/link previews.", [
+      field("pageTitle", "Page title", "Browser tab and link title. Empty uses your name.", text(s, "pageTitle")),
+      field("description", "Page description", "Search and link preview. Empty uses your tagline.", text(s, "description", { rows: 3 })),
+      field("socialImage", "Sharing image", "An image URL or assets/media/ path.", text(s, "socialImage")),
+      field("socialHandle", "Social handle", "Optional, e.g. @aryan_poonacha.", text(s, "socialHandle"))
+    ]));
     edit.appendChild(part("Links", null, [
       field("links", "Elsewhere", "Top right of the map, and at the foot of the table.", linksEditor(s, "links")),
       field("moreLinks", "More, in the table only", "Extra links at the foot of the table.", linksEditor(s, "moreLinks"))
@@ -868,6 +880,10 @@
 
   /* ---------- the preview: the real site, reading the draft ---------- */
   var frame = $("frame"), stage = $("preview-stage"), shown = { draft: null, query: null }, version = 0;
+  window.addEventListener("message", function (e) {
+    if (!doc || e.origin !== location.origin || e.source !== frame.contentWindow || !e.data || e.data.type !== "galaxy-draft-ready") return;
+    e.source.postMessage({ type: "galaxy-draft", doc: P ? P.previewDoc(doc) : doc }, location.origin);
+  });
   function target() {
     var q = "", hash = "";
     if (sel.type === "body") {
@@ -979,7 +995,7 @@
     else if (mod && k === "z" && !inField(e.target)) { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
     else if (mod && k === "y" && !inField(e.target)) { e.preventDefault(); redo(); }
   });
-  window.addEventListener("beforeunload", function (e) { if (doc && S.format(doc) !== savedText) { e.preventDefault(); e.returnValue = ""; } });
+  window.addEventListener("beforeunload", function (e) { keepWork(); if (doc && S.format(doc) !== savedText) { e.preventDefault(); e.returnValue = ""; } });
 
   /* ---------- start ---------- */
   function banner(msg, actions) {
@@ -998,7 +1014,16 @@
   function start(t) {
     doc = ensureShape(JSON.parse(t));
     baseText = savedText = S.format(doc);
-    var work = stored(KEY.work);
+    var work = stored(KEY.work) || stored("galaxy:admin:work");
+    if (!work) {
+      // A closed tab's unsaved work can still be recovered from another device tab here.
+      try {
+        Object.keys(localStorage).filter(function (k) { return k.indexOf("galaxy:admin:work:") === 0; }).forEach(function (k) {
+          var candidate = stored(k);
+          if (candidate && candidate.doc && (!work || candidate.at > work.at)) work = candidate;
+        });
+      } catch (e) { /* storage unavailable; cloud editing still works */ }
+    }
     if (work && work.doc) {
       var wt = S.format(ensureShape(work.doc));
       if (wt === baseText) store(KEY.work, undefined);

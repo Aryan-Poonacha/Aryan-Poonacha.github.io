@@ -8,6 +8,7 @@ published content, release metadata and uploaded media. Concurrent releases reje
 """
 import argparse
 import json
+import re
 import subprocess
 
 
@@ -90,6 +91,15 @@ def main():
     if release["view"] not in ("legacy", "galaxy"):
         raise SystemExit("Invalid live view; refusing deployment")
     output["index.html"] = output[release["view"] + ".html"]
+    if release["view"] == "galaxy" and previous:
+        # Retain the metadata approved in the last release while updating the renderer.
+        old_page = git("cat-file", "blob", previous["index.html"][1]).decode()
+        head = re.search(r"<!--content-head:start-->[\s\S]*?<!--content-head:end-->", old_page)
+        if not head:
+            raise SystemExit("Published galaxy metadata is missing; refusing deployment")
+        new_page = git("cat-file", "blob", output["galaxy.html"][1]).decode()
+        new_page = re.sub(r"<!--content-head:start-->[\s\S]*?<!--content-head:end-->", lambda _: head.group(), new_page)
+        output["index.html"] = blob(new_page)
     tree = make_tree(output)
     if parent and git("rev-parse", parent + "^{tree}").decode().strip() == tree:
         print("Already deployed; selected live view: " + release["view"])

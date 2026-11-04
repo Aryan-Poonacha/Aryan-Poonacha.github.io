@@ -3,19 +3,57 @@
 Everything the site says lives in one file, `content/galaxy.json`. The editor at `/admin/` edits it
 with a live preview of the real site. You can also edit the file by hand.
 
-## Start the editor
+## Edit from any device
+
+Open [the admin](https://aryan-poonacha.github.io/admin/). **Publish & live state** connects your
+GitHub repository token (Contents: read and write, this repository only). A password manager can
+keep the token across devices. Remember sign-in only on a trusted device; Disconnect removes it.
+The public admin cannot write anything without a token authorized to edit the repository.
+
+1. Connect GitHub. The editor loads the latest **cloud draft**.
+2. Edit the cards, domains, organisation, site text, card sections and page/share metadata.
+   Add, duplicate, delete or move cards with buttons or drag and drop. Undo restores deletions.
+3. **Save draft** / Ctrl+S syncs to `portfolio-drafts`. It never changes the live branch.
+4. Preview the real galaxy beside the form, as a map, hover card or detail card; choose phone
+   or desktop. **Legacy preview** opens the original site. The preview includes draft uploads.
+5. When ready, open **Publish & live state**, choose Galaxy, tick that you checked the preview,
+   and publish. Unsaved changes and content errors block galaxy publication.
+6. Check live state after deployment. A queued release is shown separately from what the public
+   website actually serves. Choose Legacy and publish to switch back while keeping galaxy work.
+
+Draft content and uploads live in GitHub, so another device can load them. Every save is a commit;
+old versions remain in Git history. If two devices edit the same starting version, the second save
+is refused rather than overwriting the first. Download its browser copy, then **Load cloud draft**;
+Undo also keeps the local version you replaced. Browser-only edits have per-tab recovery and a
+restore banner after reload. Save draft before moving between devices.
+
+Uploads use immutable names, so replacing a video cannot alter a published video. A release changes
+the homepage, content, media and release state in **one commit**. Publishing never writes `main`.
+The `portfolio-live` branch serves GitHub Pages. Deployment usually takes a minute or two.
+The initial homepage is the original legacy HTML, byte for byte. `galaxy.html` is the preview engine.
+
+This repository is public: draft JSON and uploads on its branches are **not private**. Editor notes
+and review flags are removed from published galaxy JSON, but remain in repository draft history.
+The admin's access control is GitHub's token permission, not a hidden URL. Drafts are excluded from
+the default homepage until explicitly published.
+
+## Local editing and maintenance
 
 ```sh
 python3 tools/edit.py
 ```
 
-This opens `http://127.0.0.1:4000/admin/`. Saves (Save or Ctrl+S) go straight into this checkout's
-`content/galaxy.json`, and the previous version is copied to `content/.backups/`, which git ignores.
-Commit and push with git when you are ready. Nothing in the editor publishes the site.
+Without GitHub connected, Save writes `content/galaxy.json` in this checkout and keeps up to
+50 earlier copies in ignored `content/.backups/`. Local saves do not change production. Connected
+local editing uses cloud drafts, just like the hosted admin. Live status always checks production.
+**Save as…** downloads JSON or imports a file. The legacy homepage is a preserved snapshot;
+content editing and preview apply to the galaxy.
 
-On the published site, `/admin/` can also commit to GitHub through **Save as…**. That needs a
-fine-grained token for this repository with Contents: read and write. A commit to `main` publishes the
-site; a commit to any other branch does not.
+After verified code changes, `python3 tools/deploy.py --push` updates only `portfolio-live`,
+preserving the selected view, published content, share metadata, and uploaded media. Without
+`--push` it prints an inspectable commit. A concurrent release rejects deployment rather than
+losing it. `main` and `portfolio-drafts` are not changed by this tool. The first deployment excludes
+the removed CV PDF. Pages is configured to serve `portfolio-live` at `/`.
 
 ## How the content is organised
 
@@ -49,7 +87,7 @@ A star or planet has these fields. Only `id` and `title` are required:
 | `links` | `{ "label", "url" }` items. The first three also show on hover |
 | `reviewed` | Your own tick, for working through the cards. Not shown on the site |
 | `hidden` | Keeps the card off the site without deleting it |
-| `notes` | Private notes. Never shown |
+| `notes` | Editor notes, removed from published JSON; readable in repository history |
 
 In `summary` and `body`, `[words](https://…)` makes a link, `**words**` is bold and `*words*` is
 italic. Media files go in `assets/media/`. The editor can upload them and can make a video's poster
@@ -59,4 +97,4 @@ from one of its frames.
 
 The file is plain JSON. After a hand edit, open the site. If the JSON is broken, the site says so
 and names the problem. The editor re-saves in the same layout, so diffs stay small.
-The page title, the search description and the link-preview image are in `index.html`'s `<head>`.
+The page title, description, sharing image and social handle are editable under Site text & card layout → Page and sharing. Publication writes them into the HTML head too.

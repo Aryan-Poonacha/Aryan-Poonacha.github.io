@@ -123,7 +123,7 @@ async (page) => {
     await page.keyboard.press('Control+s'); await page.waitForTimeout(200);
     await page.keyboard.type(' Then more.');
     await page.waitForTimeout(2600);
-    const work = await page.evaluate(() => { const w = JSON.parse(localStorage.getItem('galaxy:admin:work') || 'null'); return w && w.doc.domains.find((d) => d.id === 'ventures').stars.find((x) => x.id === 'voitheia').summary; });
+    const work = await page.evaluate(() => { const w = JSON.parse(localStorage.getItem('galaxy:admin:work:' + sessionStorage.getItem('galaxy:admin:preview-id')) || 'null'); return w && w.doc.domains.find((d) => d.id === 'ventures').stars.find((x) => x.id === 'voitheia').summary; });
     rec('edits-during-save-are-kept', work === 'First version. Then more.' && /Unsaved changes/.test(await status()), { work, status: await status() });
     await putText(original); await page.evaluate(() => localStorage.clear()); await page.goto(base + 'admin/'); await until(() => page.locator('#tree .row--domain').count());
 
