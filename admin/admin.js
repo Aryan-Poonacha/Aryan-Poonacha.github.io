@@ -474,7 +474,13 @@
         setStatus("Uploaded " + path + " but not attached: the card or media changed. Paste this path into the file field to use it.", true);
         return;
       }
+      var active = document.activeElement, controls = edit.querySelectorAll("input, textarea, select");
+      var focusAt = Array.prototype.indexOf.call(controls, active), start = active.selectionStart, end = active.selectionEnd, direction = active.selectionDirection;
       before(); m[target.key] = path; setStatus(message + path); changed(true);
+      if (focusAt >= 0) {
+        var replacement = edit.querySelectorAll("input, textarea, select")[focusAt];
+        if (replacement) { replacement.focus({ preventScroll: true }); if (typeof start === "number") replacement.setSelectionRange(start, end, direction); }
+      }
     }
     function fileRow(m, key, title, help, accept) {
       var input = text(m, key, { code: true, placeholder: "assets/media/name" + (accept.indexOf("video") >= 0 ? ".mp4" : ".webp"), list: "media-files", onInput: function () { drawPreview(); } });

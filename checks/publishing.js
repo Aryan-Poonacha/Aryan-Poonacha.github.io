@@ -151,9 +151,13 @@ async (page) => {
   await page.locator('#edit [data-field="media.src"] input[type="file"]').setInputFiles({ name: 'undo-upload.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=', 'base64') });
   for (let i = 0; i < 80 && !delayResolve; i++) await page.waitForTimeout(50);
   if (!delayResolve) throw new Error('Upload did not reach delayed ref update');
-  await page.locator('#undo').click(); delayResolve(); delayResolve = null;
+  await page.locator('#undo').click();
+  await summary(page).fill('Continue editing while the upload finishes.');
+  await page.keyboard.press('Home'); for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowRight');
+  delayResolve(); delayResolve = null;
   await wait(page, () => /Uploaded assets/.test(document.querySelector('#status').textContent) && !window.PortfolioPublishing.busy());
   rec('undo-during-upload-keeps-current-document-attachment', await imageInput().inputValue() !== imagePath && !(await summary(page).inputValue()).includes('Undo this unrelated'));
+  rec('upload-completion-preserves-typing-focus-and-caret', await summary(page).evaluate(e => document.activeElement === e && e.selectionStart === 4 && e.selectionEnd === 4 && e.value === 'Continue editing while the upload finishes.'));
   await page.locator('#undo').click();
   rec('uploaded-attachment-is-undoable', await imageInput().inputValue() === imagePath);
   delaySave = true; delayResolve = null;
