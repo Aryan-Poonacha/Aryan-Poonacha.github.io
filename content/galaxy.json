@@ -1,0 +1,1787 @@
+{
+  "site": {
+    "name": "Aryan Poonacha",
+    "tagline": "AI engineer · writer · game-maker",
+    "intro": {
+      "kicker": "A map of everything, since 2016",
+      "line": "AI engineer in San Francisco. A novel at fifteen. Games, research and ventures in between."
+    },
+    "hint": {
+      "pointer": "Scroll to zoom · drag to move · hover a star · I for the index",
+      "touch": "Pinch to zoom · drag to move · tap a star"
+    },
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/Aryan-Poonacha"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/aryan_poonacha"
+      },
+      {
+        "label": "Bluesky",
+        "url": "https://bsky.app/profile/aryan-poonacha.bsky.social"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/aryanpoonacha/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@aryanpoonacha1662"
+      },
+      {
+        "label": "Email",
+        "url": "mailto:aryanpoonacha01@gmail.com"
+      },
+      {
+        "label": "CV",
+        "url": "assets/Aryan-Poonacha-Resume.pdf"
+      }
+    ],
+    "moreLinks": [
+      {
+        "label": "tomex.ai",
+        "url": "https://tomex.ai"
+      },
+      {
+        "label": "lightfield.com",
+        "url": "https://lightfield.com"
+      },
+      {
+        "label": "empire-earth.pages.dev",
+        "url": "https://empire-earth.pages.dev/"
+      }
+    ],
+    "indexTitle": "Every star, as a table",
+    "labels": {
+      "galaxy": "Galaxy",
+      "core": "Core",
+      "close": "Close ×",
+      "system": "In this system",
+      "systemOf": "The {star} system",
+      "near": "Where it meets",
+      "builtWith": "Built with",
+      "previous": "← Previous",
+      "next": "Next →",
+      "hoverSystem": "Click to enter its system · {n} worlds",
+      "hoverPlanet": "Click to open · part of {star}",
+      "hoverStar": "Click to open",
+      "colName": "Name",
+      "colDomain": "Domain",
+      "colPart": "Part of",
+      "colWhen": "When",
+      "colKind": "Kind",
+      "all": "All",
+      "mapOrder": "Map order",
+      "find": "Find",
+      "findPlaceholder": "A project, a year, a tool…"
+    },
+    "card": {
+      "hover": [
+        "kicker",
+        "title",
+        "subtitle",
+        "summary",
+        "firstParagraph",
+        "builtWith",
+        "links",
+        "hint"
+      ],
+      "detail": [
+        "media",
+        "meta",
+        "title",
+        "summary",
+        "body",
+        "builtWith",
+        "links",
+        "system",
+        "connections",
+        "steps"
+      ]
+    }
+  },
+  "kinds": {
+    "place": "Place",
+    "degree": "Degree",
+    "role": "Role",
+    "work": "Project",
+    "book": "Book",
+    "column": "Column",
+    "note": "Note",
+    "award": "Award",
+    "venture": "Venture",
+    "interest": "Interest",
+    "part": "Part"
+  },
+  "path": [
+    "meng",
+    "lightfield",
+    "tomex"
+  ],
+  "core": {
+    "id": "me",
+    "kind": "place",
+    "title": "Aryan Poonacha",
+    "mapNote": "Bangalore → San Francisco",
+    "subtitle": "AI engineer · Bangalore · Kunshan · Durham · San Francisco",
+    "size": 5,
+    "summary": "AI engineer in San Francisco. A science-fiction novel at fifteen; games, research and ventures along the way.",
+    "body": [
+      "Grew up in Bangalore. Dual-degree B.Sc. in Data Science at Duke University and Duke Kunshan University, 2019–2023. M.Eng. in Artificial Intelligence at Duke, 2023–2024.",
+      "San Francisco since 2025: founding AI product engineer at Lightfield, then founding AI engineer at Tomex."
+    ],
+    "media": {
+      "type": "image",
+      "src": "assets/portrait.webp",
+      "square": true
+    },
+    "links": [
+      {
+        "label": "Email",
+        "url": "mailto:aryanpoonacha01@gmail.com"
+      },
+      {
+        "label": "CV",
+        "url": "assets/Aryan-Poonacha-Resume.pdf"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/Aryan-Poonacha"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/aryanpoonacha/"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/aryan_poonacha"
+      },
+      {
+        "label": "Bluesky",
+        "url": "https://bsky.app/profile/aryan-poonacha.bsky.social"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@aryanpoonacha1662"
+      }
+    ],
+    "planets": [
+      {
+        "id": "bangalore",
+        "kind": "place",
+        "title": "Bangalore",
+        "mapNote": "Until 2019",
+        "when": "Until 2019",
+        "year": 2016,
+        "subtitle": "Home",
+        "summary": "Grew up here. The first websites, the first games and the first book, 2016–2017.",
+        "body": [
+          "Freelance web development, 2017–2019, and an internship at Acuizen."
+        ]
+      },
+      {
+        "id": "kunshan",
+        "kind": "place",
+        "title": "Duke Kunshan University",
+        "mapLabel": "Duke Kunshan",
+        "mapNote": "2019 – 2023",
+        "when": "2019 – 2023",
+        "year": 2019,
+        "subtitle": "Kunshan, China, and Durham",
+        "summary": "B.Sc. in Data Science, a dual degree with Duke University.",
+        "body": [
+          "Research assistant under Prof. Andrew MacDonald."
+        ]
+      },
+      {
+        "id": "duke",
+        "kind": "place",
+        "title": "Duke University",
+        "mapNote": "Durham",
+        "when": "2019 – 2024",
+        "year": 2023,
+        "subtitle": "Durham, North Carolina",
+        "summary": "The Duke half of the dual degree, then the M.Eng. in Artificial Intelligence at the Pratt School of Engineering.",
+        "body": [
+          "Research assistant at the Borsuk lab (an object-detection CNN), on the EdTech team, and under Dr. Nick Carnes; Data+ and Bass Connections research programmes."
+        ]
+      },
+      {
+        "id": "sf",
+        "kind": "place",
+        "title": "San Francisco",
+        "mapNote": "2025 – now",
+        "when": "2025 – now",
+        "year": 2025,
+        "subtitle": "Two founding seats",
+        "summary": "Lightfield, then Tomex."
+      },
+      {
+        "id": "crax",
+        "kind": "place",
+        "title": "A Crax ad",
+        "mapNote": "Childhood",
+        "when": "Childhood",
+        "subtitle": "Television",
+        "summary": "A childhood modelling job: one commercial for Crax."
+      }
+    ]
+  },
+  "domains": [
+    {
+      "id": "ai",
+      "name": "AI career",
+      "color": "#F2A541",
+      "angle": -62,
+      "heart": "meng",
+      "blurb": "A master’s in AI at Duke, then two founding seats in San Francisco: Lightfield, then Tomex.",
+      "stars": [
+        {
+          "id": "meng",
+          "kind": "degree",
+          "title": "M.Eng. in Artificial Intelligence",
+          "mapLabel": "M.Eng. in AI",
+          "mapNote": "Duke · 2023 – 2024",
+          "when": "August 2023 – December 2024",
+          "year": 2024,
+          "subtitle": "Duke University · Pratt School of Engineering",
+          "size": 5,
+          "summary": "The master’s at the centre of the career: large language models, deep learning, and the projects and internships around them.",
+          "body": [
+            "Course and consulting projects: a retrieval-augmented chatbot for the programme (AI-590), a quantization workbench (AI-540), LLM fine-tuning, ScriptScouts for Duke Engineering Consulting, and a wiki-to-chatbot pipeline.",
+            "Alongside it: product work at Origin AI, then the core agentic LLM flow at Demandly."
+          ],
+          "links": [
+            {
+              "label": "CV",
+              "url": "assets/Aryan-Poonacha-Resume.pdf"
+            }
+          ],
+          "planets": [
+            {
+              "id": "dukechat",
+              "kind": "work",
+              "title": "Duke AI chatbot",
+              "mapNote": "RAG · AI-590",
+              "when": "Spring 2024",
+              "year": 2024,
+              "subtitle": "AI-590 Large Language Models, final project",
+              "summary": "A chatbot that answers questions about the Duke M.Eng. AI programme.",
+              "body": [
+                "Retrieval-augmented generation over a vector database, deployed as a proof of concept for the programme."
+              ],
+              "builtWith": "LLMs, RAG, vector database, Streamlit",
+              "media": {
+                "type": "video",
+                "src": "assets/media/dukeaichat.mp4",
+                "poster": "assets/media/dukeaichat.webp"
+              },
+              "links": [
+                {
+                  "label": "Chat",
+                  "url": "https://dukeaichat.streamlit.app/"
+                },
+                {
+                  "label": "Code",
+                  "url": "https://github.com/Aryan-Poonacha/duke-ai-chatbot"
+                }
+              ]
+            },
+            {
+              "id": "wikichat",
+              "kind": "work",
+              "title": "Wiki-to-chatbot pipeline",
+              "mapLabel": "Wiki-to-chatbot",
+              "mapNote": "Any wiki, a chatbot",
+              "when": "2024",
+              "year": 2024,
+              "subtitle": "Duke",
+              "summary": "Any wiki becomes a chatbot with its own knowledge base.",
+              "body": [
+                "A productionisable data pipeline that turns a wiki into a custom knowledge base for a retrieval-augmented chatbot; demoed on a video-game wiki."
+              ],
+              "builtWith": "LLMs, custom knowledge base, data pipeline",
+              "media": {
+                "type": "video",
+                "src": "assets/media/yakuza.mp4",
+                "poster": "assets/media/yakuza.webp"
+              },
+              "links": [
+                {
+                  "label": "Chat",
+                  "url": "https://yakuza.streamlit.app/"
+                },
+                {
+                  "label": "Code",
+                  "url": "https://github.com/Aryan-Poonacha/wiki_llm_chatbot"
+                }
+              ]
+            },
+            {
+              "id": "scriptscouts",
+              "kind": "work",
+              "title": "ScriptScouts",
+              "mapNote": "Self-healing scrapers",
+              "when": "Spring 2024",
+              "year": 2024,
+              "subtitle": "Duke Engineering Consulting · private",
+              "summary": "LLM-monitored web scraping that keeps working when the page changes.",
+              "body": [
+                "A self-adjusting API that scrapes dynamic drug prices into JSON, with LLMs monitoring and maintaining the scripts against changing content; pricing-data accuracy uptime improved two to three times."
+              ]
+            },
+            {
+              "id": "quantbench",
+              "kind": "work",
+              "title": "Quantization workbench",
+              "mapLabel": "Quantization workbench",
+              "mapNote": "AI-540",
+              "when": "Spring 2024",
+              "year": 2024,
+              "subtitle": "AI-540 Deep Learning Applications, final project",
+              "summary": "A workbench to benchmark and compare quantized versions of an LLM side by side.",
+              "links": [
+                {
+                  "label": "Code",
+                  "url": "https://github.com/rishabhshah13/quantization-workbench"
+                }
+              ]
+            },
+            {
+              "id": "llmtuning",
+              "kind": "work",
+              "title": "LLM fine-tuning",
+              "mapNote": "Domain tuning",
+              "when": "March 2024",
+              "year": 2024,
+              "subtitle": "Duke",
+              "summary": "Fine-tuning an LLM for a specific knowledge domain, then comparing it with the base model.",
+              "links": [
+                {
+                  "label": "Code",
+                  "url": "https://github.com/Aryan-Poonacha/llm_tuning"
+                }
+              ]
+            },
+            {
+              "id": "origin",
+              "kind": "role",
+              "title": "Origin AI",
+              "mapNote": "Product intern",
+              "when": "January – May 2024",
+              "year": 2024,
+              "subtitle": "Product Intern · Durham",
+              "summary": "Customer interviews and company data, turned into go-to-market recommendations for new products."
+            },
+            {
+              "id": "demandly",
+              "kind": "role",
+              "title": "Demandly",
+              "mapNote": "AI engineer intern",
+              "when": "May – December 2024",
+              "year": 2024,
+              "subtitle": "AI Engineer Intern · remote",
+              "summary": "Architected the core agentic LLM flow.",
+              "body": [
+                "A custom fine-tuned model with context construction through retrieval and external APIs."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "tomex",
+          "kind": "role",
+          "title": "Tomex",
+          "mapNote": "Founding AI engineer · now",
+          "when": "March 2026 – now",
+          "year": 2026,
+          "subtitle": "Founding AI Engineer · San Francisco",
+          "size": 5,
+          "summary": "AI cost control for the real economy. The agentic chat application, the integrations across the product, and the infrastructure that lets agents build safely.",
+          "body": [
+            "Designed, built, led and owned product surfaces: the agentic chat application and cross-product integrations.",
+            "Built the engineering infrastructure around agents: independent sandbox environments where agents test their code changes, an in-house pull-request review bot tuned to the production codebase, and CI/CD optimisations."
+          ],
+          "media": {
+            "type": "video",
+            "src": "assets/media/tomex.mp4",
+            "poster": "assets/media/tomex.webp",
+            "caption": "tomex.ai, November 2026"
+          },
+          "links": [
+            {
+              "label": "tomex.ai",
+              "url": "https://tomex.ai"
+            }
+          ],
+          "planets": [
+            {
+              "id": "tx-product",
+              "kind": "part",
+              "title": "Margin in supplier spend",
+              "mapNote": "The product",
+              "summary": "Tomex connects contracts, POs, invoices and supplier data into a living model of the supply base; AI agents validate costs and stop value leaking.",
+              "links": [
+                {
+                  "label": "tomex.ai",
+                  "url": "https://tomex.ai"
+                }
+              ]
+            },
+            {
+              "id": "tx-chat",
+              "kind": "part",
+              "title": "The agentic chat",
+              "mapNote": "Product surface",
+              "summary": "Designed, built, led and owned the AI agentic chat application."
+            },
+            {
+              "id": "tx-integrations",
+              "kind": "part",
+              "title": "Cross-product integrations",
+              "mapNote": "Product surface",
+              "summary": "Designed, built and owned the integrations that run across the product."
+            },
+            {
+              "id": "tx-sandbox",
+              "kind": "part",
+              "title": "Sandboxes for agents",
+              "mapNote": "Infrastructure",
+              "summary": "Dedicated, independent sandbox environments where agents test their changes to code."
+            },
+            {
+              "id": "tx-review",
+              "kind": "part",
+              "title": "The review bot",
+              "mapNote": "Infrastructure",
+              "summary": "An in-house pull-request review bot, customised to the production codebase."
+            },
+            {
+              "id": "tx-culture",
+              "kind": "part",
+              "title": "CI/CD and culture",
+              "mapNote": "Engineering",
+              "summary": "CI/CD optimisations, AI and engineering infrastructure adoption, and establishing and guiding the engineering culture."
+            }
+          ]
+        },
+        {
+          "id": "lightfield",
+          "kind": "role",
+          "title": "Lightfield",
+          "mapNote": "Founding AI product engineer",
+          "when": "February 2025 – March 2026",
+          "year": 2025,
+          "subtitle": "Founding AI Product Engineer · San Francisco",
+          "size": 5,
+          "summary": "An AI-native CRM from the team behind Tome, with an agent that lives inside the product.",
+          "body": [
+            "The first job after the master’s: full-stack product engineering and the agent at the centre of the product, with no PMs between engineering and customers."
+          ],
+          "builtWith": "React, TypeScript, GraphQL, shadcn, Tailwind; tool calling, vector databases, RAG",
+          "media": {
+            "type": "video",
+            "src": "assets/media/lightfield.mp4",
+            "poster": "assets/media/lightfield.webp",
+            "caption": "lightfield.com, November 2026"
+          },
+          "links": [
+            {
+              "label": "lightfield.com",
+              "url": "https://lightfield.com"
+            }
+          ],
+          "planets": [
+            {
+              "id": "lf-agent",
+              "kind": "part",
+              "title": "The agent in the product",
+              "mapNote": "Context engineering",
+              "summary": "Context engineering and tool calling for Lightfield’s agentic chat.",
+              "body": [
+                "Custom tools, vector databases, retrieval-augmented generation and domain-specific optimisations, enabling custom workflows and an agent truly integrated into the software."
+              ]
+            },
+            {
+              "id": "lf-ship",
+              "kind": "part",
+              "title": "Shipping every week",
+              "mapNote": "Full-stack",
+              "summary": "Core product features shipped weekly, full-stack.",
+              "body": [
+                "React, TypeScript, GraphQL, shadcn and Tailwind, with high ownership: engineering sketches, splitting and planning tickets, managing scope, collaborative CI/CD."
+              ]
+            },
+            {
+              "id": "lf-loop",
+              "kind": "part",
+              "title": "The customer loop",
+              "mapNote": "Forward-deployed",
+              "summary": "Owned the forward-deployed customer feedback loop.",
+              "body": [
+                "Worked directly with the design team to iterate on features from customer feedback, shipping pull requests daily with no PMs, and directly with customers to investigate, resolve and document issues."
+              ]
+            },
+            {
+              "id": "lf-product",
+              "kind": "part",
+              "title": "A CRM that updates itself",
+              "mapNote": "The product",
+              "summary": "Lightfield updates itself from every customer interaction, so its agents can run outbound, flag deals at risk, and say where to focus next.",
+              "links": [
+                {
+                  "label": "lightfield.com",
+                  "url": "https://lightfield.com"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "i-agents",
+          "kind": "interest",
+          "title": "Reliable agents and evaluation",
+          "mapLabel": "Reliable agents",
+          "mapNote": "Interest",
+          "when": "Interest",
+          "size": 2,
+          "summary": "Reliable agents, evaluation, interaction design."
+        }
+      ]
+    },
+    {
+      "id": "software",
+      "name": "Software",
+      "color": "#78A2FF",
+      "angle": -4,
+      "heart": "bottleship",
+      "blurb": "From school websites in Bangalore to twelve commits upstream in a Windows emulator.",
+      "stars": [
+        {
+          "id": "bottleship",
+          "kind": "work",
+          "title": "Win32 fixes in BottleShip",
+          "mapLabel": "BottleShip",
+          "mapNote": "12 commits upstream",
+          "when": "October 2026",
+          "year": 2026,
+          "subtitle": "Upstream pull request · merged 21 October 2026",
+          "size": 5,
+          "summary": "Twelve commits so Empire Earth runs on BottleShip, a Windows-in-the-browser emulator.",
+          "body": [
+            "Empire Earth 2.00 and its expansion did not reach their menus; once they did, quitting a game faulted about one time in three. Each fix was found by driving the real game through a harness, with a focused test that fails without it.",
+            "BottleShip boots real x86 Windows executables in the browser and reimplements Win32, COM, DirectDraw and Direct3D 7 on WebGPU, WebAudio and the Origin Private File System. Most of the graphics work existed; Empire Earth needed the long tail of Win32 a 2001 game assumes."
+          ],
+          "builtWith": "C, x86 emulation, Win32, DirectDraw, Direct3D 7, WebGPU",
+          "media": {
+            "type": "image",
+            "src": "assets/empire-earth-lobby.webp"
+          },
+          "links": [
+            {
+              "label": "Upstream PR",
+              "url": "https://github.com/jenissimo/bottleship/pull/38"
+            },
+            {
+              "label": "Write-up (draft)",
+              "url": "notes/empire-earth-in-the-browser.html"
+            }
+          ],
+          "planets": [
+            {
+              "id": "bs-crt",
+              "kind": "part",
+              "title": "The C runtime",
+              "mapNote": "VC++ 6",
+              "summary": "Empire Earth links against the Visual C++ 6 runtime; without these pieces its libraries would not bind at all.",
+              "body": [
+                "C-locale helpers, bad_cast, _Lockit assignment, wide stdio, the counted _mbs* functions, _utime, tmpfile, and 64-bit fpos_t semantics for fgetpos and fsetpos."
+              ]
+            },
+            {
+              "id": "bs-d3d",
+              "kind": "part",
+              "title": "A Direct3D 7 module",
+              "mapNote": "d3dim700.dll",
+              "summary": "The game loads d3dim700.dll at startup, so a load-only module provides it.",
+              "body": [
+                "Its exports are stubs: if the game ever calls one, the process halts rather than returning a fabricated result — what you want while chasing compatibility bugs."
+              ]
+            },
+            {
+              "id": "bs-menu",
+              "kind": "part",
+              "title": "The menu art",
+              "mapNote": "GetDC",
+              "summary": "GetDC on a DirectDraw surface returned a blank device context, so GDI labels drew over black.",
+              "body": [
+                "Seeding the device context from the surface’s current pixels brought the painted menus back."
+              ],
+              "media": {
+                "type": "image",
+                "src": "assets/empire-earth-menu.webp"
+              }
+            },
+            {
+              "id": "bs-temp",
+              "kind": "part",
+              "title": "GetTempFileName",
+              "mapNote": "A scratch file",
+              "summary": "It always failed, so the game waited forever at the point where it wanted a scratch file."
+            },
+            {
+              "id": "bs-quit",
+              "kind": "part",
+              "title": "The quit crash",
+              "mapNote": "1 in 3 quits",
+              "summary": "About one quit in three faulted.",
+              "body": [
+                "DestroyWindow re-queued messages without their target thread, so a PostThreadMessage meant for the UI thread could reach the game thread, which ran one more tick against a world already freed. Keeping the thread id on the re-queued message fixed it."
+              ]
+            },
+            {
+              "id": "bs-depth",
+              "kind": "part",
+              "title": "The first move order",
+              "mapNote": "WebGPU",
+              "summary": "In the first tutorial the world stopped rendering after the first unit was told to move.",
+              "body": [
+                "The WebGPU backend reused a binding across partial depth clears; giving each clear its own immutable binding until command submission fixed it."
+              ]
+            },
+            {
+              "id": "bs-harness",
+              "kind": "part",
+              "title": "A regression harness",
+              "mapNote": "5,987 tests",
+              "summary": "Boots both editions headless and checks that they reach their menus, with a focused test for each fix.",
+              "body": [
+                "Merged upstream on 21 October 2026 as twelve commits; BottleShip’s full gate passed with 5,987 tests."
+              ],
+              "links": [
+                {
+                  "label": "Upstream PR",
+                  "url": "https://github.com/jenissimo/bottleship/pull/38"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ta",
+          "kind": "role",
+          "title": "Teaching CS 307 and 308 at Duke",
+          "mapLabel": "Teaching at Duke",
+          "mapNote": "200+ code reviews",
+          "when": "August 2022 – December 2024",
+          "year": 2022,
+          "subtitle": "Teaching Assistant · Advanced Software Design & Implementation",
+          "size": 3,
+          "summary": "Office hours and mentoring for 40+ students building large software projects in teams.",
+          "body": [
+            "Python, Java, Maven and git; 200+ code reviews; rehired every semester."
+          ]
+        },
+        {
+          "id": "healthcarolina",
+          "kind": "work",
+          "title": "HealthCarolina",
+          "mapLabel": "HealthCarolina",
+          "mapNote": "NC health map",
+          "when": "Fall 2021",
+          "year": 2021,
+          "subtitle": "Databases final project · Duke",
+          "size": 3,
+          "summary": "An interactive map of North Carolina health statistics.",
+          "body": [
+            "Geographical data modelling with GIS and NumPy; a team of four iterating features and load-testing for scale. 300+ monthly visits."
+          ],
+          "builtWith": "Flask, PostgreSQL, MySQL",
+          "media": {
+            "type": "video",
+            "src": "assets/media/healthcarolina.mp4",
+            "poster": "assets/media/healthcarolina.webp"
+          },
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/nadiabey/nchealthmap"
+            }
+          ]
+        },
+        {
+          "id": "lumino",
+          "kind": "work",
+          "title": "Lumino",
+          "mapNote": "A reading cause",
+          "when": "2018 – 2019",
+          "year": 2019,
+          "subtitle": "Website",
+          "size": 2,
+          "summary": "The website for Lumino, a social cause that promotes reading.",
+          "builtWith": "HTML, CSS, JS, jQuery, Bootstrap",
+          "media": {
+            "type": "video",
+            "src": "assets/media/lumino.mp4",
+            "poster": "assets/media/lumino.webp"
+          },
+          "links": [
+            {
+              "label": "Site",
+              "url": "https://aryan-poonacha.github.io/lumino/"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/lumino"
+            }
+          ]
+        },
+        {
+          "id": "blazing",
+          "kind": "work",
+          "title": "Blazing Hoops",
+          "mapNote": "Tournament site",
+          "when": "August 2017",
+          "year": 2017,
+          "subtitle": "Website",
+          "size": 2,
+          "summary": "The official site of Blazing Hoops, a basketball tournament held at CMR NPS.",
+          "builtWith": "HTML, CSS, JS, jQuery, Bootstrap",
+          "media": {
+            "type": "video",
+            "src": "assets/media/blazing.mp4",
+            "poster": "assets/media/blazing.webp"
+          },
+          "links": [
+            {
+              "label": "Site",
+              "url": "https://d2c99kev9mr0qi.cloudfront.net/"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/blazing_hoops"
+            }
+          ]
+        },
+        {
+          "id": "firstjs",
+          "kind": "work",
+          "title": "First JavaScript",
+          "mapNote": "2017",
+          "when": "2017",
+          "year": 2017,
+          "subtitle": "School",
+          "size": 1,
+          "summary": "A clicker inspired by Cookie Clicker, a quiz template, a football scoreboard, the Sishu Griha MUN 2017 site.",
+          "body": [
+            "html_clicker was the first JavaScript project. quiz_template for Limit Infinity 2017; football_scoreboard for the Sishu Griha science fair; the SGMUN 2017 website; E-Bizz, a page built in about an hour for a programming competition at Resurgence 2017."
+          ],
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha?tab=repositories&type=source&sort=&q=2017"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "games",
+      "name": "Games",
+      "color": "#7BD88F",
+      "angle": 56,
+      "heart": "ee",
+      "blurb": "Empire Earth at about five; Empire Earth in the browser, twenty-odd years later.",
+      "stars": [
+        {
+          "id": "ee",
+          "kind": "work",
+          "title": "Empire Earth in the browser",
+          "mapNote": "The 2001 RTS, in Chrome",
+          "when": "October 2026",
+          "year": 2026,
+          "subtitle": "Live · desktop Chrome",
+          "size": 5,
+          "summary": "The 2001 RTS and its expansion, playable in a browser: single-player, and multiplayer with public and private lobbies.",
+          "body": [
+            "Empire Earth was my first real game, at about five. The original Windows executable runs in a WebAssembly x86 emulator, with DirectDraw and Direct3D 7 on WebGPU. BottleShip already did most of that graphics work; the missing Win32 pieces for Empire Earth were filled in upstream.",
+            "Multiplayer: host a lobby, send the link, a friend joins from Chrome. Two players use a small relay; bigger games need a direct connection to the host. Saves stay in your browser."
+          ],
+          "media": {
+            "type": "video",
+            "src": "assets/media/ee-boot.mp4",
+            "poster": "assets/media/ee-boot.webp",
+            "caption": "The 42-second boot"
+          },
+          "links": [
+            {
+              "label": "Play",
+              "url": "https://empire-earth.pages.dev/"
+            },
+            {
+              "label": "Launch thread",
+              "url": "https://bsky.app/profile/aryan-poonacha.bsky.social/post/3myiladxjlc2l"
+            },
+            {
+              "label": "Upstream PR",
+              "url": "https://github.com/jenissimo/bottleship/pull/38"
+            }
+          ],
+          "planets": [
+            {
+              "id": "ee-boot",
+              "kind": "part",
+              "title": "The 42-second boot",
+              "mapNote": "Unmodified",
+              "summary": "The unmodified 2001 executable boots in a WebAssembly x86 emulator, with DirectDraw and Direct3D 7 on WebGPU.",
+              "media": {
+                "type": "video",
+                "src": "assets/media/ee-boot.mp4",
+                "poster": "assets/media/ee-boot.webp"
+              },
+              "links": [
+                {
+                  "label": "Play",
+                  "url": "https://empire-earth.pages.dev/"
+                }
+              ]
+            },
+            {
+              "id": "ee-own",
+              "kind": "part",
+              "title": "Bring your own copy",
+              "mapNote": "Saves stay local",
+              "summary": "You bring your own copy of the game, attest that you own it, download the edition once, and play; saves stay in the browser."
+            },
+            {
+              "id": "ee-mp",
+              "kind": "part",
+              "title": "Multiplayer",
+              "mapNote": "Lobbies + relay",
+              "summary": "Host a lobby, send the link, and a friend joins from Chrome.",
+              "body": [
+                "Two players can play through a small relay from anywhere; three to eight players need a direct WebRTC connection to the host, which has held up in Huge-map matches across two Macs with native chat and unit training."
+              ],
+              "media": {
+                "type": "image",
+                "src": "assets/empire-earth-lobby.webp"
+              }
+            },
+            {
+              "id": "ee-host",
+              "kind": "part",
+              "title": "Seven dollars a month",
+              "mapNote": "Hosting",
+              "summary": "The playable site, the game-file delivery and the two-player relay run on Cloudflare Pages plus one small Render service, at a fixed cost of about seven dollars a month."
+            },
+            {
+              "id": "ee-open",
+              "kind": "part",
+              "title": "Still open",
+              "mapNote": "Next",
+              "summary": "Reconnect and host migration, strict-NAT traversal, and browsers other than desktop Chrome."
+            }
+          ]
+        },
+        {
+          "id": "agronomy",
+          "kind": "work",
+          "title": "Agronomy VR",
+          "mapNote": "VR farming",
+          "when": "2022",
+          "year": 2022,
+          "subtitle": "Unity, C# · VR",
+          "size": 3,
+          "summary": "A farming game for VR.",
+          "body": [
+            "Built after Robotech 2022; the VR gaming startup founded around it joined GeorgiaTech’s CreateX accelerator."
+          ],
+          "media": {
+            "type": "video",
+            "src": "assets/media/agronomyvr.mp4",
+            "poster": "assets/media/agronomyvr.webp"
+          },
+          "links": [
+            {
+              "label": "Pitch video",
+              "url": "https://www.youtube.com/watch?v=W0y4Fptv5Ds"
+            }
+          ]
+        },
+        {
+          "id": "quantum",
+          "kind": "work",
+          "title": "Quantum Gambler",
+          "mapNote": "A quantum deck",
+          "when": "November 2021",
+          "year": 2021,
+          "subtitle": "Qiskit, Flask",
+          "size": 2,
+          "summary": "A web card game whose deck is a quantum circuit.",
+          "media": {
+            "type": "video",
+            "src": "assets/media/quantum.mp4",
+            "poster": "assets/media/quantum.webp"
+          },
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/quantum_gambler"
+            }
+          ]
+        },
+        {
+          "id": "collector",
+          "kind": "work",
+          "title": "Collector Onslaught",
+          "mapNote": "Browser game",
+          "when": "December 2018",
+          "year": 2018,
+          "subtitle": "Browser game",
+          "size": 2,
+          "summary": "How long can you hold off the collector forces?",
+          "builtWith": "HTML, CSS, JS, jQuery",
+          "media": {
+            "type": "video",
+            "src": "assets/media/collector.mp4",
+            "poster": "assets/media/collector.webp"
+          },
+          "links": [
+            {
+              "label": "Play",
+              "url": "https://aryan-poonacha.github.io/Collector-Onslaught/"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/Collector-Onslaught"
+            }
+          ]
+        },
+        {
+          "id": "i-strategy",
+          "kind": "interest",
+          "title": "Grand strategy and RTS",
+          "mapNote": "Interest",
+          "when": "Interest",
+          "size": 2,
+          "summary": "Empire Earth at about five; strategy games since."
+        },
+        {
+          "id": "firstgames",
+          "kind": "work",
+          "title": "First games",
+          "mapNote": "2017",
+          "when": "2017",
+          "year": 2017,
+          "subtitle": "School",
+          "size": 1,
+          "summary": "A bombing game, a stock-trading game for the Sishu Griha science fair, a clicker.",
+          "body": [
+            "bombing_game, a practice project in HTML, CSS, JS and jQuery; stock_trading_game for the science fair at Sishu Griha 2017; what_would_you_do.am, an all-nighter built around a domain name that reads as a sentence."
+          ],
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/bombing_game"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ventures",
+      "name": "Ventures",
+      "color": "#B596FF",
+      "angle": 120,
+      "heart": "robotech",
+      "blurb": "A hackathon win, a VR startup in an accelerator, a national startup final.",
+      "stars": [
+        {
+          "id": "robotech",
+          "kind": "award",
+          "title": "Robotech 2022, Best Overall Hack",
+          "mapLabel": "Robotech 2022",
+          "mapNote": "Best Overall Hack",
+          "when": "April 2022",
+          "year": 2022,
+          "subtitle": "GeorgiaTech Robotech hackathon",
+          "size": 4,
+          "summary": "Best Overall Hack, Second Best Design and Most Accessible Hack, for Source Tracker.",
+          "body": [
+            "Source Tracker: spatial-audio isolation and live captioning. $3,000 in prizes and $5,000 in startup seed funding."
+          ],
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/source_tracker"
+            }
+          ],
+          "planets": [
+            {
+              "id": "rt-source",
+              "kind": "part",
+              "title": "Source Tracker",
+              "mapNote": "The hack",
+              "summary": "Spatial-audio isolation and live captioning.",
+              "links": [
+                {
+                  "label": "Code",
+                  "url": "https://github.com/Aryan-Poonacha/source_tracker"
+                }
+              ]
+            },
+            {
+              "id": "rt-awards",
+              "kind": "part",
+              "title": "Three awards",
+              "mapNote": "Of the hackathon",
+              "summary": "Best Overall Hack, Second Best Design and Most Accessible Hack."
+            },
+            {
+              "id": "rt-seed",
+              "kind": "part",
+              "title": "$8,000",
+              "mapNote": "Prizes + seed",
+              "summary": "$3,000 in prizes and $5,000 in startup seed funding."
+            }
+          ]
+        },
+        {
+          "id": "createx",
+          "kind": "venture",
+          "title": "CreateX accelerator",
+          "mapLabel": "CreateX",
+          "mapNote": "A VR startup",
+          "when": "2022",
+          "year": 2022,
+          "subtitle": "GeorgiaTech CreateX startup accelerator",
+          "size": 3,
+          "summary": "A VR gaming startup, founded after Robotech, admitted to the accelerator.",
+          "body": [
+            "Its game was Agronomy VR, a farming game built in Unity."
+          ],
+          "media": {
+            "type": "video",
+            "src": "assets/media/agronomyvr.mp4",
+            "poster": "assets/media/agronomyvr.webp",
+            "caption": "Agronomy VR"
+          },
+          "links": [
+            {
+              "label": "Pitch video",
+              "url": "https://www.youtube.com/watch?v=W0y4Fptv5Ds"
+            }
+          ]
+        },
+        {
+          "id": "frontiers",
+          "kind": "venture",
+          "title": "Alibaba GET Global Startup Challenge",
+          "mapLabel": "Alibaba GET finalist",
+          "mapNote": "National finalist",
+          "when": "2020",
+          "year": 2020,
+          "subtitle": "National finalist",
+          "size": 2,
+          "summary": "Frontiers of Health, a startup for the mental-health needs of Chinese high-school students.",
+          "body": [
+            "A basic, fully functional prototype."
+          ],
+          "links": [
+            {
+              "label": "Prototype",
+              "url": "https://github.com/Aryan-Poonacha/frontiers_of_health"
+            }
+          ]
+        },
+        {
+          "id": "voitheia",
+          "kind": "venture",
+          "title": "Voitheia",
+          "mapNote": "Crowdfunding",
+          "when": "November 2017",
+          "year": 2017,
+          "subtitle": "Non-profit crowdfunding platform",
+          "size": 2,
+          "summary": "Used to raise funds for the Abhivruddi Foundation and other causes across events.",
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/voitheia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "name": "Research",
+      "color": "#5FD0E0",
+      "angle": 180,
+      "heart": "dps",
+      "blurb": "Data, models and dashboards: Durham’s schools, housing as a fluid, laugh tracks, Bollywood music.",
+      "stars": [
+        {
+          "id": "dps",
+          "kind": "work",
+          "title": "Visualizing Durham Public Schools",
+          "mapLabel": "Durham Public Schools",
+          "mapNote": "3,000+ monthly visits",
+          "when": "May – July 2022",
+          "year": 2022,
+          "subtitle": "Data+ · Rhodes Information Initiative at Duke",
+          "size": 4,
+          "summary": "A public dashboard of Durham Public Schools statistics.",
+          "body": [
+            "Consulted with Durham Public Schools administrators, students and stakeholders on feature selection and the most relevant data points, developing the dashboard iteratively in two-week sprints. 3,000+ monthly visits, and a video feature by Duke."
+          ],
+          "builtWith": "R, RStudio, ggplot, R Shiny, tidyverse",
+          "media": {
+            "type": "video",
+            "src": "assets/media/dataplus.mp4",
+            "poster": "assets/media/dataplus.webp"
+          },
+          "links": [
+            {
+              "label": "Dashboard",
+              "url": "https://visualizingdps.shinyapps.io/dps_dashboard2/"
+            },
+            {
+              "label": "Duke feature",
+              "url": "https://www.youtube.com/watch?v=AkzBLhaZhyA"
+            }
+          ]
+        },
+        {
+          "id": "fluid",
+          "kind": "work",
+          "title": "Housing inequality as a fluid",
+          "mapLabel": "Housing as a fluid",
+          "mapNote": "Data as art",
+          "when": "Fall 2021",
+          "year": 2021,
+          "subtitle": "Bass Connections, under Dr. Thomas DeFrantz · Duke",
+          "size": 3,
+          "summary": "A fluid-simulation model that visualises systemic racial housing inequality in Durham.",
+          "body": [
+            "A minimal Stable Fluids-inspired solver in Python and NumPy, with the model in TensorFlow; shown publicly as an art-gallery data display."
+          ],
+          "builtWith": "Python, NumPy, TensorFlow",
+          "media": {
+            "type": "video",
+            "src": "assets/media/fluid.mp4",
+            "poster": "assets/media/fluid.webp"
+          },
+          "links": [
+            {
+              "label": "Exhibited video",
+              "url": "https://youtu.be/-aY_Dl56Zjs"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/stable-fluids"
+            }
+          ]
+        },
+        {
+          "id": "laugh",
+          "kind": "work",
+          "title": "Laugh-track removal",
+          "mapNote": "Audio ML",
+          "when": "May 2020",
+          "year": 2020,
+          "subtitle": "PETAL independent study, session 4 · Duke Kunshan",
+          "size": 2,
+          "summary": "A tool that strips laugh tracks from audio, then a survey and study of whether laugh tracks work.",
+          "body": [
+            "A deep-learning laughter classifier applied to remove canned laughter, built on the open-source laughr model; then a survey analysing the effectiveness of laugh tracks."
+          ],
+          "builtWith": "Keras, TensorFlow",
+          "media": {
+            "type": "video",
+            "src": "assets/media/audio.mp4",
+            "poster": "assets/media/audio.webp"
+          },
+          "links": [
+            {
+              "label": "Clip with laughter removed",
+              "url": "https://www.youtube.com/watch?v=aLJciDjjWI4"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/laughtrackanalysis"
+            }
+          ]
+        },
+        {
+          "id": "musicgen",
+          "kind": "work",
+          "title": "Bollywood music generator",
+          "mapLabel": "Bollywood music generator",
+          "mapNote": "An LSTM",
+          "when": "October 2020",
+          "year": 2020,
+          "subtitle": "Deep learning",
+          "size": 2,
+          "summary": "A recurrent neural network that generates Bollywood music.",
+          "body": [
+            "Adapted from an LSTM music-generation method."
+          ],
+          "media": {
+            "type": "video",
+            "src": "assets/media/musicgen.mp4",
+            "poster": "assets/media/musicgen.webp"
+          },
+          "links": [
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/bollywoodmusicgenerator"
+            }
+          ]
+        },
+        {
+          "id": "i-physics",
+          "kind": "interest",
+          "title": "Particle-accelerator and astrophysics data",
+          "mapLabel": "Physics data",
+          "mapNote": "Interest",
+          "when": "Interest",
+          "size": 2,
+          "summary": "What language models might find in the archives."
+        },
+        {
+          "id": "i-history",
+          "kind": "interest",
+          "title": "History of grand strategy and political economy",
+          "mapLabel": "Grand strategy, history",
+          "mapNote": "Interest",
+          "when": "Interest",
+          "size": 2,
+          "summary": "Reading, mostly."
+        },
+        {
+          "id": "voting",
+          "kind": "work",
+          "title": "Willingness to vote in East Asian democracies",
+          "mapLabel": "Willingness to vote",
+          "mapNote": "Datathon 2021",
+          "when": "November 2021",
+          "year": 2021,
+          "subtitle": "Duke Datathon",
+          "size": 1,
+          "summary": "Modelling and analysing willingness to vote.",
+          "builtWith": "pandas, scikit-learn",
+          "media": {
+            "type": "video",
+            "src": "assets/media/voting.mp4",
+            "poster": "assets/media/voting.webp"
+          },
+          "links": [
+            {
+              "label": "Paper",
+              "url": "https://drive.google.com/file/d/1t_ZGizSx7A9HDQjJvKs4LPPPqA-m0URv/view"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/cs582/DukeDatathon2021"
+            }
+          ]
+        },
+        {
+          "id": "covid",
+          "kind": "work",
+          "title": "The economic impact of Covid-19",
+          "mapLabel": "Covid-19 and the economy",
+          "mapNote": "Datathon 2020",
+          "when": "November 2020",
+          "year": 2020,
+          "subtitle": "Duke Datathon",
+          "size": 1,
+          "summary": "The impact on the US economy, and which counties will have a harder time recovering.",
+          "builtWith": "pandas, Matplotlib",
+          "media": {
+            "type": "video",
+            "src": "assets/media/economic.mp4",
+            "poster": "assets/media/economic.webp"
+          },
+          "links": [
+            {
+              "label": "Paper",
+              "url": "https://drive.google.com/file/d/1Ntg6Se_z_Y_uHCUuF6_qzaTT92LZ6jFN/view"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/cs582/The-Economic-Impact-of-Covid-19_Duke_Datathon"
+            }
+          ]
+        },
+        {
+          "id": "vk",
+          "kind": "work",
+          "title": "Predicting VK follower counts",
+          "mapLabel": "VK follower counts",
+          "mapNote": "Regression",
+          "when": "January 2020",
+          "year": 2020,
+          "subtitle": "Stats 101 final project · Duke Kunshan",
+          "size": 1,
+          "summary": "A regression model for follower counts on VK, a Russian social network.",
+          "builtWith": "R, RStudio",
+          "media": {
+            "type": "video",
+            "src": "assets/media/socialmedia.mp4",
+            "poster": "assets/media/socialmedia.webp"
+          },
+          "links": [
+            {
+              "label": "Paper",
+              "url": "https://github.com/Aryan-Poonacha/predict_follower_count_vk/blob/master/Report.pdf"
+            },
+            {
+              "label": "Code",
+              "url": "https://github.com/Aryan-Poonacha/predict_follower_count_vk"
+            }
+          ]
+        },
+        {
+          "id": "i-math",
+          "kind": "interest",
+          "title": "Mathematics",
+          "mapNote": "Interest",
+          "when": "Interest",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "id": "writing",
+      "name": "Writing",
+      "color": "#EE6C5A",
+      "angle": -120,
+      "heart": "curebereft",
+      "blurb": "A science-fiction novel at fifteen, five columns in The Chronicle, and the next novel in draft.",
+      "stars": [
+        {
+          "id": "curebereft",
+          "kind": "book",
+          "title": "Cure Bereft",
+          "mapNote": "A novel at fifteen",
+          "when": "November 2016",
+          "year": 2016,
+          "subtitle": "Novel · Leadstart Publishing · 320 pages",
+          "size": 5,
+          "summary": "A science-fiction thriller, published at fifteen.",
+          "body": [
+            "Jack Reach, a reputed scientist in Los Angeles, learns he can change the world through nano-robotics, and what happens when that power lands in the wrong hands. Plotted in Class 6, drafted by Class 8, then a year of refining the details.",
+            "“A thrilling debut” — Deccan Chronicle, 9 November 2016. ISBN 978-93-5201-739-3."
+          ],
+          "media": {
+            "type": "book",
+            "title": "Cure Bereft",
+            "author": "Aryan Poonacha"
+          },
+          "links": [
+            {
+              "label": "Leadstart",
+              "url": "https://www.leadstartcorp.com/thrillers/cure-bereft/"
+            },
+            {
+              "label": "Google Books",
+              "url": "https://books.google.com/books?id=3Dg6DQAAQBAJ"
+            },
+            {
+              "label": "Deccan Chronicle",
+              "url": "https://www.deccanchronicle.com/lifestyle/books-and-art/091116/a-thrilling-debut.html"
+            }
+          ],
+          "planets": [
+            {
+              "id": "cb-story",
+              "kind": "part",
+              "title": "The story",
+              "mapNote": "Nano-robotics",
+              "summary": "Jack Reach, a reputed scientist in Los Angeles, learns he can change the world through nano-robotics — and what happens when that power lands in the wrong hands."
+            },
+            {
+              "id": "cb-writing",
+              "kind": "part",
+              "title": "Class 6 to Class 8",
+              "mapNote": "Writing it",
+              "summary": "Plotted in Class 6, drafted by Class 8, then a year of refining the details."
+            },
+            {
+              "id": "cb-publish",
+              "kind": "part",
+              "title": "Leadstart, 2016",
+              "mapNote": "320 pages",
+              "summary": "Published by Leadstart Publishing in November 2016: 320 pages, ISBN 978-93-5201-739-3.",
+              "links": [
+                {
+                  "label": "Leadstart",
+                  "url": "https://www.leadstartcorp.com/thrillers/cure-bereft/"
+                },
+                {
+                  "label": "Google Books",
+                  "url": "https://books.google.com/books?id=3Dg6DQAAQBAJ"
+                }
+              ]
+            },
+            {
+              "id": "cb-press",
+              "kind": "part",
+              "title": "“A thrilling debut”",
+              "mapNote": "Deccan Chronicle",
+              "summary": "The Deccan Chronicle’s review, 9 November 2016.",
+              "media": {
+                "type": "quote",
+                "quote": "A thrilling debut",
+                "cite": "Deccan Chronicle"
+              },
+              "links": [
+                {
+                  "label": "Read",
+                  "url": "https://www.deccanchronicle.com/lifestyle/books-and-art/091116/a-thrilling-debut.html"
+                }
+              ]
+            },
+            {
+              "id": "i-novel",
+              "kind": "interest",
+              "title": "The next novel",
+              "mapNote": "In draft",
+              "when": "In draft",
+              "summary": "More drafts since Cure Bereft, slowly."
+            }
+          ]
+        },
+        {
+          "id": "chronicle",
+          "kind": "column",
+          "title": "Columns in The Chronicle",
+          "mapLabel": "The Chronicle",
+          "mapNote": "Five columns · 2020 – 2022",
+          "when": "January 2020 – January 2022",
+          "year": 2020,
+          "subtitle": "The Chronicle · Duke’s student newspaper · opinion",
+          "size": 4,
+          "summary": "Five opinion columns as a Duke Kunshan student: schooling, stereotypes, the hybrid degree, and the visa road after it.",
+          "links": [
+            {
+              "label": "All columns",
+              "url": "https://www.dukechronicle.com/staff/aryan-poonacha"
+            }
+          ],
+          "planets": [
+            {
+              "id": "col-soup",
+              "kind": "column",
+              "title": "Word soup for the soul",
+              "mapLabel": "Word soup for the soul",
+              "mapNote": "17 Jan 2020",
+              "when": "17 January 2020",
+              "year": 2020,
+              "subtitle": "The Chronicle · opinion",
+              "summary": "The first of the five.",
+              "links": [
+                {
+                  "label": "Read",
+                  "url": "https://www.dukechronicle.com/article/630cd792-0532-4e3b-9c1b-f9357ecdb740"
+                }
+              ]
+            },
+            {
+              "id": "col-scattered",
+              "kind": "column",
+              "title": "Scattered to the wind",
+              "mapLabel": "Scattered to the wind",
+              "mapNote": "3 Apr 2020",
+              "when": "3 April 2020",
+              "year": 2020,
+              "subtitle": "The Chronicle · opinion",
+              "summary": "A column from the spring the campus emptied.",
+              "links": [
+                {
+                  "label": "Read",
+                  "url": "https://www.dukechronicle.com/article/7fdca92e-4777-4ffd-9721-49ed56d8471f"
+                }
+              ]
+            },
+            {
+              "id": "col-quiet",
+              "kind": "column",
+              "title": "Behind the ‘quiet and shy’ Asian student stereotype",
+              "mapLabel": "‘Quiet and shy’",
+              "mapNote": "7 Aug 2020",
+              "when": "7 August 2020",
+              "year": 2020,
+              "subtitle": "The Chronicle · opinion",
+              "summary": "On exam-first schooling, and what it does to how students show up in a classroom.",
+              "links": [
+                {
+                  "label": "Read",
+                  "url": "https://www.dukechronicle.com/article/6633a52a-9f81-4648-8698-a09c523bd295"
+                }
+              ]
+            },
+            {
+              "id": "col-hybrid",
+              "kind": "column",
+              "title": "The hybrid degree and institutional clout",
+              "mapLabel": "The hybrid degree",
+              "mapNote": "24 Dec 2020",
+              "when": "24 December 2020",
+              "year": 2020,
+              "subtitle": "The Chronicle · opinion",
+              "summary": "“Whether we acknowledge it or not, we all implicitly understand the clout involved with a big-name higher-education institution's degree.”",
+              "media": {
+                "type": "quote",
+                "quote": "We all implicitly understand the clout involved with a big-name higher-education institution's degree.",
+                "cite": "The Chronicle, December 2020"
+              },
+              "links": [
+                {
+                  "label": "Read",
+                  "url": "https://www.dukechronicle.com/article/241c1094-bc28-4a7a-b51e-c702a17ca54b"
+                }
+              ]
+            },
+            {
+              "id": "col-visa",
+              "kind": "column",
+              "title": "Limited opportunities and visa hell for DKU students at Duke",
+              "mapLabel": "Visa hell",
+              "mapNote": "31 Jan 2022",
+              "when": "31 January 2022",
+              "year": 2022,
+              "subtitle": "The Chronicle · opinion",
+              "summary": "“Working in the States is a dream come true, regardless of the odds that I might not get a working permit to start my career after graduation.”",
+              "media": {
+                "type": "quote",
+                "quote": "Working in the States is a dream come true, regardless of the odds.",
+                "cite": "The Chronicle, January 2022"
+              },
+              "links": [
+                {
+                  "label": "Read",
+                  "url": "https://www.dukechronicle.com/article/05c4398c-3f92-47f9-a9d3-a5f829ab7ed6"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "eenote",
+          "kind": "note",
+          "title": "Empire Earth in the browser: what it took",
+          "mapLabel": "What it took",
+          "mapNote": "Technical note",
+          "when": "October 2026",
+          "year": 2026,
+          "subtitle": "Technical note · draft",
+          "size": 3,
+          "summary": "The emulator, the missing Win32 pieces, the quit crash, and the relay.",
+          "media": {
+            "type": "image",
+            "src": "assets/empire-earth-menu.webp"
+          },
+          "links": [
+            {
+              "label": "Read",
+              "url": "notes/empire-earth-in-the-browser.html"
+            }
+          ]
+        },
+        {
+          "id": "i-scifi",
+          "kind": "interest",
+          "title": "Science fiction",
+          "mapNote": "Interest",
+          "when": "Interest",
+          "size": 2,
+          "summary": "Read, and written."
+        }
+      ]
+    }
+  ],
+  "connections": [
+    [
+      "bangalore",
+      "blazing"
+    ],
+    [
+      "bangalore",
+      "curebereft"
+    ],
+    [
+      "bangalore",
+      "voitheia"
+    ],
+    [
+      "bangalore",
+      "firstgames"
+    ],
+    [
+      "kunshan",
+      "vk"
+    ],
+    [
+      "kunshan",
+      "chronicle"
+    ],
+    [
+      "kunshan",
+      "frontiers"
+    ],
+    [
+      "kunshan",
+      "laugh"
+    ],
+    [
+      "duke",
+      "meng"
+    ],
+    [
+      "duke",
+      "dps"
+    ],
+    [
+      "duke",
+      "ta"
+    ],
+    [
+      "sf",
+      "lightfield"
+    ],
+    [
+      "sf",
+      "tomex"
+    ],
+    [
+      "ee",
+      "bottleship"
+    ],
+    [
+      "ee",
+      "eenote"
+    ],
+    [
+      "bottleship",
+      "eenote"
+    ],
+    [
+      "ee",
+      "i-strategy"
+    ],
+    [
+      "i-strategy",
+      "i-history"
+    ],
+    [
+      "agronomy",
+      "createx"
+    ],
+    [
+      "agronomy",
+      "robotech"
+    ],
+    [
+      "robotech",
+      "createx"
+    ],
+    [
+      "curebereft",
+      "i-scifi"
+    ],
+    [
+      "curebereft",
+      "chronicle"
+    ],
+    [
+      "quantum",
+      "i-physics"
+    ],
+    [
+      "i-physics",
+      "i-math"
+    ],
+    [
+      "dps",
+      "healthcarolina"
+    ],
+    [
+      "fluid",
+      "dps"
+    ],
+    [
+      "ta",
+      "meng"
+    ],
+    [
+      "tomex",
+      "i-agents"
+    ],
+    [
+      "wikichat",
+      "i-agents"
+    ],
+    [
+      "demandly",
+      "lightfield"
+    ],
+    [
+      "musicgen",
+      "laugh"
+    ],
+    [
+      "laugh",
+      "vk"
+    ],
+    [
+      "laugh",
+      "rt-source"
+    ],
+    [
+      "blazing",
+      "firstjs"
+    ],
+    [
+      "firstjs",
+      "firstgames"
+    ],
+    [
+      "firstgames",
+      "collector"
+    ],
+    [
+      "collector",
+      "quantum"
+    ],
+    [
+      "quantum",
+      "agronomy"
+    ],
+    [
+      "agronomy",
+      "ee"
+    ],
+    [
+      "voitheia",
+      "frontiers"
+    ],
+    [
+      "frontiers",
+      "robotech"
+    ],
+    [
+      "lumino",
+      "healthcarolina"
+    ],
+    [
+      "blazing",
+      "lumino"
+    ]
+  ]
+}
