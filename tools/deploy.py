@@ -72,7 +72,7 @@ def main():
     if parent:
         git("fetch", "origin", branch)
         previous = files(parent)
-    allowed = ("admin/", "js/", "css/", "assets/")
+    allowed = ("admin/", "js/", "css/", "assets/", "notes/")
     names = {"index.html", "galaxy.html", "legacy.html", ".nojekyll",
              "content/galaxy.json", "content/publishing.json", "content/release.json"}
     output = {p: v for p, v in source.items() if p in names or p.startswith(allowed)}

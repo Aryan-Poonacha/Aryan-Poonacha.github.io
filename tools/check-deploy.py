@@ -45,6 +45,8 @@ write("legacy.html", legacy)
 write("galaxy.html", galaxy)
 write(".nojekyll", "")
 write("admin/index.html", "admin v1")
+write("notes/example.html", "editable note shell")
+write("js/note.js", "note renderer")
 write("content/publishing.json", json.dumps({"liveBranch": "portfolio-live"}))
 write("content/galaxy.json", json.dumps({"core": {"id": "core", "title": "Draft", "notes": "EDITOR_ONLY", "reviewed": True}, "domains": []}))
 write("content/release.json", json.dumps({"view": "legacy"}))
@@ -59,6 +61,8 @@ assert "reviewed" not in show("content/galaxy.json")
 deployed_files = run("git", "ls-tree", "-r", "--name-only", "origin/portfolio-live")
 assert "Aryan-Poonacha-Resume.pdf" not in deployed_files
 assert show("admin/index.html") == "admin v1"
+assert show("notes/example.html") == "editable note shell"
+assert show("js/note.js") == "note renderer"
 print("PASS first deployment preserves exact Legacy, excludes CV and editor notes")
 assert "Already deployed" in run(sys.executable, str(ROOT / "tools/deploy.py"), "--push")
 print("PASS repeat deployment is idempotent")

@@ -1,6 +1,6 @@
 # Editing the site
 
-Everything the site says lives in one file, `content/galaxy.json`. The editor at `/admin/` edits it
+Everything the galaxy says lives in one file, `content/galaxy.json`. The editor at `/admin/` edits it
 with a live preview of the real site. You can also edit the file by hand.
 
 ## Edit from any device
@@ -98,3 +98,8 @@ from one of its frames.
 The file is plain JSON. After a hand edit, open the site. If the JSON is broken, the site says so
 and names the problem. The editor re-saves in the same layout, so diffs stay small.
 The page title, description, sharing image and social handle are editable under Site text & card layout → Page and sharing. Publication writes them into the HTML head too.
+
+The Empire Earth write-up also reads the `eenote` card's title, dates, summary and body.
+Edit that card to update both its detail view and the standalone reading page. A paragraph
+containing only `**a heading**` becomes a section heading on the reading page.
+The original public Google Docs résumé link is retained; the removed personal PDF is not deployed.
