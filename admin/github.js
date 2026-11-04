@@ -50,10 +50,13 @@
       this.config = config; this.token = token; this.fetcher = fetcher || fetch.bind(globalThis);
       this.api = "https://api.github.com/repos/" + config.repository.split("/").map(encodeURIComponent).join("/");
       this.draft = null; this.live = null;
+      this.abort = new AbortController(); this.disconnected = false;
     }
+    disconnect() { this.disconnected = true; this.token = ""; this.abort.abort(); }
     async request(path, method, body) {
+      if (this.disconnected) throw new Error("This device is disconnected. Connect GitHub again to continue.");
       const res = await this.fetcher(this.api + path, {
-        method: method || "GET", cache: "no-store", signal: AbortSignal.timeout(30000),
+        method: method || "GET", cache: "no-store", signal: AbortSignal.any([this.abort.signal, AbortSignal.timeout(30000)]),
         headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + this.token,
           "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
         ...(body ? { body: JSON.stringify(body) } : {})

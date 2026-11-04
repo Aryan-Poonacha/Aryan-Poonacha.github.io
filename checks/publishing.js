@@ -7,7 +7,7 @@ async (page) => {
   const legacy = await (await page.request.get(base + 'legacy.html')).text();
   const galaxy = await (await page.request.get(base + 'galaxy.html')).text();
   const blobs = new Map(), trees = new Map(), commits = new Map(), refs = new Map();
-  let n = 0, servedHead, rejectLive = false, failAuth = false, delaySave = false, delayResolve;
+  let n = 0, servedHead, rejectLive = false, failAuth = false, failLive = false, delaySave = false, delayResolve;
   const id = () => String(++n).padStart(40, '0');
   const blob = text => { const sha = id(); blobs.set(sha, text); return sha; };
   const seed = new Map([
@@ -22,7 +22,11 @@ async (page) => {
     p.on('pageerror', e => errors.push(e.message));
     p.on('dialog', d => d.accept());
     await p.route('**/__admin/ping', r => r.fulfill({ status: 404, body: '{}' }));
-    await p.route('**/content/release.json*', r => r.fulfill({ contentType: 'application/json', body: atFile(servedHead, 'content/release.json') }));
+    await p.route('**/content/release.json*', r => r.fulfill({ status: failLive ? 503 : 200, contentType: 'application/json', body: failLive ? '{}' : atFile(servedHead, 'content/release.json') }));
+    await p.route('https://aryan-poonacha.github.io/assets/media/**', r => {
+      const path = new URL(r.request().url()).pathname.slice(1), data = atFile(servedHead, path);
+      return r.fulfill({ status: data ? 200 : 404, contentType: 'image/png', body: data || '' });
+    });
     await p.route('https://api.github.com/**', async route => {
       const req = route.request(), url = new URL(req.url()), path = decodeURIComponent(url.pathname.replace(/^\/repos\/[^/]+\/[^/]+/, ''));
       const body = req.postDataJSON(); let out = {}, status = 200;
@@ -101,7 +105,17 @@ async (page) => {
   await p3.reload(); await wait(p3, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden);
   await p3.locator('#banner button', { hasText: 'Restore them' }).click(); await pick(p3, 'lightfield');
   rec('two-tabs-recover-their-own-unsaved-edits', tabA === 'Tab A unsaved.' && await summary(p3).inputValue() === 'Tab B unsaved.');
-  await p3.close();
+  await p3.locator('#undo').click(); await p3.waitForTimeout(300); await p3.close();
+  const popupPromise = page.context().waitForEvent('page');
+  await page.evaluate(() => window.open('about:blank', '_blank'));
+  const clone = await popupPromise; await routes(clone); await clone.goto(base + 'admin/');
+  await wait(clone, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  const originalId = await page.evaluate(() => sessionStorage.getItem('galaxy:admin:preview-id'));
+  const cloneId = await clone.evaluate(() => sessionStorage.getItem('galaxy:admin:preview-id'));
+  await pick(clone, 'lightfield'); await summary(clone).fill('Copied-tab independent change.'); await clone.waitForTimeout(300);
+  const ownCopy = await page.evaluate(id => JSON.parse(localStorage.getItem('galaxy:admin:work:' + id)).doc.domains.find(d => d.id === 'ai').stars.find(b => b.id === 'tomex').summary, originalId);
+  rec('opener-copied-session-gets-independent-recovery', originalId !== cloneId && ownCopy === 'Tab A unsaved.');
+  await clone.locator('#undo').click(); await clone.waitForTimeout(300); await clone.close();
   // Create, upload, duplicate and delete through the same hosted UI used in production.
   await page.locator('#tree .row--domain[data-id="ventures"] ~ .branch__kids .tree__add').click();
   await page.locator('#edit [data-field="title"] input').fill('Future project');
@@ -111,8 +125,18 @@ async (page) => {
   await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
   const uploadedPath = await page.locator('#edit [data-field="media.src"] input:not([type="file"])').inputValue();
   await page.locator('#edit [data-field="notes"] textarea').fill('EDITOR_ONLY_BROWSER_PROOF');
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden && !document.querySelector('#disconnect').disabled);
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden && !document.querySelector('#disconnect').disabled);
+  rec('unresolved-recovery-survives-repeated-reload', await page.locator('#banner').isVisible());
+  await page.locator('#banner button', { hasText: 'Restore them' }).click(); await pick(page, 'future-project');
+  await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
+  rec('unsaved-upload-recovery-hydrates-inline-media', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('blob:') && e.naturalWidth > 0));
   await page.locator('#save').click(); await wait(page, () => /All changes saved/.test(document.querySelector('#status').textContent) && !document.querySelector('#save').disabled);
   rec('new-card-and-immutable-media-sync-only-to-draft', file('portfolio-drafts', 'content/galaxy.json').includes('future-project') && !trees.get(commits.get(refs.get('portfolio-live')).tree.sha).has(uploadedPath));
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await pick(page, 'future-project');
+  await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
+  rec('saved-upload-reload-hydrates-inline-media', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('blob:') && e.naturalWidth > 0));
   await page.getByRole('button', { name: 'Duplicate', exact: true }).click();
   const copyId = await page.locator('#edit [data-field="id"] input').inputValue();
   await page.getByRole('button', { name: 'Delete…', exact: true }).click();
@@ -141,16 +165,37 @@ async (page) => {
   rec('galaxy-release-is-one-snapshot', file('portfolio-live', 'index.html').includes('id="sky"') && /Typed while saving/.test(file('portfolio-live', 'content/galaxy.json')) && JSON.parse(file('portfolio-live', 'content/release.json')).view === 'galaxy');
   rec('release-publishes-media-and-metadata-without-editor-notes', trees.get(commits.get(refs.get('portfolio-live')).tree.sha).has(uploadedPath) && file('portfolio-live', 'index.html').includes('Updated &amp; reviewed portfolio') && !file('portfolio-live', 'content/galaxy.json').includes('EDITOR_ONLY_BROWSER_PROOF'));
   rec('live-label-waits-for-served-release', /Live: Legacy/.test(await page.locator('#release-state').textContent()) && /Waiting for deployment: Galaxy/.test(await page.locator('#release-pending').textContent()));
+  await close(page); await page.reload();
+  await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await pick(page, 'future-project');
+  await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
+  rec('queued-publication-keeps-draft-media-preview-working', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('blob:') && e.naturalWidth > 0));
+  await page.locator('#publishing').click();
   servedHead = refs.get('portfolio-live'); await page.locator('#check-live').click();
   await wait(page, () => /Live: Galaxy/.test(document.querySelector('#live-state').textContent));
   rec('live-label-verifies-served-release', /Live: Galaxy/.test(await page.locator('#release-state').textContent()) && !(await page.locator('#release-pending').textContent()));
+  failLive = true; await page.locator('#check-live').click(); await wait(page, () => /Live: unverified/.test(document.querySelector('#live-state').textContent));
+  await close(page); await pick(page, 'tomex'); await summary(page).fill('Temporary local edit for failed verification.');
+  rec('failed-live-verification-stays-unverified-during-edit', /Live: unverified/.test(await page.locator('#live-state').textContent()));
+  await page.locator('#undo').click(); failLive = false;
+  await page.locator('#publishing').click(); await page.locator('#check-live').click(); await wait(page, () => /^Live: Galaxy/.test(document.querySelector('#live-state').textContent));
+  await close(page); await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await pick(page, 'future-project'); await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
+  rec('local-connected-editor-resolves-served-production-media', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('https://aryan-poonacha.github.io/') && e.naturalWidth > 0));
+  await page.locator('#publishing').click();
   const draftBeforeRollback = refs.get('portfolio-drafts'), publishedBeforeRollback = file('portfolio-live', 'content/galaxy.json');
   await page.locator('#release-view').selectOption('legacy');
   rec('switching-view-needs-new-deliberate-publish', await page.locator('#publish-go').isDisabled() && file('portfolio-live', 'index.html').includes('id="sky"'));
   await page.locator('#release-confirm').check(); await page.locator('#publish-go').click();
   await wait(page, () => /Waiting for deployment: Legacy/.test(document.querySelector('#release-pending').textContent));
   rec('legacy-switch-keeps-galaxy-draft-and-publication', file('portfolio-live', 'index.html') === legacy && refs.get('portfolio-drafts') === draftBeforeRollback && file('portfolio-live', 'content/galaxy.json') === publishedBeforeRollback);
+  const sibling = await page.context().newPage(); await routes(sibling); await sibling.goto(base + 'admin/');
+  await wait(sibling, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  const beforeLogout = refs.get('portfolio-drafts');
   await page.locator('#disconnect').click();
+  await wait(sibling, () => !window.PortfolioPublishing.connected()); await sibling.locator('#save').click();
+  rec('device-disconnect-clears-sibling-access', !await sibling.evaluate(() => window.PortfolioPublishing.connected()) && refs.get('portfolio-drafts') === beforeLogout && await sibling.locator('#connection-form').isVisible());
+  await close(sibling); await sibling.close();
   rec('disconnect-clears-credentials', await page.evaluate(() => !localStorage.getItem('portfolio:github:token') && !sessionStorage.getItem('portfolio:github:token')));
   failAuth = true; await page.locator('#connect-token').fill('expired-fixture'); await page.locator('#connect-go').click();
   await wait(page, () => /sign-in expired/.test(document.querySelector('#publishing-msg').textContent));

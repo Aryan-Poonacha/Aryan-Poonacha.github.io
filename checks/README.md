@@ -67,11 +67,11 @@ preview fails the five preview cases.
 
 ## Drafts and publication
 
-`publishing.js` adds 23 hosted-admin browser cases. It uses an isolated GitHub API fixture with
+`publishing.js` adds 31 hosted-admin browser cases. It uses an isolated GitHub API fixture with
 immutable trees, commits, blobs and guarded ref updates. It covers separate draft initialization,
 cross-device sync, stale saves, two-tab recovery, upload/create/duplicate/delete, typing during
 saving, reload recovery, failed publication, media and page metadata, editor-note stripping,
-served-versus-queued release status, Legacy restoration, disconnect, token expiry and phone layout.
+served-versus-queued release status, Legacy restoration, device-wide disconnect, token expiry and phone layout. It also covers repeated unresolved recovery, copied-tab identities, saved/unsaved/queued media hydration, connected local previews and persistent verification failures.
 No fixture calls reach GitHub or production.
 
 Run `python3 tools/check-deploy.py` for three local-Git checks of deployment preservation,

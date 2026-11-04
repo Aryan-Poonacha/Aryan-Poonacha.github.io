@@ -7,7 +7,7 @@ with a live preview of the real site. You can also edit the file by hand.
 
 Open [the admin](https://aryan-poonacha.github.io/admin/). **Publish & live state** connects your
 GitHub repository token (Contents: read and write, this repository only). A password manager can
-keep the token across devices. Remember sign-in only on a trusted device; Disconnect removes it.
+keep the token across devices. Remember sign-in only on a trusted device; Disconnect removes it and disconnects other open admin tabs on that device.
 The public admin cannot write anything without a token authorized to edit the repository.
 
 1. Connect GitHub. The editor loads the latest **cloud draft**.
@@ -25,7 +25,7 @@ Draft content and uploads live in GitHub, so another device can load them. Every
 old versions remain in Git history. If two devices edit the same starting version, the second save
 is refused rather than overwriting the first. Download its browser copy, then **Load cloud draft**;
 Undo also keeps the local version you replaced. Browser-only edits have per-tab recovery and a
-restore banner after reload. Save draft before moving between devices.
+restore banner after reload, including repeated reloads before restoring. Copies of an open tab keep separate recovery records. Save draft before moving between devices.
 
 Uploads use immutable names, so replacing a video cannot alter a published video. A release changes
 the homepage, content, media and release state in **one commit**. Publishing never writes `main`.

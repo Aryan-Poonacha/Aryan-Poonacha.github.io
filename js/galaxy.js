@@ -829,6 +829,7 @@ window.startGalaxy = function (G) {
     a.addEventListener("click", function (e) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { toggleIndex(false); return; } /* opens elsewhere, no card here */
       var keyboard = e.detail === 0;
+      if (!keyboard) a.blur();
       toggleIndex(false, true); if (location.hash === "#" + s.id) open(s, keyboard); else indexPick = keyboard;
     });
     td1.appendChild(a); tr.appendChild(td1);

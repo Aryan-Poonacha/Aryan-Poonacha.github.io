@@ -7,7 +7,8 @@
   var SITE = new URL("../", location.href).href;
   var PREVIEW = new URL("galaxy.html", SITE).href;
   var P = window.PortfolioPublishing;
-  var draftId = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
+  function newTabId() { return window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2); }
+  var draftId = newTabId();
   try {
     draftId = sessionStorage.getItem("galaxy:admin:preview-id") || draftId;
     sessionStorage.setItem("galaxy:admin:preview-id", draftId);
@@ -15,6 +16,32 @@
   window.addEventListener("pagehide", function () { store(KEY.draft + ":" + draftId, undefined); });
   var KEY = { work: "galaxy:admin:work:" + draftId, draft: "galaxy:draft", ui: "galaxy:admin:ui" };
   var CORE_COLOR = "#FFE3B8";
+  var tabIdentityReady = Promise.resolve(), activeTabIds = new Set();
+  if (window.BroadcastChannel) {
+    var identityChannel = new BroadcastChannel("galaxy-admin-tabs"), instance = newTabId(), born = Date.now();
+    function renewIdentity() {
+      draftId = newTabId(); KEY.work = "galaxy:admin:work:" + draftId;
+      try { sessionStorage.setItem("galaxy:admin:preview-id", draftId); } catch (e) { /* optional persistence */ }
+      identityChannel.postMessage({ type: "hello", id: draftId, instance: instance, born: born });
+    }
+    identityChannel.onmessage = function (e) {
+      var m = e.data;
+      if (!m || m.instance === instance) return;
+      if (m.type === "gone") { activeTabIds.delete(m.id); return; }
+      activeTabIds.add(m.id);
+      if (m.type === "hello") identityChannel.postMessage({ type: "present", id: draftId, instance: instance, born: born });
+      if (m.id !== draftId) return;
+      var otherOlder = m.born < born || (m.born === born && m.instance < instance);
+      if (otherOlder) renewIdentity();
+      else if (m.type === "hello") identityChannel.postMessage({ type: "claimed", id: draftId, instance: instance, born: born });
+    };
+    tabIdentityReady = new Promise(function (resolve) { setTimeout(function () { resolve(); }, 150); });
+    identityChannel.postMessage({ type: "hello", id: draftId, instance: instance, born: born });
+    window.addEventListener("pagehide", function () {
+      identityChannel.postMessage({ type: "gone", id: draftId, instance: instance, born: born });
+      identityChannel.close();
+    });
+  }
 
   /* ---------- small helpers ---------- */
   function $(id) { return document.getElementById(id); }
@@ -50,7 +77,7 @@
   function swap(arr, i, d) { var j = i + d; if (j < 0 || j >= arr.length) return false; var t = arr[i]; arr[i] = arr[j]; arr[j] = t; return true; }
 
   /* ---------- state ---------- */
-  var doc = null, baseText = "", savedText = "", savedVia = "", server = null;
+  var doc = null, baseText = "", savedText = "", savedVia = "", server = null, pendingRecovery = null;
   var sel = { type: "overview" }, undoStack = [], redoStack = [], lastKey = null, lastAt = 0;
   var ui = Object.assign({ open: {}, closed: {}, preview: true, mode: "card", device: "desktop", auto: true, filter: "all" }, stored(KEY.ui) || {});
   function saveUi() { store(KEY.ui, ui); }
@@ -92,6 +119,12 @@
   function keepWork() {
     if (!doc) return;
     var text = S.format(doc);
+    if (pendingRecovery && pendingRecovery.key === KEY.work) {
+      if (text === baseText) return; // Keep the unresolved version across repeated reloads.
+      var recoveryKey = KEY.work + ":recovered:" + pendingRecovery.work.at;
+      if (!store(recoveryKey, pendingRecovery.work)) { setStatus("Recovery storage is full. Restore or download the earlier changes before editing more.", true); return; }
+      pendingRecovery.key = recoveryKey;
+    }
     if (text === baseText) store(KEY.work, undefined);
     else if (!store(KEY.work, { at: Date.now(), base: hashText(baseText), doc: doc, savedVia: text === savedText ? savedVia : "" })) {
       setStatus("Browser recovery storage unavailable. Save draft to keep these changes.", true);
@@ -450,8 +483,8 @@
     function drawPreview() {
       prev.textContent = "";
       var m = b.media; if (!m) { prev.appendChild(el("p", { class: "help" }, "No media: the hover card shows a live picture of the map around this card.")); return; }
-      if (m.type === "video" && m.src) prev.appendChild(el("video", { src: mediaUrl(m.src), poster: m.poster ? mediaUrl(m.poster) : null, muted: true, loop: true, autoplay: true, playsinline: true, controls: true }));
-      else if (m.type === "image" && m.src) prev.appendChild(el("img", { src: mediaUrl(m.src), alt: "" }));
+      if (m.type === "video" && m.src) prev.appendChild(el("video", { src: mediaUrl(m.src), "data-media-src": m.src, "data-media-poster": m.poster || "", poster: m.poster ? mediaUrl(m.poster) : null, muted: true, loop: true, autoplay: true, playsinline: true, controls: true }));
+      else if (m.type === "image" && m.src) prev.appendChild(el("img", { src: mediaUrl(m.src), "data-media-src": m.src, alt: "" }));
       else if (m.type === "quote") prev.appendChild(el("blockquote", null, "“" + (m.quote || "") + "”", el("cite", null, m.cite || "")));
       else if (m.type === "book") prev.appendChild(el("div", { class: "bookmock" }, el("b", null, (m.title || "").toUpperCase()), el("span", null, m.author || "")));
     }
@@ -764,7 +797,7 @@
       labels.appendChild(field("labels." + k, LABEL_HELP[k] || k, null, text(s.labels, k, { placeholder: S.LABELS[k] })));
     });
     edit.appendChild(part("Interface words", "Every word the site itself says. Empty uses the default shown.", [field("indexTitle", "Table heading", null, text(s, "indexTitle", { placeholder: "Every star, as a table" })), labels]));
-    edit.appendChild(el("p", { class: "help" }, "The page title, search description and link preview image are in the <head> of index.html."));
+    edit.appendChild(el("p", { class: "help" }, "Page title, search description and sharing image are editable above and included when you publish."));
   }
   function renderKinds() {
     edit.appendChild(head("Kinds", "Kinds of card", CORE_COLOR));
@@ -1014,33 +1047,39 @@
   function start(t) {
     doc = ensureShape(JSON.parse(t));
     baseText = savedText = S.format(doc);
-    var work = stored(KEY.work) || stored("galaxy:admin:work");
+    var workKey = KEY.work, work = stored(workKey);
+    if (!work) { workKey = "galaxy:admin:work"; work = stored(workKey); }
+    pendingRecovery = null;
     if (!work) {
-      // A closed tab's unsaved work can still be recovered from another device tab here.
+      // A closed tab's unsaved work can still be recovered in this browser.
       try {
         Object.keys(localStorage).filter(function (k) { return k.indexOf("galaxy:admin:work:") === 0; }).forEach(function (k) {
+          var owner = k.slice("galaxy:admin:work:".length).split(":")[0];
+          if (owner !== draftId && activeTabIds.has(owner)) return;
           var candidate = stored(k);
-          if (candidate && candidate.doc && (!work || candidate.at > work.at)) work = candidate;
+          if (candidate && candidate.doc && (!work || candidate.at > work.at)) { work = candidate; workKey = k; }
         });
       } catch (e) { /* storage unavailable; cloud editing still works */ }
     }
     if (work && work.doc) {
       var wt = S.format(ensureShape(work.doc));
-      if (wt === baseText) store(KEY.work, undefined);
+      if (wt === baseText) store(workKey, undefined);
       else {
         var moved = work.base !== hashText(baseText);
+        pendingRecovery = { work: work, key: workKey };
         banner(work.savedVia
           ? "This browser has the version you saved (" + work.savedVia + ", " + day(work.at) + "), which this copy of the site does not show yet."
           : "This browser kept changes you had not saved (" + day(work.at) + ")." + (moved ? " content/galaxy.json has changed since; restoring replaces those changes when you save." : ""),
-          [{ label: work.savedVia ? "Use it" : "Restore them", primary: true, fn: function () { before(); doc = ensureShape(work.doc); if (work.savedVia) { savedText = wt; savedVia = work.savedVia; } changed(true); preview(); } },
-           { label: "Discard", fn: function () { store(KEY.work, undefined); } }]);
+          [{ label: work.savedVia ? "Use it" : "Restore them", primary: true, fn: function () { before(); var recovery = pendingRecovery; pendingRecovery = null; doc = ensureShape(work.doc); if (recovery && recovery.key !== KEY.work) { store(KEY.work, work); store(recovery.key, undefined); } if (work.savedVia) { savedText = wt; savedVia = work.savedVia; } changed(true); preview(); } },
+           { label: "Discard", fn: function () { if (pendingRecovery) store(pendingRecovery.key, undefined); pendingRecovery = null; keepWork(); } }]);
       }
     }
     restoreSel(); syncPreviewUi(); refreshStatus(); show();
   }
   Promise.all([
     fetch(SITE + "content/galaxy.json", { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error("content/galaxy.json: HTTP " + r.status); return r.text(); }),
-    fetch(SITE + "__admin/ping", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+    fetch(SITE + "__admin/ping", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+    tabIdentityReady
   ]).then(function (res) {
     server = res[1] && res[1].ok ? res[1] : null;
     try {
@@ -1055,12 +1094,24 @@
         blocked: blockers,
         status: setStatus,
         preview: function () { shown.draft = null; preview(); },
+        mediaReady: function () {
+          edit.querySelectorAll("[data-media-src]").forEach(function (node) {
+            var src = mediaUrl(node.dataset.mediaSrc);
+            if (node.src !== src) node.src = src;
+            if (node.dataset.mediaPoster) node.poster = mediaUrl(node.dataset.mediaPoster);
+          });
+        },
         connected: refreshStatus,
         disconnected: refreshStatus,
         remote: function (text, initial) {
           if (initial) { start(text); return; }
-          before(); doc = ensureShape(JSON.parse(text)); baseText = savedText = S.format(doc);
-          savedVia = "cloud"; $("banner").hidden = true; fixSel(); keepWork(); changed(true); preview();
+          if (pendingRecovery && pendingRecovery.key === KEY.work) {
+            if (!store(KEY.work + ":recovered:" + pendingRecovery.work.at, pendingRecovery.work)) throw new Error("Download or restore the pending browser recovery before loading another draft.");
+          }
+          if (pendingRecovery && S.format(doc) === baseText) { undoStack.push(JSON.stringify(pendingRecovery.work.doc)); redoStack = []; lastKey = null; }
+          else before();
+          doc = ensureShape(JSON.parse(text)); baseText = savedText = S.format(doc);
+          savedVia = "cloud"; pendingRecovery = null; $("banner").hidden = true; fixSel(); keepWork(); changed(true); preview();
         },
         saved: function (text, via) {
           baseText = savedText = text; savedVia = via; settle(); keepWork(); refreshStatus();
