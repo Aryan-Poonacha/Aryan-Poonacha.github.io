@@ -17,7 +17,7 @@ async (page) => {
     const p = String(width);
     await page.setViewportSize({ width, height: 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('http://127.0.0.1:4187/?galaxy-levels=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?galaxy-levels=1', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     await page.waitForTimeout(400);
     let s = await state();
@@ -59,7 +59,7 @@ async (page) => {
     s = await state();
     rec(p + '-escape-zooms-out-to-galaxy', s.level === 'galaxy' && !s.headingSeen, s);
 
-    await page.goto('http://127.0.0.1:4187/?galaxy-levels=2#lf-agent', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?galaxy-levels=2#lf-agent', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     await page.waitForTimeout(400);
     s = await state();
@@ -68,7 +68,7 @@ async (page) => {
   /* a short phone: the card leaves little map, and the system's planets must still be there */
   for (const width of [390, 720]) {
     await page.setViewportSize({ width, height: 667 });
-    await page.goto('http://127.0.0.1:4187/?galaxy-levels=3#curebereft', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?galaxy-levels=3#curebereft', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     await page.waitForTimeout(500);
     const short = await state();

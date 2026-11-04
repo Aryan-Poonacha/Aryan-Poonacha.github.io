@@ -5,7 +5,7 @@ async (page) => {
  const inspect=()=>page.evaluate(()=>({focusId:document.activeElement.id,tag:document.activeElement.tagName,indexOn:document.querySelector('#index').dataset.on,focusInIndex:document.querySelector('#index').contains(document.activeElement),cardOn:document.querySelector('#card').dataset.on,focusInCard:document.querySelector('#card').contains(document.activeElement),hash:location.hash}));
  for(const width of [1280,390]) for(const motion of ['reduce','no-preference']) {
   const prefix=width+'-'+motion;await page.setViewportSize({width,height:844});await page.emulateMedia({reducedMotion:motion});
-  await page.goto('http://127.0.0.1:4187/',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>typeof window.__galaxy==='function');await page.bringToFront();if(!await page.evaluate(()=>document.hasFocus()))throw new Error('Native browser input is not focused');
+  await page.goto('http://127.0.0.1:4187/galaxy.html',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>typeof window.__galaxy==='function');await page.bringToFront();if(!await page.evaluate(()=>document.hasFocus()))throw new Error('Native browser input is not focused');
   await page.locator('#index-toggle').focus();await page.keyboard.press('Enter');await page.waitForTimeout(350);
   let s=await inspect();record(prefix+'-keyboard-open',s.indexOn==='true'&&s.focusInIndex,s);
   await page.keyboard.press('Escape');await page.waitForTimeout(350);s=await inspect();record(prefix+'-escape-restores-opener',s.indexOn==='false'&&s.focusId==='index-toggle',s);

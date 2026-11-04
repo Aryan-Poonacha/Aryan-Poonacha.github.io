@@ -3,7 +3,7 @@ async (page) => {
   for (const width of [1280, 390]) for (const motion of ['reduce', 'no-preference']) {
     await page.setViewportSize({ width, height: 844 });
     await page.emulateMedia({ reducedMotion: motion });
-    await page.goto('http://127.0.0.1:4187/?card-reopen-focus=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?card-reopen-focus=1', { waitUntil: 'domcontentloaded' });
     await page.bringToFront();
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     for (let cycle = 0; cycle < 2; cycle++) {

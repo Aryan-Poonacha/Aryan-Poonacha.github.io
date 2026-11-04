@@ -3,7 +3,7 @@ async (page) => {
   for (const width of [1280, 390]) for (const panel of ['index', 'card']) {
     await page.setViewportSize({ width, height: 844 });
     await page.emulateMedia({ reducedMotion: 'no-preference' });
-    await page.goto('http://127.0.0.1:4187/?panel-double-click=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?panel-double-click=1', { waitUntil: 'domcontentloaded' });
     await page.bringToFront();
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     await page.locator('#index-toggle').click();

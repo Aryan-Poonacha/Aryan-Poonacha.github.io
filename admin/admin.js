@@ -5,6 +5,9 @@
   "use strict";
   var S = window.GalaxySchema;
   var SITE = new URL("../", location.href).href;
+  var PREVIEW = new URL("galaxy.html", SITE).href;
+  var P = window.PortfolioPublishing;
+  var draftId = (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
   var KEY = { work: "galaxy:admin:work", draft: "galaxy:draft", ui: "galaxy:admin:ui", gh: "galaxy:admin:github", token: "galaxy:admin:token" };
   var DEFAULT_REPO = /\.github\.io$/.test(location.hostname) ? location.hostname.split(".")[0] + "/" + location.hostname : "Aryan-Poonacha/Aryan-Poonacha.github.io";
   var CORE_COLOR = "#FFE3B8";
@@ -100,7 +103,8 @@
     st.textContent = (statusNote ? statusNote + " · " : "") + (dirty ? "Unsaved changes" : "All changes saved") + (errs ? " · " + errs + (errs === 1 ? " error" : " errors") : "");
     st.dataset.state = statusBad || errs ? "bad" : dirty ? "dirty" : "clean";
     $("undo").disabled = !undoStack.length; $("redo").disabled = !redoStack.length;
-    $("save").textContent = server ? "Save" : "Save…";
+    $("save").textContent = P && P.connected() ? "Save draft" : server ? "Save" : "Save draft…";
+    window.dispatchEvent(new Event("galaxy-editor-change"));
     document.title = (dirty ? "• " : "") + "Content editor · " + (doc.site.name || "");
   }
   function issuesFor(id) { return S.check(doc).filter(function (i) { return i.id === id; }); }
@@ -394,6 +398,7 @@
   /* ---------- media ---------- */
   function mediaName(name) { var m = String(name).toLowerCase().match(/^(.*?)(\.[a-z0-9]+)?$/); return S.slug(m[1]) + (m[2] || ""); }
   function upload(blob, name) {
+    if (P && P.connected()) return P.upload(blob, name || blob.name || "file");
     var path = "assets/media/" + mediaName(name || blob.name || "file");
     if (server) {
       return putFile(path, blob, false).catch(function (e) {
@@ -401,20 +406,13 @@
         throw e;
       }).then(function () { return path; });
     }
-    var cfg = ghConfig();
-    if (cfg.token) {
-      return toB64Blob(blob).then(function (b64) {
-        return ghRead(cfg, path).then(function (cur) {
-          if (cur && !confirm(path + " already exists on " + cfg.branch + ". Replace it?")) throw new Error("Not replaced");
-          return ghWrite(cfg, path, b64, "Add " + path, cur && cur.sha);
-        });
-      }).then(function () { return path; });
-    }
-    return Promise.reject(new Error("Uploading needs python3 tools/edit.py running, or a GitHub token under Save as…. Or copy the file into assets/media/ and type its path."));
+    return P.upload(blob, name || blob.name || "file");
   }
+  function mediaUrl(src) { return new URL(P ? P.resolve(src) : src, SITE).href; }
+
   function posterFrom(src) {
     return new Promise(function (ok, no) {
-      var v = document.createElement("video"); v.muted = true; v.preload = "auto"; v.crossOrigin = "anonymous"; v.src = new URL(src, SITE).href;
+      var v = document.createElement("video"); v.muted = true; v.preload = "auto"; v.crossOrigin = "anonymous"; v.src = mediaUrl(src);
       v.addEventListener("loadeddata", function () { v.currentTime = Math.min(1.2, (v.duration || 3) / 3); }, { once: true });
       v.addEventListener("seeked", function () {
         var c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
@@ -446,8 +444,8 @@
     function drawPreview() {
       prev.textContent = "";
       var m = b.media; if (!m) { prev.appendChild(el("p", { class: "help" }, "No media: the hover card shows a live picture of the map around this card.")); return; }
-      if (m.type === "video" && m.src) prev.appendChild(el("video", { src: new URL(m.src, SITE).href, poster: m.poster ? new URL(m.poster, SITE).href : null, muted: true, loop: true, autoplay: true, playsinline: true, controls: true }));
-      else if (m.type === "image" && m.src) prev.appendChild(el("img", { src: new URL(m.src, SITE).href, alt: "" }));
+      if (m.type === "video" && m.src) prev.appendChild(el("video", { src: mediaUrl(m.src), poster: m.poster ? mediaUrl(m.poster) : null, muted: true, loop: true, autoplay: true, playsinline: true, controls: true }));
+      else if (m.type === "image" && m.src) prev.appendChild(el("img", { src: mediaUrl(m.src), alt: "" }));
       else if (m.type === "quote") prev.appendChild(el("blockquote", null, "“" + (m.quote || "") + "”", el("cite", null, m.cite || "")));
       else if (m.type === "book") prev.appendChild(el("div", { class: "bookmock" }, el("b", null, (m.title || "").toUpperCase()), el("span", null, m.author || "")));
     }
@@ -537,7 +535,7 @@
     summary: "Opens the hover card and the card. One or two sentences.",
     body: "The card’s text. A blank line starts a new paragraph; the first paragraph also shows on hover. [words](https://…) makes a link, **bold**, *italic*.",
     builtWith: "Tools and stack, one line.",
-    notes: "Only here, never on the site: to-dos, sources, ideas."
+    notes: "Editor notes, removed from published galaxy content. This public repository’s draft branch is readable by others."
   };
   function renderBody(f) {
     var b = f.body, at = f.at, color = colorOf(f), kindOpts = Object.keys(doc.kinds).map(function (k) { return [k, doc.kinds[k] || k]; });
@@ -572,7 +570,7 @@
     edit.appendChild(part("Connections", "Lines to other cards, drawn across the map and listed under “Where it meets”.", connections(b)));
     if (!at.planet) edit.appendChild(part("Planets", (b.planets || []).length ? "Its solar system: each planet is one part of this, with its own card." : "Add planets to give this star a solar system you can zoom into.", planetsList(b)));
     edit.appendChild(part("Place and ID", null, placement(f)));
-    edit.appendChild(part("Notes", null, field("notes", "Private notes", BODY_HELP.notes, text(b, "notes", { rows: 3 }))));
+    edit.appendChild(part("Notes", null, field("notes", "Editor notes", BODY_HELP.notes, text(b, "notes", { rows: 3 }))));
     if (!at.core) edit.appendChild(el("div", { class: "ed__danger" }, btn("Duplicate", function () { duplicate(f); }, { cls: "small" }), btn("Delete…", function () { remove(f); }, { cls: "small danger" })));
   }
   function paragraphs(b) {
@@ -697,7 +695,7 @@
     });
     box.appendChild(btn("+ Star", function () { addStar(d); }, { cls: "ghost small" }));
     edit.appendChild(part("Stars", "In reading order: the table, Previous / Next, and the order they are placed around the heart.", box));
-    edit.appendChild(part("Notes", null, field("notes", "Private notes", BODY_HELP.notes, text(d, "notes", { rows: 3 }))));
+    edit.appendChild(part("Notes", null, field("notes", "Editor notes", BODY_HELP.notes, text(d, "notes", { rows: 3 }))));
     var i = doc.domains.indexOf(d);
     edit.appendChild(el("div", { class: "ed__danger" },
       btn("Move up", function () { step(doc.domains, d, -1); }, { cls: "small", disabled: i === 0 }),
@@ -876,19 +874,19 @@
       var f = find(sel.id);
       if (f && !hiddenAt(f)) { if (ui.mode === "hover") q = "&at=" + sel.id + "&hover=" + sel.id; else if (ui.mode === "map") q = "&at=" + sel.id; else hash = "#" + sel.id; }
     } else if (sel.type === "domain" && domain(sel.id) && !domain(sel.id).hidden) q = "&cluster=" + sel.id;
-    return { query: "?draft=1&intro=0" + q, hash: hash };
+    return { query: "?draft=1&editor=" + encodeURIComponent(draftId) + "&intro=0" + q, hash: hash };
   }
   function preview() {
     if (!ui.preview || !doc) return;
     var draft = S.format(doc), t = target();
-    $("preview-open").href = SITE + t.query + t.hash;
+    $("preview-open").href = PREVIEW + t.query + t.hash;
     if (draft === shown.draft && t.query === shown.query && frame.contentWindow && frame.src) {
       /* same content and view: only the hash moves, and the site flies there */
       try { if (frame.contentWindow.location.hash !== t.hash) frame.contentWindow.location.hash = t.hash || ""; return; } catch (e) { /* reload below */ }
     }
-    store(KEY.draft, draft);
+    store(KEY.draft + ":" + draftId, JSON.stringify(P ? P.previewDoc(doc) : doc));
     shown = { draft: draft, query: t.query };
-    frame.src = SITE + t.query + "&v=" + (++version) + t.hash;
+    frame.src = PREVIEW + t.query + "&v=" + (++version) + t.hash;
   }
   var previewSoon = debounce(preview, 900);
   /* a phone is 390 × 844; a desktop is 1280 wide and as tall as the panel's shape allows */
@@ -930,8 +928,10 @@
   }
   function settle() { all().forEach(function (f) { delete f.body._auto; }); doc.domains.forEach(function (d) { delete d._auto; }); }
   function saveNow() {
+    if (P && P.busy()) return;
     if (!doc || blockers()) return;
-    if (!server) return openDialog();
+    if (P && P.connected()) return P.save();
+    if (!server) return P.open();
     var t = S.format(doc);
     setStatus("Saving…");
     putFile("content/galaxy.json", new Blob([t], { type: "application/json" })).then(function () {
@@ -939,61 +939,6 @@
       setStatus("Saved to content/galaxy.json at " + clock(Date.now()));
       dialogMsg("Saved to content/galaxy.json.");
     }).catch(function (e) { setStatus("Not saved: " + e.message, true); dialogMsg("Not saved: " + e.message, true); });
-  }
-  function toB64(t) {
-    var bytes = new TextEncoder().encode(t), s = "";
-    for (var i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
-    return btoa(s);
-  }
-  function fromB64(b) { var s = atob(b.replace(/\s/g, "")), bytes = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i); return new TextDecoder().decode(bytes); }
-  function toB64Blob(blob) { return new Promise(function (ok, no) { var r = new FileReader(); r.onload = function () { ok(String(r.result).split(",")[1] || ""); }; r.onerror = function () { no(r.error); }; r.readAsDataURL(blob); }); }
-  function ghConfig() {
-    var c = stored(KEY.gh) || {}, token = "";
-    try { token = sessionStorage.getItem(KEY.token) || localStorage.getItem(KEY.token) || ""; } catch (e) { /* blocked */ }
-    return { repo: c.repo || DEFAULT_REPO, branch: c.branch || "main", remember: !!c.remember, token: token };
-  }
-  function ghUrl(cfg, path) { return "https://api.github.com/repos/" + cfg.repo.split("/").map(encodeURIComponent).join("/") + "/contents/" + path.split("/").map(encodeURIComponent).join("/"); }
-  function ghHeaders(cfg) { return { Authorization: "Bearer " + cfg.token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }; }
-  function ghFail(r) {
-    return r.json().catch(function () { return {}; }).then(function (j) {
-      throw new Error((j.message || "HTTP " + r.status) + (r.status === 401 ? ": check the token" : r.status === 404 ? ": check the repository, the branch and the token’s access" : r.status === 409 ? ": the file changed meanwhile, try again" : ""));
-    });
-  }
-  function ghRead(cfg, path) {
-    return fetch(ghUrl(cfg, path) + "?ref=" + encodeURIComponent(cfg.branch), { headers: ghHeaders(cfg), cache: "no-store" })
-      .then(function (r) { return r.status === 404 ? null : r.ok ? r.json() : ghFail(r); });
-  }
-  function ghWrite(cfg, path, b64, message, sha) {
-    var body = { message: message, content: b64, branch: cfg.branch }; if (sha) body.sha = sha;
-    return fetch(ghUrl(cfg, path), { method: "PUT", headers: ghHeaders(cfg), body: JSON.stringify(body) }).then(function (r) { return r.ok ? r.json() : ghFail(r); });
-  }
-  function readGhForm() {
-    var cfg = { repo: $("gh-repo").value.trim() || DEFAULT_REPO, branch: $("gh-branch").value.trim() || "main", remember: $("gh-remember").checked, token: $("gh-token").value.trim() };
-    store(KEY.gh, { repo: cfg.repo, branch: cfg.branch, remember: cfg.remember });
-    try {
-      sessionStorage.removeItem(KEY.token); localStorage.removeItem(KEY.token);
-      if (cfg.token) (cfg.remember ? localStorage : sessionStorage).setItem(KEY.token, cfg.token);
-    } catch (e) { /* blocked */ }
-    return cfg;
-  }
-  function ghCommit() {
-    if (!doc || blockers()) return closeDialog();
-    var cfg = readGhForm();
-    if (!cfg.token) return dialogMsg("Paste a token first.", true);
-    var t = S.format(doc), message = $("gh-message").value.trim() || "Update the site’s content";
-    dialogMsg("Checking " + cfg.branch + "…");
-    ghRead(cfg, "content/galaxy.json").then(function (cur) {
-      var remote = null;
-      if (cur && cur.content) { try { remote = S.format(ensureShape(JSON.parse(fromB64(cur.content)))); } catch (e) { remote = "unreadable"; } }
-      if (remote === t) { savedText = t; savedVia = "github"; autosave(); refreshStatus(); return dialogMsg("Already up to date on " + cfg.branch + "."); }
-      if (remote != null && remote !== baseText && !confirm("content/galaxy.json on " + cfg.branch + " is not the version you started editing (it changed, or it is another branch’s). Replace it with yours?")) return dialogMsg("Not committed.");
-      if (cfg.branch === "main" && !confirm("Committing to main publishes the site. Commit now?")) return dialogMsg("Not committed.");
-      return ghWrite(cfg, "content/galaxy.json", toB64(t), message, cur && cur.sha).then(function (out) {
-        savedText = t; savedVia = "github " + out.commit.sha.slice(0, 7) + " on " + cfg.branch; settle(); keepWork();
-        setStatus("Committed " + out.commit.sha.slice(0, 7) + " to " + cfg.branch);
-        dialogMsg("Committed " + out.commit.sha.slice(0, 7) + " to " + cfg.branch + ".");
-      });
-    }).catch(function (e) { dialogMsg("Not committed: " + e.message, true); });
   }
   function download() {
     if (!doc) return;
@@ -1013,21 +958,15 @@
   var dialog = $("save-dialog");
   function dialogMsg(m, bad) { var p = $("save-msg"); p.textContent = m || ""; p.classList.toggle("is-bad", !!bad); }
   function openDialog() {
-    var cfg = ghConfig();
     $("save-disk").hidden = !server;
     if (server) $("save-disk-help").textContent = "Writes " + (server.root ? server.root + "/" : "") + "content/galaxy.json in this checkout; the previous version goes to content/.backups/. Commit and push it with git when you are ready.";
-    $("gh-repo").value = cfg.repo; $("gh-branch").value = cfg.branch; $("gh-token").value = cfg.token; $("gh-remember").checked = cfg.remember;
-    $("gh-message").value = $("gh-message").value || "Update the site’s content";
-    ghBranchWarn(); dialogMsg("");
+    dialogMsg("");
     if (dialog.showModal) dialog.showModal(); else dialog.setAttribute("open", "");
   }
   function closeDialog() { if (dialog.open) dialog.close(); }
-  function ghBranchWarn() { $("gh-main-warn").hidden = ($("gh-branch").value.trim() || "main") !== "main"; }
-  $("gh-branch").addEventListener("input", ghBranchWarn);
   /* Enter in a field must not close the dialog; only its × does */
   dialog.querySelector("form").addEventListener("submit", function (e) { if (!e.submitter || e.submitter.value !== "cancel") e.preventDefault(); });
   $("save-disk-go").addEventListener("click", saveNow);
-  $("gh-go").addEventListener("click", ghCommit);
   $("download").addEventListener("click", download);
   $("import").addEventListener("change", function () { if (this.files[0]) importFile(this.files[0]); this.value = ""; });
   $("save").addEventListener("click", saveNow);
@@ -1079,7 +1018,30 @@
     fetch(SITE + "__admin/ping", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
   ]).then(function (res) {
     server = res[1] && res[1].ok ? res[1] : null;
-    try { start(res[0]); }
+    try {
+      start(res[0]);
+      window.dispatchEvent(new CustomEvent("galaxy-editor-ready", { detail: {
+        text: function () { return S.format(doc); },
+        base: function () { return baseText; },
+        dirty: function () { return S.format(doc) !== savedText; },
+        local: function () { return !!server; },
+        site: function () { return SITE; },
+        hasRecovery: function () { return !$("banner").hidden; },
+        blocked: blockers,
+        status: setStatus,
+        preview: function () { shown.draft = null; preview(); },
+        connected: refreshStatus,
+        disconnected: refreshStatus,
+        remote: function (text, initial) {
+          if (initial) { start(text); return; }
+          before(); doc = ensureShape(JSON.parse(text)); baseText = savedText = S.format(doc);
+          savedVia = "cloud"; $("banner").hidden = true; fixSel(); keepWork(); changed(true); preview();
+        },
+        saved: function (text, via) {
+          baseText = savedText = text; savedVia = via; settle(); keepWork(); refreshStatus();
+        }
+      } }));
+    }
     catch (e) {
       $("status").textContent = "Could not read content/galaxy.json";
       edit.appendChild(el("div", { class: "part part--bad" }, el("h3", { class: "part__h" }, "content/galaxy.json is not valid JSON"), el("p", null, e.message),

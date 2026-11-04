@@ -12,7 +12,7 @@ async (page) => {
     const p = '1280-' + motion;
     await page.setViewportSize({ width: 1280, height: 844 });
     await page.emulateMedia({ reducedMotion: motion });
-    await page.goto('http://127.0.0.1:4187/?cluster=games&hover-card=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?cluster=games&hover-card=1', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     await page.waitForTimeout(500);
     await page.locator('#b-ee .body__hit').hover();

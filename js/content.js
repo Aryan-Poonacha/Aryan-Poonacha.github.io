@@ -5,7 +5,7 @@
   var S = window.GalaxySchema, qs = new URLSearchParams(location.search);
   var PALETTE = ["#F2A541", "#78A2FF", "#7BD88F", "#B596FF", "#5FD0E0", "#EE6C5A"];
 
-  function draft() { try { var d = localStorage.getItem("galaxy:draft"); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
+  function draft() { try { var d = localStorage.getItem("galaxy:draft" + (qs.get("editor") ? ":" + qs.get("editor") : "")); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
   function load() {
     if (qs.get("draft") === "1" && draft()) return Promise.resolve(draft());
     return fetch("content/galaxy.json", { cache: "no-cache" }).then(function (r) {

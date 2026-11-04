@@ -8,7 +8,7 @@ async (page) => {
     const p = String(width);
     await page.setViewportSize({ width, height: 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('http://127.0.0.1:4187/?table-view=1', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://127.0.0.1:4187/galaxy.html?table-view=1', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => typeof window.__galaxy === 'function');
     await page.bringToFront();
     await page.locator('#home-link').focus();

@@ -20,12 +20,19 @@
     <button type="button" id="undo" title="Undo (Ctrl+Z)" disabled>Undo</button>
     <button type="button" id="redo" title="Redo (Ctrl+Shift+Z)" disabled>Redo</button>
     <button type="button" id="toggle-preview" aria-pressed="true">Preview</button>
+    <button type="button" id="publishing">Publish & live state</button>
     <button type="button" id="more" title="Save elsewhere, download, open a file">Save as…</button>
     <button type="button" id="save" class="primary" title="Save (Ctrl+S)">Save</button>
   </div>
 </header>
 <div class="banner" id="banner" hidden></div>
 
+<div class="publication" aria-label="Publication status">
+  <span><b id="live-state">Live: checking…</b><small id="cloud-state">Drafts stay separate from the live site.</small></span>
+  <button type="button" id="connect-shortcut">Connect GitHub</button>
+  <button type="button" id="cloud-reload" disabled>Load cloud draft</button>
+  <a href="../legacy.html" target="_blank" rel="noopener">Legacy preview ↗</a>
+</div>
 <main class="shell" id="shell">
   <nav class="side" aria-label="Content">
     <input type="search" id="find" placeholder="Find a card…" autocomplete="off" spellcheck="false" />
@@ -45,10 +52,10 @@
       </div>
       <label class="check"><input type="checkbox" id="preview-auto" checked /> Live</label>
       <button type="button" id="preview-reload" title="Reload the preview">↻</button>
-      <a id="preview-open" href="../?draft=1" target="_blank" rel="noopener" title="Open this preview in a tab">↗</a>
+      <a id="preview-open" href="../galaxy.html?draft=1" target="_blank" rel="noopener" title="Open this preview in a tab">↗</a>
     </div>
     <div class="preview__stage" id="preview-stage"><iframe id="frame" title="Preview of the site with your changes"></iframe></div>
-    <p class="preview__note">The preview shows your unsaved changes. Visitors see only what you save and publish.</p>
+    <p class="preview__note">The preview shows your unsaved changes. Saving a draft never changes the live site. Use Publish &amp; live state when ready.</p>
   </section>
 </main>
 
@@ -59,20 +66,6 @@
       <h3>This computer</h3>
       <p class="help" id="save-disk-help"></p>
       <button type="button" class="primary" id="save-disk-go">Save to content/galaxy.json</button>
-    </section>
-    <section class="dialog__part">
-      <h3>GitHub</h3>
-      <p class="help">Commits content/galaxy.json to a branch. Committing to <code>main</code> publishes the site within a minute or two; any other branch does not.
-        Use a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> for this repository only, with <b>Contents: read and write</b>.</p>
-      <div class="grid2">
-        <label class="field"><span class="field__l">Repository</span><input id="gh-repo" spellcheck="false" placeholder="owner/name" /></label>
-        <label class="field"><span class="field__l">Branch</span><input id="gh-branch" spellcheck="false" placeholder="main" /></label>
-      </div>
-      <label class="field"><span class="field__l">Commit message</span><input id="gh-message" /></label>
-      <label class="field"><span class="field__l">Token</span><input id="gh-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" /></label>
-      <label class="check"><input type="checkbox" id="gh-remember" /> Remember the token in this browser</label>
-      <p class="help warn" id="gh-main-warn" hidden>This branch is the live site: the commit publishes your changes.</p>
-      <button type="button" class="primary" id="gh-go">Commit</button>
     </section>
     <section class="dialog__part">
       <h3>A file</h3>
@@ -86,7 +79,43 @@
   </form>
 </dialog>
 
+<dialog class="dialog" id="publishing-dialog" aria-labelledby="publishing-title">
+  <div class="dialog__in">
+    <header class="dialog__top"><h2 id="publishing-title">Publish &amp; live state</h2><button type="button" id="publishing-close" aria-label="Close publishing">×</button></header>
+    <p class="help">Edit and preview freely. Save draft syncs your work across devices. Publishing is a separate, deliberate step.</p>
+    <section class="dialog__part" id="connection-form">
+      <h3>Connect your GitHub</h3>
+      <p class="help">Use your GitHub account's <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">repository token</a> with <b>Contents: read and write</b> for this repository. Your password manager can keep it for other devices.</p>
+      <label class="field"><span class="field__l">GitHub token</span><input id="connect-token" name="password" type="password" autocomplete="current-password" spellcheck="false" /></label>
+      <label class="check"><input type="checkbox" id="connect-remember" /> Keep me connected on this trusted device</label>
+      <p class="help">The token stays in this tab unless you choose to remember it. Disconnect removes it from this browser. Repository drafts are visible to anyone with repository access.</p>
+      <button type="button" id="connect-go" class="primary">Connect</button>
+    </section>
+    <section class="dialog__part" id="connected-info" hidden>
+      <h3>Connected</h3><p id="connected-repo" class="help"></p>
+      <button type="button" id="disconnect">Disconnect this device</button>
+    </section>
+    <section class="dialog__part">
+      <h3>What visitors see</h3>
+      <p id="release-state">Checking the live site…</p>
+      <p id="release-pending" class="help"></p>
+      <div class="hrow"><a class="button" id="open-live" href="../" target="_blank" rel="noopener">Open live site ↗</a><button type="button" id="check-live">Check live state</button></div>
+      <p class="help">A release usually takes a minute or two to deploy. The live status changes only after the website serves the new release.</p>
+    </section>
+    <section class="dialog__part">
+      <h3>Release</h3>
+      <label class="field"><span class="field__l">View to publish</span><select id="release-view"><option value="galaxy">Galaxy with the saved draft</option><option value="legacy">Legacy website</option></select></label>
+      <p id="release-summary" class="help">Save your draft first. Preview every card before publishing.</p>
+      <label class="check"><input type="checkbox" id="release-confirm" /> I checked the preview and want this view live</label>
+      <button type="button" id="publish-go" class="primary" disabled>Publish selected view</button>
+      <p class="help">Switching to Legacy leaves your galaxy draft and last published galaxy content intact.</p>
+    </section>
+    <p class="dialog__msg" id="publishing-msg" role="status" aria-live="polite"></p>
+  </div>
+</dialog>
 <script src="../js/schema.js"></script>
+<script src="github.js"></script>
+<script src="publishing.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

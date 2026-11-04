@@ -21,7 +21,7 @@ async (page) => {
     await page.setViewportSize({ width, height: 844 });
     await page.emulateMedia({ reducedMotion: motion });
     const reset = async () => {
-      await page.goto('http://127.0.0.1:4187/?focus-regression=1', { waitUntil: 'domcontentloaded' });
+      await page.goto('http://127.0.0.1:4187/galaxy.html?focus-regression=1', { waitUntil: 'domcontentloaded' });
       await page.bringToFront();
       await page.waitForFunction(() => typeof window.__galaxy === 'function');
       if (!await page.evaluate(() => document.hasFocus())) throw new Error('Browser input is not focused');

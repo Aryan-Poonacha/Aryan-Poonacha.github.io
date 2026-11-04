@@ -36,7 +36,7 @@ async (page) => {
     rec('edit-shows-in-preview', lead && /Unsaved changes/.test(await status()), { lead, status: await status() });
 
     const pub = await page.context().newPage();
-    await pub.goto(base + '?intro=0#tomex'); await pub.waitForFunction(() => typeof window.__galaxy === 'function'); await pub.waitForTimeout(300);
+    await pub.goto(base + 'galaxy.html?intro=0#tomex'); await pub.waitForFunction(() => typeof window.__galaxy === 'function'); await pub.waitForTimeout(300);
     const pubLead = await pub.locator('#card .card__lead').textContent(); await pub.close(); await page.bringToFront();
     rec('visitors-do-not-see-drafts', /^AI cost control/.test(pubLead || ''), pubLead);
 
@@ -149,14 +149,14 @@ async (page) => {
     tx.summary = 'See [this](\u0001javascript:alert(1)) now.'; tx.links = [{ label: 'Bad', url: 'java\tscript:alert(1)' }, { label: 'Good', url: 'https://tomex.ai' }];
     const xss = await page.context().newPage();
     await xss.goto(base + 'admin/blank'); await xss.evaluate((d) => localStorage.setItem('galaxy:draft', JSON.stringify(d)), draft);
-    await xss.goto(base + '?draft=1&intro=0#tomex'); await xss.waitForFunction(() => typeof window.__galaxy === 'function'); await xss.waitForTimeout(300);
+    await xss.goto(base + 'galaxy.html?draft=1&intro=0#tomex'); await xss.waitForFunction(() => typeof window.__galaxy === 'function'); await xss.waitForTimeout(300);
     const hrefs = await xss.evaluate(() => ({ lead: document.querySelector('#card .card__lead').innerHTML, links: Array.from(document.querySelectorAll('#card .card__links a')).map((a) => a.getAttribute('href')) }));
     await xss.evaluate(() => localStorage.removeItem('galaxy:draft')); await xss.close(); await page.bringToFront();
     rec('script-links-render-as-text', hrefs.lead.indexOf('<a') < 0 && hrefs.lead.indexOf('this') >= 0 && hrefs.links.length === 1 && hrefs.links[0] === 'https://tomex.ai', hrefs);
 
     const bad = await page.context().newPage();
     await bad.route('**/content/galaxy.json', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: '{"core": ' }));
-    await bad.goto(base + '?intro=0'); await bad.waitForSelector('.load-error', { timeout: 5000 }).catch(() => null);
+    await bad.goto(base + 'galaxy.html?intro=0'); await bad.waitForSelector('.load-error', { timeout: 5000 }).catch(() => null);
     const msg = await bad.locator('.load-error').textContent().catch(() => '');
     await bad.close(); await page.bringToFront();
     rec('site-reports-broken-content', /not valid JSON/.test(msg || ''), msg);

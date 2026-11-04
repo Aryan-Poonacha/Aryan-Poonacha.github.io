@@ -229,3 +229,27 @@ table.overview { width: 100%; border-collapse: collapse; font-size: 13px; }
   .list__row { grid-template-columns: 1fr auto auto auto; }
   .list__row .list__url { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* Publication status remains visible while editing. */
+.top { height: 56px; }
+.shell { top: 124px; }
+.publication { position: fixed; inset: 56px 0 auto; height: 68px; z-index: 9; display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: #10131d; border-bottom: 1px solid var(--line2); }
+.publication > span { flex: 1; min-width: 0; }
+.publication b { display: block; color: var(--ok); font-weight: 500; }
+.publication small { display: block; color: var(--muted); }
+.publication a { font-size: 12px; white-space: nowrap; }
+.banner { top: 134px; }
+#publishing-dialog { width: min(640px, 94vw); }
+#release-state { font-size: 20px; color: var(--ok); }
+@media (max-width: 760px) {
+  .top { height: auto; }
+  .top__actions { flex-wrap: wrap; gap: 6px; }
+  .top__site { display: none; }
+  .top__actions button { padding: 7px 9px; font-size: 12px; }
+  .publication { position: static; height: auto; min-height: 80px; flex-wrap: wrap; }
+  .publication > span { flex-basis: 100%; }
+  .publication a { margin-left: auto; }
+  .banner { top: 12px; flex-wrap: wrap; }
+  .dialog__in { padding: 16px; }
+  .ed__actions { flex-wrap: wrap; }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Aryan Poonacha</title>
+  <meta name="description" content="Aryan Poonacha, AI engineer in San Francisco: everything made since 2016 as one galaxy. An M.Eng. in AI at Duke, then Lightfield and Tomex; Cure Bereft, a novel at fifteen; Empire Earth in the browser; research and ventures." />
+  <meta name="author" content="Aryan Poonacha" />
+  <meta name="theme-color" content="#04050a" />
+  <link rel="canonical" href="https://aryan-poonacha.github.io/" />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="Aryan Poonacha" />
+  <meta property="og:description" content="AI career, writing, games, research, ventures: everything made since 2016, as one galaxy." />
+  <meta property="og:url" content="https://aryan-poonacha.github.io/" />
+  <meta property="og:image" content="https://aryan-poonacha.github.io/assets/og-galaxy.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:creator" content="@aryan_poonacha" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/galaxy.css" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Aryan Poonacha","url":"https://aryan-poonacha.github.io/","image":"https://aryan-poonacha.github.io/assets/portrait.jpg","jobTitle":"Founding AI Engineer","worksFor":{"@type":"Organization","name":"Tomex","url":"https://tomex.ai"},"homeLocation":{"@type":"Place","name":"San Francisco, California"},"birthPlace":{"@type":"Place","name":"Bangalore, India"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"Duke University"},{"@type":"CollegeOrUniversity","name":"Duke Kunshan University"}],"sameAs":["https://github.com/Aryan-Poonacha","https://x.com/aryan_poonacha","https://bsky.app/profile/aryan-poonacha.bsky.social","https://www.linkedin.com/in/aryanpoonacha/","https://www.youtube.com/@aryanpoonacha1662","https://books.google.com/books?id=3Dg6DQAAQBAJ","https://www.dukechronicle.com/staff/aryan-poonacha"]}
+  </script>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="world" id="world" role="group" aria-label="Everything, as one galaxy: domains as clusters, projects as stars, their parts as planets. Drag to move, scroll to zoom, choose a star. Press I for the table."></div>
+</div>
+
+<div class="intro" id="intro" data-on="false" aria-hidden="true">
+  <p class="intro__kicker label">A map of everything, since 2016</p>
+  <p class="intro__name">Aryan Poonacha</p>
+  <p class="intro__line">AI engineer in San Francisco. A novel at fifteen. Games, research and ventures in between.</p>
+</div>
+
+<div class="peek" id="peek" data-on="false" aria-hidden="true"></div>
+
+<header class="hud brand">
+  <h1><a href="#" id="home-link">Aryan Poonacha</a></h1>
+  <p class="label">AI engineer · writer · game-maker</p>
+</header>
+
+<nav class="hud elsewhere label" aria-label="Elsewhere">
+  <a href="https://github.com/Aryan-Poonacha">GitHub</a>
+  <a href="https://x.com/aryan_poonacha">X</a>
+  <a href="https://bsky.app/profile/aryan-poonacha.bsky.social">Bluesky</a>
+  <a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn</a>
+  <a href="https://www.youtube.com/@aryanpoonacha1662">YouTube</a>
+  <a href="mailto:aryanpoonacha01@gmail.com">Email</a>
+  <a href="assets/Aryan-Poonacha-Resume.pdf">CV</a>
+</nav>
+
+<div class="hud heading" id="heading" data-on="false" aria-live="polite">
+  <p class="heading__n"></p>
+  <p class="heading__b"></p>
+</div>
+
+<div class="hud nav">
+  <nav class="crumbs label" id="crumbs" aria-label="Where you are"></nav>
+  <ul class="legend label" id="legend" aria-label="Domains"></ul>
+</div>
+
+<canvas id="minimap" aria-label="Map of the whole galaxy; click to go there"></canvas>
+<div class="hud tools label">
+  <span class="hint" id="hint" data-on="true"></span>
+  <span class="zoom" aria-label="Zoom">
+    <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+    <button type="button" id="zoom-home" aria-label="Whole galaxy">○</button>
+    <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+  </span>
+  <button type="button" id="index-toggle" aria-expanded="false" aria-controls="index">Index <kbd>I</kbd></button>
+</div>
+
+<aside class="card" id="card" data-on="false" aria-live="polite"></aside>
+
+<div class="index" id="index" data-on="false" role="dialog" aria-modal="true" aria-labelledby="index-title">
+  <div class="index__top">
+    <div>
+      <h2 id="index-title">Every star, as a table</h2>
+      <p class="index__count label" id="index-count"></p>
+    </div>
+    <button type="button" id="index-close" class="label">Close ×</button>
+  </div>
+  <div class="index__controls">
+    <label class="index__search"><span class="label">Find</span><input type="search" id="index-search" placeholder="A project, a year, a tool…" autocomplete="off" spellcheck="false" /></label>
+    <div class="index__filters label" id="index-filters" role="group" aria-label="Domain"></div>
+    <button type="button" class="filter label" id="index-map-order">Map order</button>
+  </div>
+  <div class="index__body" id="index-body"></div>
+  <nav class="index__links label" aria-label="Elsewhere">
+    <a href="https://github.com/Aryan-Poonacha">GitHub ↗</a>
+    <a href="https://x.com/aryan_poonacha">X ↗</a>
+    <a href="https://bsky.app/profile/aryan-poonacha.bsky.social">Bluesky ↗</a>
+    <a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn ↗</a>
+    <a href="https://www.youtube.com/@aryanpoonacha1662">YouTube ↗</a>
+    <a href="https://tomex.ai">tomex.ai ↗</a>
+    <a href="https://lightfield.com">lightfield.com ↗</a>
+    <a href="https://empire-earth.pages.dev/">empire-earth.pages.dev ↗</a>
+    <a href="mailto:aryanpoonacha01@gmail.com">aryanpoonacha01@gmail.com</a>
+    <a href="assets/Aryan-Poonacha-Resume.pdf">CV (PDF)</a>
+  </nav>
+</div>
+
+<noscript>
+  <main class="plain">
+    <h1>Aryan Poonacha</h1>
+    <p>AI engineer in San Francisco. M.Eng. in Artificial Intelligence at Duke (2023–2024); founding AI product engineer at Lightfield (2025–2026); founding AI engineer at Tomex (2026–now). Author of Cure Bereft, a science-fiction novel published at fifteen (Leadstart, 2016). Empire Earth in the browser (2026), with twelve Win32 fixes upstream in BottleShip.</p>
+    <p><a href="assets/Aryan-Poonacha-Resume.pdf">CV</a> · <a href="https://github.com/Aryan-Poonacha">GitHub</a> · <a href="https://www.linkedin.com/in/aryanpoonacha/">LinkedIn</a> · <a href="mailto:aryanpoonacha01@gmail.com">Email</a></p>
+  </main>
+</noscript>
+
+<script src="js/schema.js"></script>
+<script src="js/galaxy.js"></script>
+<script src="js/content.js"></script>
+</body>
+</html>
