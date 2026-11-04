@@ -1,2 +1,6 @@
 content/.backups/
 __pycache__/
+assets/Aryan-Poonacha-Resume.pdf
+.claude/launch.json
+node_modules/
+test-results/

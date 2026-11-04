@@ -37,5 +37,11 @@ async (page) => {
     s = await peek();
     rec(p + '-no-recording-gets-live-picture', s.on === 'true' && s.id === 'firstgames' && !s.video && s.canvas, s);
   }
+  const doc = await (await page.request.get('http://127.0.0.1:4187/content/galaxy.json')).json();
+  delete doc.domains.flatMap(d => d.stars).find(b => b.id === 'tomex').media.poster;
+  await page.route('**/content/galaxy.json', r => r.fulfill({ json: doc }));
+  await page.goto('http://127.0.0.1:4187/galaxy.html?intro=0#tomex');
+  await page.locator('#card video').waitFor();
+  rec('video-without-poster-does-not-fetch-undefined', await page.locator('#card video').getAttribute('poster') === null);
   return { ok: cases.every((c) => c.ok), cases };
 }

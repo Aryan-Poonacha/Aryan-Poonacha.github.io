@@ -88,7 +88,7 @@
     }
     async connect() {
       const repo = await this.request("");
-      if (!repo.permissions || !repo.permissions.push) throw new Error("This GitHub account cannot edit this repository.");
+      if (!repo.permissions || !repo.permissions.push) throw new Error("This token cannot edit this repository. Select this repository and grant Contents: read and write.");
       if (this.config.liveBranch === this.config.draftBranch || [this.config.liveBranch, this.config.draftBranch].includes("main")) {
         throw new Error("Draft and live branches must be separate and cannot be main.");
       }
@@ -138,7 +138,11 @@
     async publish(view, text) {
       if (!["legacy", "galaxy"].includes(view)) throw new Error("Choose legacy or galaxy.");
       // Galaxy releases always use the exact saved draft snapshot, not unsaved form values.
-      if (view === "galaxy" && schema.format(JSON.parse(await this.text(this.draft, CONTENT))) !== schema.format(JSON.parse(text))) throw new Error("Save this draft before publishing.");
+      if (view === "galaxy") {
+        const head = await this.request("/git/ref/heads/" + encodeURIComponent(this.config.draftBranch));
+        if (head.object.sha !== this.draft.sha) throw new Error("The cloud draft changed on another device. Load cloud draft and review it before publishing. Your browser changes are still here.");
+        if (schema.format(JSON.parse(await this.text(this.draft, CONTENT))) !== schema.format(JSON.parse(text))) throw new Error("Save this draft before publishing.");
+      }
       const release = { view, publishedAt: new Date().toISOString(), draftCommit: view === "galaxy" ? this.draft.sha : null };
       const template = this.live.files.get(view + ".html");
       if (!template) throw new Error("The live branch has no " + view + " template. Deploy the admin first.");

@@ -550,7 +550,7 @@ window.startGalaxy = function (G) {
     var m = s.media || {};
     if (m.video) {
       var v = document.createElement("video"); v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
-      v.poster = m.poster; v.preload = "auto"; if (big) v.controls = true; v.autoplay = !reduced; v.src = m.video; return v;
+      if (m.poster) v.poster = m.poster; v.preload = "auto"; if (big) v.controls = true; v.autoplay = !reduced; v.src = m.video; return v;
     }
     if (m.image) { var im = h("img"); im.src = m.image; im.alt = ""; im.decoding = "async"; return im; }
     if (m.book) {
@@ -907,7 +907,12 @@ window.startGalaxy = function (G) {
     last = { x: e.clientX, y: e.clientY };
   });
   function up(e) {
+    var wasPinching = !!pinch;
     pointers.delete(e.pointerId); if (pointers.size < 2) pinch = null;
+    if (wasPinching && pointers.size === 1) {
+      var remaining = Array.from(pointers.values())[0];
+      down = last = { x: remaining.x, y: remaining.y, t: performance.now() };
+    }
     if (pointers.size === 0) { var wasDrag = dragged; down = null; pointerDown = false; stage.classList.remove("is-drag"); setTimeout(function () { dragged = false; }, 0); if (!wasDrag && !e.target.closest(".body, .cl, .hud, .card, .index, #minimap, .peek") && active) closeCard(); }
   }
   stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up); window.addEventListener("pointerup", function (e) { if (pointers.has(e.pointerId)) up(e); });

@@ -9,6 +9,9 @@ Open [the admin](https://aryan-poonacha.github.io/admin/). **Publish & live stat
 GitHub repository token (Contents: read and write, this repository only). A password manager can
 keep the token across devices. Remember sign-in only on a trusted device; Disconnect removes it and disconnects other open admin tabs on that device.
 The public admin cannot write anything without a token authorized to edit the repository.
+On GitHub, explicitly choose **Only select repositories → Aryan-Poonacha.github.io** and
+**Contents → Read and write**. GitHub cannot preselect an individual repository from the link.
+The setup link suggests a one-year expiry; change it on GitHub if preferred.
 
 1. Connect GitHub. The editor loads the latest **cloud draft**.
 2. Edit the cards, domains, organisation, site text, card sections and page/share metadata.
@@ -16,6 +19,7 @@ The public admin cannot write anything without a token authorized to edit the re
 3. **Save draft** / Ctrl+S syncs to `portfolio-drafts`. It never changes the live branch.
 4. Preview the real galaxy beside the form, as a map, hover card or detail card; choose phone
    or desktop. **Legacy preview** opens the original site. The preview includes draft uploads.
+   On a phone, Show card/hover moves to the preview; Back to editor returns to the form.
 5. When ready, open **Publish & live state**, choose Galaxy, tick that you checked the preview,
    and publish. Unsaved changes and content errors block galaxy publication.
 6. Check live state after deployment. A queued release is shown separately from what the public
@@ -26,6 +30,7 @@ old versions remain in Git history. If two devices edit the same starting versio
 is refused rather than overwriting the first. Download its browser copy, then **Load cloud draft**;
 Undo also keeps the local version you replaced. Browser-only edits have per-tab recovery and a
 restore banner after reload, including repeated reloads before restoring. Copies of an open tab keep separate recovery records. Save draft before moving between devices.
+Publishing also refuses a draft superseded by another device until you load and review it.
 
 Uploads use immutable names, so replacing a video cannot alter a published video. A release changes
 the homepage, content, media and release state in **one commit**. Publishing never writes `main`.

@@ -41,6 +41,7 @@
   <section class="edit" id="edit" aria-label="Editor"></section>
   <section class="preview" id="preview" aria-label="Preview">
     <div class="preview__bar">
+      <button type="button" id="preview-back" class="preview__back">Back to editor ↑</button>
       <div class="seg" id="preview-mode" role="group" aria-label="Show">
         <button type="button" data-mode="hover">Hover card</button>
         <button type="button" data-mode="card">Card</button>
@@ -86,6 +87,7 @@
     <section class="dialog__part" id="connection-form">
       <h3>Connect your GitHub</h3>
       <p class="help">Use your GitHub account's <a id="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">repository token</a> with <b>Contents: read and write</b> for this repository. Your password manager can keep it for other devices.</p>
+      <p class="help">On GitHub, choose Repository access → Only select repositories → <b>Aryan-Poonacha.github.io</b>, then Contents → Read and write. The link sets a one-year expiry; you can change it before generating.</p>
       <label class="field"><span class="field__l">GitHub token</span><input id="connect-token" name="password" type="password" autocomplete="current-password" spellcheck="false" /></label>
       <label class="check"><input type="checkbox" id="connect-remember" /> Keep me connected on this trusted device</label>
       <p class="help">The token stays in this tab unless you choose to remember it. Disconnect removes it from this browser. Repository drafts are visible to anyone with repository access.</p>

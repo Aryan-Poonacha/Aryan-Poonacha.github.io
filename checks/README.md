@@ -1,5 +1,21 @@
 # Browser checks
 
+From a fresh checkout (Node 20+ and Python 3):
+
+```sh
+npm ci
+npx playwright install chromium
+npm test
+# Quick check of one flow:
+npm test -- publishing.js
+```
+
+The runner starts the local editor server on port 4187 if needed, verifies an existing
+server belongs to this checkout, runs checks serially in fresh browser contexts, and writes
+`test-results/browser.json`. It stops only a server it started. Browser checks never publish
+to production. `touch.js` uses real Chromium touch input to check pinch-to-drag transitions.
+`note.js` covers editable note rendering, safe links, hiding and phone layout.
+
 Serve this checkout on loopback port 4187 with `python3 tools/edit.py --port 4187 --no-open --no-backups`
 (the editor's server; `admin.js` needs it to save, and the other checks run on it unchanged).
 `index-keyboard.js` is an async function accepting a Playwright `page`. Run it in an existing
@@ -67,11 +83,14 @@ preview fails the five preview cases.
 
 ## Drafts and publication
 
-`publishing.js` adds 31 hosted-admin browser cases. It uses an isolated GitHub API fixture with
+`publishing.js` checks the hosted admin using an isolated GitHub API fixture with
 immutable trees, commits, blobs and guarded ref updates. It covers separate draft initialization,
 cross-device sync, stale saves, two-tab recovery, upload/create/duplicate/delete, typing during
 saving, reload recovery, failed publication, media and page metadata, editor-note stripping,
 served-versus-queued release status, Legacy restoration, device-wide disconnect, token expiry and phone layout. It also covers repeated unresolved recovery, copied-tab identities, saved/unsaved/queued media hydration, connected local previews and persistent verification failures.
+It rejects publication from a superseded draft, preserves uploads through Undo, protects newer
+media choices, rejects malformed imports without replacing the editor, and brings phone previews
+into view with a return button. Connected local editing hides the disk-save option.
 No fixture calls reach GitHub or production.
 
 Run `python3 tools/check-deploy.py` for three local-Git checks of deployment preservation,
@@ -84,7 +103,7 @@ The opt-in real protocol proof uses the existing owning GitHub sign-in:
 PORTFOLIO_API_PROOF=1 node tools/check-publishing-api.cjs
 ```
 
-It makes two uniquely named `admin-proof-*` branches, exercises eight cases against the real
+It makes two uniquely named `admin-proof-*` branches, exercises nine cases against the real
 GitHub API, and removes its branches in `finally`. It never writes the actual publishing branches,
 `main`, Pages settings or production. It proves first-run normalization, actual non-fast-forward
 rejection, unsaved-publication refusal, atomic content/media/metadata release, editor-note stripping

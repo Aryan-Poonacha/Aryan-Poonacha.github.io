@@ -29,7 +29,7 @@ const prove = (name, detail) => { results.push({ name, ok: true, detail }); cons
     // Leave the draft branch absent to exercise automatic initialization.
     await client.request('/git/refs', 'POST', { ref: 'refs/heads/' + config.liveBranch, sha: commit.sha }); made.push(config.liveBranch);
     await client.connect(); made.push(config.draftBranch);
-    const stale = new Client(config, token); await stale.connect();
+    const stale = new Client(config, token); const staleConnected = await stale.connect();
     assert.equal(client.live.sha, commit.sha); assert.equal(client.draft.sha, commit.sha);
     prove('connection creates a separate draft without publishing');
     await client.publish('galaxy', S.format(doc));
@@ -45,6 +45,8 @@ const prove = (name, detail) => { results.push({ name, ok: true, detail }); cons
     await assert.rejects(stale.save(S.format({ ...doc, site: { ...doc.site, name: 'stale device' } })), e => e.status === 422);
     assert.equal(await client.text(await client.snapshot(config.draftBranch), 'content/galaxy.json'), text);
     prove('actual GitHub rejects concurrent stale save');
+    await assert.rejects(stale.publish('galaxy', S.format(JSON.parse(staleConnected.draft))), /cloud draft changed/);
+    prove('stale tab cannot publish a superseded cloud draft');
     await assert.rejects(client.publish('galaxy', S.format({ ...doc, site: { ...doc.site, name: 'unsaved' } })), /Save this draft/);
     prove('unsaved content cannot publish');
     const released = await client.publish('galaxy', text), savedDraft = client.draft.sha;
