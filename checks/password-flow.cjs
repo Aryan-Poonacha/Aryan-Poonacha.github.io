@@ -72,12 +72,18 @@ async function run() {
     if (evidence) await page.screenshot({ path: path.join(evidence, 'password-connected.png') });
     // Finalize the short single-page recording before opening any additional editor tabs.
     const remembered = await context.storageState(); await context.close(); context = null;
-    context = await browser.newContext({ ignoreHTTPSErrors: true, storageState: remembered }); await setup(context);
+    context = await browser.newContext({ ignoreHTTPSErrors: true, storageState: remembered, ...(evidence ? { recordVideo: { dir: evidence, size: { width: 1280, height: 800 } } } : {}) }); await setup(context);
     page = await context.newPage(); await page.goto(origin + '/admin/'); await ready(page);
     check('remembered cookie survives a fresh browser context', await page.locator('#shell').isVisible());
     await page.route('https://aryan-poonacha.github.io/remembered-entry', route => route.fulfill({ contentType: 'text/html', body: '<a id="return" href="' + origin + '/admin/">Open editor</a>' }));
-    await page.goto('https://aryan-poonacha.github.io/remembered-entry'); await page.locator('#return').click(); await ready(page);
+    await page.goto('https://aryan-poonacha.github.io/remembered-entry');
+    if (evidence) await page.waitForTimeout(750);
+    await page.locator('#return').click(); await ready(page);
     check('public-site navigation reuses remembered sign-in', await page.locator('#shell').isVisible());
+    if (evidence) { await page.screenshot({ path: path.join(evidence, 'password-return.png') }); await page.waitForTimeout(750); }
+    const returned = await context.storageState(); await context.close(); context = null;
+    context = await browser.newContext({ ignoreHTTPSErrors: true, storageState: returned }); await setup(context);
+    page = await context.newPage(); await page.goto(origin + '/admin/'); await ready(page);
     const second = await context.newPage(); await second.goto(origin + '/admin/'); await ready(second);
     await page.locator('#publishing').click(); await page.locator('#disconnect').click();
     await page.waitForURL('**/login'); await second.waitForURL('**/login');
