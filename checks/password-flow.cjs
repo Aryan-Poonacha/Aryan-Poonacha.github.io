@@ -92,6 +92,28 @@ async function run() {
     if (evidence) await mobile.screenshot({ path: path.join(evidence, 'password-phone.png') });
     await login(mobile);
     check('phone opens connected editor', await mobile.locator('#shell').isVisible());
+    await phone.close(); phone = null;
+    context = await browser.newContext();
+    await context.addInitScript(doc => {
+      if (location.origin !== 'https://aryan-poonacha.github.io') return;
+      localStorage.setItem('portfolio:github:token', 'old-fixture-token');
+      localStorage.setItem('galaxy:admin:work:bridge', JSON.stringify({ at: Date.now(), doc }));
+    }, JSON.parse(state.text));
+    await context.route('**/*', async route => {
+      const url = new URL(route.request().url());
+      if (url.origin === 'https://agentmaxx-tuf.tail130242.ts.net') return route.fulfill({ contentType: 'text/html', body: '<p>Password sign-in destination</p>' });
+      if (url.origin !== 'https://aryan-poonacha.github.io') return route.fulfill({ status: 204 });
+      if (url.pathname === '/__admin/session') return route.fulfill({ status: 404, body: '{}' });
+      const file = path.join(root, url.pathname === '/admin/' ? 'admin/index.html' : url.pathname.slice(1));
+      const type = { '.js': 'text/javascript', '.html': 'text/html', '.json': 'application/json', '.css': 'text/css' }[path.extname(file)];
+      return route.fulfill({ contentType: type || 'application/octet-stream', body: fs.existsSync(file) ? fs.readFileSync(file) : '' });
+    });
+    const bridge = await context.newPage(); await bridge.goto('https://aryan-poonacha.github.io/admin/');
+    await bridge.waitForURL('https://agentmaxx-tuf.tail130242.ts.net/admin/**');
+    const transfer = JSON.parse(Buffer.from(decodeURIComponent(new URL(bridge.url()).hash.slice(10)), 'base64').toString());
+    check('public admin redirects to password editor with browser work', transfer.version === 1 && transfer.work.some(w => w.key === 'galaxy:admin:work:bridge'));
+    const source = (await context.storageState()).origins.find(o => o.origin === 'https://aryan-poonacha.github.io').localStorage;
+    check('redirect preserves original work and clears old GitHub credentials', source.some(v => v.name === 'galaxy:admin:work:bridge') && !source.some(v => v.name === 'portfolio:github:token'));
     check('no browser GitHub token or direct API requests', !requests.some(r => r.url.startsWith('https://api.github.com') || r.headers.authorization));
     check('no script errors', errors.length === 0);
     console.log(JSON.stringify({ passed: cases.length, cases, errors }));
