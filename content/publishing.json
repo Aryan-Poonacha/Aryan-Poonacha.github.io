@@ -2,5 +2,12 @@
   "repository": "Aryan-Poonacha/Aryan-Poonacha.github.io",
   "draftBranch": "portfolio-drafts",
   "liveBranch": "portfolio-live",
-  "siteUrl": "https://aryan-poonacha.github.io/"
+  "siteUrl": "https://aryan-poonacha.github.io/",
+  "accessEnvelope": {
+    "version": 1,
+    "iterations": 600000,
+    "salt": "IjezJ3kLfGnNIEvZVK9CMQ==",
+    "iv": "Sji9bL4o6epaGJw+",
+    "data": "DLHAPBvZd3KtuHjQvNMRj2keQHsQj3C/imckpRpBAemOHwzwN0t+EtOpxq7YvHZ+gVshqeI20Sg="
+  }
 }

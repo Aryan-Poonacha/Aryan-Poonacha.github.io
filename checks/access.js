@@ -5,6 +5,7 @@ async (page) => {
   let mode = 'owner', writes = 0, repositoryReads = 0;
   const requests = [];
   async function routes(p) {
+    await p.route('**/content/publishing.json', r => r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/' } }));
     p.on('pageerror', e => errors.push(e.message));
     p.on('dialog', d => d.accept());
     p.on('request', r => requests.push({ url: r.url(), method: r.method(), authorization: r.headers().authorization }));
@@ -112,12 +113,33 @@ async (page) => {
     await p.route('http://public.example/**', async r => {
       const url = new URL(r.request().url());
       if (url.pathname === '/__admin/ping') return r.fulfill({ json: { ok: true, root: 'spoofed-server' } });
+      if (url.pathname === '/content/publishing.json') return r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/' } }));
       return r.fulfill({ response: await p.request.get(base + url.pathname.slice(1) + url.search) });
     });
     await p.goto('http://public.example/admin/'); await p.locator('#access-go:enabled').waitFor();
     rec('remote-host-cannot-use-local-server-bypass', await p.locator('#shell').count() === 0 && await p.locator('#access').isVisible());
   } finally { await remoteContext.close(); }
   rec('authentication-checks-never-mutate-repository', writes === 0);
+  const password = 'deliberate-fixture-password-2026';
+  const envelope = await require('../admin/password.js').seal(password, 'fixture-owner-secret', 'Aryan-Poonacha/Aryan-Poonacha.github.io');
+  const encryptedContext = await page.context().browser().newContext(process.env.PORTFOLIO_STATIC_EVIDENCE_DIR ? { viewport: { width: 1000, height: 750 }, recordVideo: { dir: process.env.PORTFOLIO_STATIC_EVIDENCE_DIR, size: { width: 1000, height: 750 } } } : {});
+  try {
+    const p = await encryptedContext.newPage(); await routes(p);
+    await p.route('**/content/publishing.json', r => r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/', accessEnvelope: envelope } }));
+    await p.goto(base + 'admin/'); await p.locator('#access-go:enabled').waitFor();
+    rec('static-admin-asks-only-for-saved-password', (await p.locator('#access-form .field__l').textContent()) === 'Password' && await p.locator('#access-form details').isHidden() && await p.locator('#access-form .check').isHidden());
+    if (process.env.PORTFOLIO_STATIC_EVIDENCE_DIR) await p.screenshot({ path: require('node:path').join(process.env.PORTFOLIO_STATIC_EVIDENCE_DIR, 'static-password.png') });
+    const reads = repositoryReads;
+    await p.locator('#access-token').fill('wrong-password'); await p.locator('#access-go').click(); await p.locator('#access-go:enabled').waitFor();
+    rec('wrong-password-never-reaches-github', (await p.locator('#access-status').textContent()).includes('did not match') && repositoryReads === reads && await p.locator('#shell').count() === 0);
+    await p.locator('#access-token').fill(password); await p.locator('#access-go').click(); await connected(p);
+    rec('password-unlocks-connected-static-editor', await p.locator('#shell').isVisible() && await p.locator('#access').isHidden());
+    rec('password-and-github-key-stay-out-of-browser-storage', await p.evaluate(() => !localStorage.getItem('portfolio:github:token') && !sessionStorage.getItem('portfolio:github:token') && !JSON.stringify({ ...localStorage, ...sessionStorage }).includes('deliberate-fixture-password-2026')));
+    rec('password-is-cleared-after-unlock', await p.locator('#access-token').inputValue() === '');
+    if (process.env.PORTFOLIO_STATIC_EVIDENCE_DIR) await p.screenshot({ path: require('node:path').join(process.env.PORTFOLIO_STATIC_EVIDENCE_DIR, 'static-connected.png') });
+    await p.locator('#publishing').click(); await p.locator('#disconnect').click();
+    rec('static-password-sign-out-locks-editor', await p.locator('#access').isVisible() && await p.locator('#admin-app').isHidden() && await p.evaluate(() => window.PortfolioAccess.session === null));
+  } finally { await encryptedContext.close(); }
   rec('no-access-page-errors', errors.length === 0);
   return { ok: cases.every(c => c.ok), cases };
 }

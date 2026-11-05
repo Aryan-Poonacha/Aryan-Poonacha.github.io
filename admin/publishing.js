@@ -23,7 +23,7 @@
       localStorage.removeItem(REMEMBER);
       // Remove the earlier editor's separate credential store too.
       sessionStorage.removeItem("galaxy:admin:token"); localStorage.removeItem("galaxy:admin:token");
-      if (token) (remember ? localStorage : sessionStorage).setItem(TOKEN, token);
+      if (token && !window.PortfolioAccess?.session?.config?.accessEnvelope) (remember ? localStorage : sessionStorage).setItem(TOKEN, token);
       if (token && remember) localStorage.setItem(REMEMBER, "yes");
     } catch (e) { message("This browser cannot remember sign-in. Keep this tab open.", true); }
   }

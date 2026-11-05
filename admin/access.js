@@ -1,5 +1,5 @@
-/* Pages serves public files. GitHub verifies the owner's identity and enforces every
-   repository write. Never ship a shared password or trust a stored "unlocked" flag. */
+/* Fully static: the password unlocks encrypted GitHub access locally.
+   GitHub verifies the owner and authorizes every repository write. */
 (function () {
   "use strict";
   const $ = id => document.getElementById(id);
@@ -7,7 +7,7 @@
   const app = $("admin-app"), gate = $("access");
   const channel = window.BroadcastChannel ? new BroadcastChannel("portfolio-admin-auth") : null;
   const scripts = new Map();
-  let config, guard = null, generation = 0, started = false, local = false, checking = false, timer;
+  let config, guard = null, generation = 0, started = false, local = false, checking = false, timer, passwordMode = false;
 
   function status(text, bad) {
     $("access-status").textContent = text;
@@ -70,10 +70,10 @@
     try {
       await candidate.authorize();
       if (attempt !== generation) return;
-      rememberToken(token, remember);
+      rememberToken(passwordMode ? "" : token, passwordMode ? false : remember);
       $("access-token").value = "";
       // Share the verified session in memory, including when browser storage is blocked.
-      window.PortfolioAccess.session = { token, remember, config };
+      window.PortfolioAccess.session = { token, remember: passwordMode ? false : remember, config };
       if (!started) {
         await boot();
       } else window.dispatchEvent(new Event("portfolio-admin-unlocked"));
@@ -100,10 +100,15 @@
   window.addEventListener("focus", revalidate);
   window.addEventListener("pageshow", revalidate);
   document.addEventListener("visibilitychange", revalidate);
-  $("access-form").addEventListener("submit", e => {
+  $("access-form").addEventListener("submit", async e => {
     e.preventDefault();
-    const token = $("access-token").value.trim();
-    if (token && config && !$("access-go").disabled) open(token, $("access-remember").checked);
+    const value = $("access-token").value;
+    if (!value || !config || $("access-go").disabled) return;
+    $("access-go").disabled = true;
+    try {
+      const token = passwordMode ? await window.PortfolioPassword.unlock(value, config.accessEnvelope, config.repository) : value.trim();
+      await open(token, $("access-remember").checked);
+    } catch (error) { lock(error.message); }
   });
   (async () => {
     try {
@@ -122,6 +127,12 @@
       if (!response.ok) throw new Error("Sign-in configuration is unavailable. Reload to try again.");
       config = await response.json();
       if (config.repository !== "Aryan-Poonacha/Aryan-Poonacha.github.io") throw new Error("Invalid sign-in configuration.");
+      passwordMode = !!config.accessEnvelope && !new URL(location.href).searchParams.has("recover");
+      $("access-form").querySelector(".field__l").textContent = passwordMode ? "Password" : "GitHub token";
+      $("access-form").querySelector(".help").textContent = passwordMode ? "Use Portfolio Website Admin in 1Password." : "Sign in with your GitHub token to open the editor. Access is restricted to Aryan-Poonacha.";
+      $("access-form").querySelector(".check").hidden = passwordMode;
+      $("access-form").querySelector("details").hidden = passwordMode;
+      if (passwordMode) { rememberToken("", false); lock(); return; }
       const token = stored();
       if (token) {
         let remember = false;

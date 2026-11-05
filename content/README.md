@@ -5,14 +5,13 @@ with a live preview of the real site. You can also edit the file by hand.
 
 ## Edit from any device
 
-Open [the admin](https://aryan-poonacha.github.io/admin/) and sign in with Aryan-Poonacha's
-GitHub repository token (Contents: read and write, this repository only). GitHub verifies the
-account's immutable ID and repository write access before the editor starts. A password manager can
-keep the token across devices. Remember sign-in only on a trusted device; Disconnect removes it and disconnects other open admin tabs on that device.
-The public admin cannot write anything without a token authorized to edit the repository.
-On GitHub, explicitly choose **Only select repositories → Aryan-Poonacha.github.io** and
-**Contents → Read and write**. GitHub cannot preselect an individual repository from the link.
-The setup link suggests a one-year expiry; change it on GitHub if preferred.
+Open [the admin](https://aryan-poonacha.github.io/admin/) and use the password saved in
+**Portfolio Website Admin** in 1Password. The entire website and editor are static files on
+GitHub Pages. There is no private service, Tailscale requirement or dependency on a personal device.
+The password decrypts saved GitHub authorization in the browser; GitHub verifies the owner and
+repository write permission before the editor opens. No password or unencrypted credential is
+published. The password and decrypted key stay in tab memory; 1Password handles filling the
+password again after closing or reloading. Disconnect locks the editor and its open tabs.
 
 1. Sign in. The editor connects GitHub and loads the latest **cloud draft**.
 2. Edit the cards, domains, organisation, site text, card sections and page/share metadata.
@@ -40,14 +39,20 @@ The initial homepage is the original legacy HTML, byte for byte. `galaxy.html` i
 
 This repository is public: draft JSON and uploads on its branches are **not private**. Editor notes
 and review flags are removed from published galaxy JSON, but remain in repository draft history.
-The admin's access control is GitHub's token permission, not a hidden URL. Drafts are excluded from
+The admin's write authorization is enforced by GitHub. Drafts are excluded from
 the default homepage until explicitly published.
-GitHub Pages serves static public files: the sign-in screen gates the editor interface, while
+GitHub Pages serves static public files: the password decrypts an AES-GCM credential envelope
+derived with PBKDF2-SHA256 (600,000 iterations). The repository name is authenticated with it.
 GitHub enforces authorization on every save, upload and publication. This does not make repository
-files or draft branches private. No shared password is embedded in the website. Remembered tokens
-are reverified on every load, and access is checked each minute and when returning to the tab.
+files or draft branches private. Access is checked each minute and when returning to the tab.
 Disconnect or an expired token locks the hosted editor, including other open tabs on that device.
 The loopback-only local editor server still opens without a token.
+
+To rotate the saved GitHub authorization or password, use the existing owning `gh` sign-in and
+`node tools/seal-access.cjs op://VAULT/ITEM/password`, then review and deploy the changed encrypted
+configuration. The helper reads secrets into memory from the existing credential stores and writes
+only ciphertext. It is a one-time maintenance command, not a hosted service. Passwords must have
+at least 20 characters and 10 distinct characters. `?recover` retains direct owner-key sign-in.
 
 ## Local editing and maintenance
 

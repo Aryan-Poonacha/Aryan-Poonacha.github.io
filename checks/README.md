@@ -83,6 +83,11 @@ preview fails the five preview cases.
 
 ## Drafts and publication
 
+`node --test checks/password.cjs` checks static AES-GCM access, wrong passwords, tampering,
+repository binding and work-factor validation. `access.js` also exercises the actual static password
+form, owner verification, memory-only credentials and sign-out with a deliberate encrypted fixture.
+`PORTFOLIO_STATIC_EVIDENCE_DIR=/absolute/external/directory` captures only that short password flow.
+
 `access.js` verifies the hosted editor stays locked for anonymous visitors, forged browser flags,
 another account (even with a spoofed owner name), expired/read-only tokens, rate limits and network
 failures. It covers owner sign-in, tab-only and remembered sessions, GitHub-only credential headers,
