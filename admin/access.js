@@ -56,8 +56,8 @@
   }
   async function boot() {
     if (!app.childElementCount) app.appendChild($("editor-template").content.cloneNode(true));
-    await script("publishing.js?v=owner-access-1");
-    await script("admin.js?v=owner-access-1");
+    await script("publishing.js?v=static-password-1");
+    await script("admin.js?v=static-password-1");
     started = true;
   }
   async function open(token, remember) {

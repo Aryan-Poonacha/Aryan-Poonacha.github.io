@@ -113,7 +113,7 @@ async (page) => {
     await p.route('http://public.example/**', async r => {
       const url = new URL(r.request().url());
       if (url.pathname === '/__admin/ping') return r.fulfill({ json: { ok: true, root: 'spoofed-server' } });
-      if (url.pathname === '/content/publishing.json') return r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/' } }));
+      if (url.pathname === '/content/publishing.json') return r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/' } });
       return r.fulfill({ response: await p.request.get(base + url.pathname.slice(1) + url.search) });
     });
     await p.goto('http://public.example/admin/'); await p.locator('#access-go:enabled').waitFor();

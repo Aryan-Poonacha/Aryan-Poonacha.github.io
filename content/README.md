@@ -53,6 +53,11 @@ To rotate the saved GitHub authorization or password, use the existing owning `g
 configuration. The helper reads secrets into memory from the existing credential stores and writes
 only ciphertext. It is a one-time maintenance command, not a hosted service. Passwords must have
 at least 20 characters and 10 distinct characters. `?recover` retains direct owner-key sign-in.
+Use a unique, randomly generated 1Password password: public ciphertext can be guessed offline,
+so there is no server-side attempt limit. The saved native GitHub credential retains its existing
+permissions; encrypting it does not restrict its scope. Changing the password requires resealing
+and deploying, and revoking old access also requires revoking the old GitHub credential because
+previous ciphertext remains in Git history.
 
 ## Local editing and maintenance
 
