@@ -5,13 +5,13 @@ with a live preview of the real site. You can also edit the file by hand.
 
 ## Edit from any device
 
-Open [the admin](https://aryan-poonacha.github.io/admin/) on an existing Tailscale-connected device.
-It redirects to the private HTTPS editor. Use the password saved in **Portfolio Website Admin**
-in 1Password. Sign-in is remembered for 30 days with a Secure, HttpOnly cookie. Disconnect signs
-out the device and its open editor tabs. Changing the item's password invalidates existing
-sessions within a minute. No GitHub token setup is needed: the hub uses its existing owner login.
-Browser-only drafts transfer to the private editor; their original copies remain on the public
-origin. `?recover` on the old admin retains the original owner-token recovery flow.
+Open [the admin](https://aryan-poonacha.github.io/admin/) and use the password saved in
+**Portfolio Website Admin** in 1Password. The entire website and editor are static files on
+GitHub Pages. There is no private service, Tailscale requirement or dependency on a personal device.
+The password decrypts saved GitHub authorization in the browser; GitHub verifies the owner and
+repository write permission before the editor opens. No password or unencrypted credential is
+published. The password and decrypted key stay in tab memory; 1Password handles filling the
+password again after closing or reloading. Disconnect locks the editor and its open tabs.
 
 1. Sign in. The editor connects GitHub and loads the latest **cloud draft**.
 2. Edit the cards, domains, organisation, site text, card sections and page/share metadata.
@@ -39,18 +39,25 @@ The initial homepage is the original legacy HTML, byte for byte. `galaxy.html` i
 
 This repository is public: draft JSON and uploads on its branches are **not private**. Editor notes
 and review flags are removed from published galaxy JSON, but remain in repository draft history.
-Drafts are excluded from the default homepage until explicitly published. The private server
-requires a password session before serving editor files or accessing GitHub. Its API permits only
-draft save, media upload and deliberate publication, with version checks and same-origin write
-protection. GitHub credentials and the password never enter website source or browser storage.
-GitHub still enforces repository permissions. Public repository files and branches remain readable.
-The TUF must be online for hosted editing; the public site remains on GitHub Pages independently.
+The admin's write authorization is enforced by GitHub. Drafts are excluded from
+the default homepage until explicitly published.
+GitHub Pages serves static public files: the password decrypts an AES-GCM credential envelope
+derived with PBKDF2-SHA256 (600,000 iterations). The repository name is authenticated with it.
+GitHub enforces authorization on every save, upload and publication. This does not make repository
+files or draft branches private. Access is checked each minute and when returning to the tab.
+Disconnect or an expired token locks the hosted editor, including other open tabs on that device.
 The loopback-only local editor server still opens without a token.
 
-The private server runs as `portfolio-admin.service`, on an owner-only Unix socket behind the
-existing Tailscale Serve HTTPS listener. Its private policy contains an origin and an `op://`
-reference to the existing item's password, never the value. `tools/private-admin.cjs --root PATH
---policy PATH --socket PATH` starts it; the systemd service caps memory and restarts failures.
+To rotate the saved GitHub authorization or password, use the existing owning `gh` sign-in and
+`node tools/seal-access.cjs op://VAULT/ITEM/password`, then review and deploy the changed encrypted
+configuration. The helper reads secrets into memory from the existing credential stores and writes
+only ciphertext. It is a one-time maintenance command, not a hosted service. Passwords must have
+at least 20 characters and 10 distinct characters. `?recover` retains direct owner-key sign-in.
+Use a unique, randomly generated 1Password password: public ciphertext can be guessed offline,
+so there is no server-side attempt limit. The saved native GitHub credential retains its existing
+permissions; encrypting it does not restrict its scope. Changing the password requires resealing
+and deploying, and revoking old access also requires revoking the old GitHub credential because
+previous ciphertext remains in Git history.
 
 ## Local editing and maintenance
 

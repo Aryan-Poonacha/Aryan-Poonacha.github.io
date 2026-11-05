@@ -23,7 +23,7 @@
       localStorage.removeItem(REMEMBER);
       // Remove the earlier editor's separate credential store too.
       sessionStorage.removeItem("galaxy:admin:token"); localStorage.removeItem("galaxy:admin:token");
-      if (token) (remember ? localStorage : sessionStorage).setItem(TOKEN, token);
+      if (token && !window.PortfolioAccess?.session?.config?.accessEnvelope) (remember ? localStorage : sessionStorage).setItem(TOKEN, token);
       if (token && remember) localStorage.setItem(REMEMBER, "yes");
     } catch (e) { message("This browser cannot remember sign-in. Keep this tab open.", true); }
   }
@@ -33,7 +33,7 @@
     const connected = !!client, dirty = editor.text() !== cloudText;
     $("connection-form").hidden = connected;
     $("connected-info").hidden = !connected;
-    $("connected-repo").textContent = config ? config.repository + (config.managedAuth ? " · You're signed in." : "") : "";
+    $("connected-repo").textContent = config ? config.repository : "";
     $("connect-shortcut").textContent = connected ? "GitHub connected" : "Connect GitHub";
     $("cloud-reload").disabled = !connected || busy;
     $("connect-go").disabled = busy || !config;
@@ -220,12 +220,9 @@
     };
     window.addEventListener("galaxy-editor-change", () => { $("release-confirm").checked = false; update(); refreshMediaSoon(); });
     try {
-      if (window.PortfolioAccess?.session?.config?.managedAuth) config = window.PortfolioAccess.session.config;
-      else {
-        const response = await fetch(editor.site() + "content/publishing.json", { cache: "no-store" });
-        if (!response.ok) throw new Error("Publishing configuration is unavailable.");
-        config = await response.json();
-      }
+      const response = await fetch(editor.site() + "content/publishing.json", { cache: "no-store" });
+      if (!response.ok) throw new Error("Publishing configuration is unavailable.");
+      config = await response.json();
       if (!/^[\w.-]+\/[\w.-]+$/.test(config.repository || "")) throw new Error("Invalid repository configuration.");
       $("token-link").href = "https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&contents=write&expires_in=366&target_name=" + encodeURIComponent(config.repository.split("/")[0]);
       await checkLive(); update();
@@ -234,7 +231,7 @@
       if (!window.PortfolioAccess?.session) {
         try { remember = localStorage.getItem(REMEMBER) === "yes"; } catch (e) { /* optional persistence */ }
       }
-      if (token || config.managedAuth) await operation(() => connect(token, remember));
+      if (token) await operation(() => connect(token, remember));
     } catch (e) { message(e.message, true); update(); }
   }, { once: true });
 })();

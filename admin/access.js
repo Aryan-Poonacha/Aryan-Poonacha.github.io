@@ -1,5 +1,5 @@
-/* Pages redirects to the password-protected editor. Its server keeps GitHub credentials.
-   The original owner-token mode remains available for local development and recovery. */
+/* Fully static: the password unlocks encrypted GitHub access locally.
+   GitHub verifies the owner and authorizes every repository write. */
 (function () {
   "use strict";
   const $ = id => document.getElementById(id);
@@ -7,7 +7,7 @@
   const app = $("admin-app"), gate = $("access");
   const channel = window.BroadcastChannel ? new BroadcastChannel("portfolio-admin-auth") : null;
   const scripts = new Map();
-  let config, guard = null, generation = 0, started = false, local = false, checking = false, timer;
+  let config, guard = null, generation = 0, started = false, local = false, checking = false, timer, passwordMode = false;
 
   function status(text, bad) {
     $("access-status").textContent = text;
@@ -42,10 +42,6 @@
       if (channel) channel.postMessage("disconnect");
       try { localStorage.setItem(LOGOUT, crypto.randomUUID()); } catch (e) { /* BroadcastChannel also handles logout. */ }
     }
-    if (config?.managedAuth) {
-      fetch("/__admin/logout", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json", "X-Portfolio-Request": "1" }, body: "{}" })
-        .catch(() => null).finally(() => location.assign("/login"));
-    }
   }
   function script(src) {
     if (scripts.has(src)) return scripts.get(src);
@@ -60,25 +56,24 @@
   }
   async function boot() {
     if (!app.childElementCount) app.appendChild($("editor-template").content.cloneNode(true));
-    if (config?.managedAuth) app.querySelector(".top__site").href = config.siteUrl;
-    await script("publishing.js?v=owner-access-1");
-    await script("admin.js?v=owner-access-1");
+    await script("publishing.js?v=static-password-1");
+    await script("admin.js?v=static-password-1");
     started = true;
   }
   async function open(token, remember) {
     const attempt = ++generation;
     $("access-go").disabled = true;
-    status(config.managedAuth ? "Opening your editor…" : "Verifying your GitHub account…");
+    status("Verifying your GitHub account…");
     const candidate = new window.PortfolioGitHub.Client(config, token);
     if (guard) guard.disconnect();
     guard = candidate;
     try {
       await candidate.authorize();
       if (attempt !== generation) return;
-      rememberToken(token, remember);
+      rememberToken(passwordMode ? "" : token, passwordMode ? false : remember);
       $("access-token").value = "";
       // Share the verified session in memory, including when browser storage is blocked.
-      window.PortfolioAccess.session = { token, remember, config };
+      window.PortfolioAccess.session = { token, remember: passwordMode ? false : remember, config };
       if (!started) {
         await boot();
       } else window.dispatchEvent(new Event("portfolio-admin-unlocked"));
@@ -98,42 +93,6 @@
     finally { checking = false; }
   }
   window.PortfolioAccess = { lock, session: null, allowed: () => local || !app.hidden && !!window.PortfolioAccess.session };
-  function receiveRecovery() {
-    try {
-      const pending = sessionStorage.getItem("portfolio:admin:recovery");
-      if (!location.hash.startsWith("#recovery=") && pending) history.replaceState(null, "", location.pathname + location.search + pending);
-    } catch (e) { /* The original browser copy remains available. */ }
-    if (!location.hash.startsWith("#recovery=")) return;
-    try {
-      const raw = decodeURIComponent(location.hash.slice(10));
-      if (raw.length > 1400000) throw new Error("Recovery is too large.");
-      const data = JSON.parse(window.PortfolioGitHub.decode(raw));
-      if (data.version !== 1 || !Array.isArray(data.work)) throw new Error("Invalid recovery.");
-      for (const item of data.work) {
-        if (!/^galaxy:admin:work:[\w.:-]{1,200}$/.test(item.key) || typeof item.value !== "string") continue;
-        const work = JSON.parse(item.value);
-        if (!work.doc || !Number.isFinite(work.at) || window.GalaxySchema.check(work.doc).some(i => i.level === "error")) continue;
-        // Keep existing private-origin work too. The normal recovery UI resolves edits.
-        const key = localStorage.getItem(item.key) && localStorage.getItem(item.key) !== item.value ? item.key + ":migrated:" + work.at : item.key;
-        localStorage.setItem(key, item.value);
-      }
-      if (typeof data.tab === "string" && /^[\w.-]{1,100}$/.test(data.tab)) sessionStorage.setItem("galaxy:admin:preview-id", data.tab);
-      sessionStorage.removeItem("portfolio:admin:recovery");
-      history.replaceState(null, "", location.pathname + location.search + (typeof data.hash === "string" && /^#[\w:.-]*$/.test(data.hash) ? data.hash : ""));
-    } catch (e) { status("Your previous browser copy is still kept on the public site's admin page.", true); }
-  }
-  function privateEditor(url) {
-    if (url !== "https://agentmaxx-tuf.tail130242.ts.net/admin/") throw new Error("Invalid private editor address.");
-    const target = new URL(url);
-    try {
-      const work = Object.keys(localStorage).filter(k => k.startsWith("galaxy:admin:work:")).map(key => ({ key, value: localStorage.getItem(key) }));
-      const data = JSON.stringify({ version: 1, work, tab: sessionStorage.getItem("galaxy:admin:preview-id"), hash: location.hash });
-      if (work.length && data.length < 1000000) target.hash = "recovery=" + encodeURIComponent(window.PortfolioGitHub.encode(data));
-      else target.hash = location.hash;
-    } catch (e) { target.hash = location.hash; }
-    rememberToken("", false);
-    location.replace(target.href);
-  }
   window.addEventListener("portfolio-admin-locked", () => { window.PortfolioAccess.session = null; });
   window.addEventListener("portfolio-auth-required", e => lock(e.detail, started && !app.hidden));
   if (channel) channel.onmessage = e => { if (e.data === "disconnect") lock(); };
@@ -141,28 +100,18 @@
   window.addEventListener("focus", revalidate);
   window.addEventListener("pageshow", revalidate);
   document.addEventListener("visibilitychange", revalidate);
-  $("access-form").addEventListener("submit", e => {
+  $("access-form").addEventListener("submit", async e => {
     e.preventDefault();
-    if (config?.managedAuth && !$("access-go").disabled) return open("", false);
-    const token = $("access-token").value.trim();
-    if (token && config && !$("access-go").disabled) open(token, $("access-remember").checked);
+    const value = $("access-token").value;
+    if (!value || !config || $("access-go").disabled) return;
+    $("access-go").disabled = true;
+    try {
+      const token = passwordMode ? await window.PortfolioPassword.unlock(value, config.accessEnvelope, config.repository) : value.trim();
+      await open(token, $("access-remember").checked);
+    } catch (error) { lock(error.message); }
   });
   (async () => {
     try {
-      const sessionResponse = await fetch("../__admin/session", { cache: "no-store", credentials: "same-origin", signal: AbortSignal.timeout(10000) }).catch(() => null);
-      if (sessionResponse?.ok) {
-        const session = await sessionResponse.json();
-        if (session.managedAuth && session.owner?.id === 25931656 && session.config?.managedAuth && session.config.repository === "Aryan-Poonacha/Aryan-Poonacha.github.io") {
-          config = session.config;
-          $("access-token").required = false;
-          $("access-form").querySelectorAll(".field, .check, details").forEach(node => { node.hidden = true; });
-          $("access-form").querySelector(".help").textContent = "Opening your editor…";
-          rememberToken("", false); receiveRecovery();
-          await open("", false);
-          return;
-        }
-        throw new Error("This device could not be verified.");
-      }
       // Only the loopback-only editor server may open without a GitHub sign-in.
       if (["127.0.0.1", "localhost"].includes(location.hostname)) {
         const response = await fetch("../__admin/ping", { cache: "no-store" }).catch(() => null);
@@ -178,7 +127,12 @@
       if (!response.ok) throw new Error("Sign-in configuration is unavailable. Reload to try again.");
       config = await response.json();
       if (config.repository !== "Aryan-Poonacha/Aryan-Poonacha.github.io") throw new Error("Invalid sign-in configuration.");
-      if (config.privateEditor && !new URL(location.href).searchParams.has("recover")) { privateEditor(config.privateEditor); return; }
+      passwordMode = !!config.accessEnvelope && !new URL(location.href).searchParams.has("recover");
+      $("access-form").querySelector(".field__l").textContent = passwordMode ? "Password" : "GitHub token";
+      $("access-form").querySelector(".help").textContent = passwordMode ? "Use Portfolio Website Admin in 1Password." : "Sign in with your GitHub token to open the editor. Access is restricted to Aryan-Poonacha.";
+      $("access-form").querySelector(".check").hidden = passwordMode;
+      $("access-form").querySelector("details").hidden = passwordMode;
+      if (passwordMode) { rememberToken("", false); lock(); return; }
       const token = stored();
       if (token) {
         let remember = false;

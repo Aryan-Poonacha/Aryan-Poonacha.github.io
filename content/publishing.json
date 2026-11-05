@@ -3,5 +3,11 @@
   "draftBranch": "portfolio-drafts",
   "liveBranch": "portfolio-live",
   "siteUrl": "https://aryan-poonacha.github.io/",
-  "privateEditor": "https://agentmaxx-tuf.tail130242.ts.net/admin/"
+  "accessEnvelope": {
+    "version": 1,
+    "iterations": 600000,
+    "salt": "IjezJ3kLfGnNIEvZVK9CMQ==",
+    "iv": "Sji9bL4o6epaGJw+",
+    "data": "DLHAPBvZd3KtuHjQvNMRj2keQHsQj3C/imckpRpBAemOHwzwN0t+EtOpxq7YvHZ+gVshqeI20Sg="
+  }
 }
