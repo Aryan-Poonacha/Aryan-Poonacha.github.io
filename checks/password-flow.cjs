@@ -28,7 +28,7 @@ async function run() {
   const origin = 'https://127.0.0.1:' + server.address().port;
   handler = createHandler({ root, policy: { origin, passwordRef: 'op://fixture/item/password' }, passwordProvider: async () => password, clientFactory: factory });
   const browser = await chromium.launch(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE } : {});
-  let context, phone, restored;
+  let context, phone;
   async function setup(context) {
     context.on('page', page => { page.on('pageerror', e => errors.push(e.message)); page.on('dialog', d => d.accept()); });
     await context.route('**/*', async route => {
@@ -47,7 +47,7 @@ async function run() {
   try {
     if (evidence) fs.mkdirSync(evidence, { recursive: true });
     context = await browser.newContext({ ignoreHTTPSErrors: true, viewport: { width: 1280, height: 800 }, ...(evidence ? { recordVideo: { dir: evidence, size: { width: 1280, height: 800 } } } : {}) });
-    await setup(context); const page = await context.newPage();
+    await setup(context); let page = await context.newPage();
     await page.goto(origin + '/admin/');
     check('anonymous editor redirects to one password form', new URL(page.url()).pathname === '/login' && await page.locator('input[type=password]').count() === 1);
     check('no editor resources before sign-in', !requests.some(r => r.url.endsWith('/admin/admin.js')) && state.writes.length === 0);
@@ -69,9 +69,11 @@ async function run() {
     await page.frameLocator('#frame').locator('canvas').first().waitFor();
     check('real preview runs under protected origin CSP', true);
     if (evidence) await page.screenshot({ path: path.join(evidence, 'password-connected.png') });
-    restored = await browser.newContext({ ignoreHTTPSErrors: true, storageState: await context.storageState() }); await setup(restored);
-    const again = await restored.newPage(); await again.goto(origin + '/admin/'); await ready(again);
-    check('remembered cookie survives a fresh browser context', await again.locator('#shell').isVisible()); await restored.close(); restored = null;
+    // Finalize the short single-page recording before opening any additional editor tabs.
+    const remembered = await context.storageState(); await context.close(); context = null;
+    context = await browser.newContext({ ignoreHTTPSErrors: true, storageState: remembered }); await setup(context);
+    page = await context.newPage(); await page.goto(origin + '/admin/'); await ready(page);
+    check('remembered cookie survives a fresh browser context', await page.locator('#shell').isVisible());
     const second = await context.newPage(); await second.goto(origin + '/admin/'); await ready(second);
     await page.locator('#publishing').click(); await page.locator('#disconnect').click();
     await page.waitForURL('**/login'); await second.waitForURL('**/login');
@@ -82,6 +84,7 @@ async function run() {
     await page.goto(origin + '/admin/#recovery=' + encodeURIComponent(Buffer.from(JSON.stringify(recovery)).toString('base64')));
     await login(page);
     check('browser draft survives password form navigation', await page.evaluate(() => Object.keys(localStorage).some(k => k.startsWith('galaxy:admin:work:') && localStorage.getItem(k).includes('Transferred browser-only work'))));
+    await context.close(); context = null;
     phone = await browser.newContext({ ignoreHTTPSErrors: true, viewport: { width: 390, height: 844 }, isMobile: true, deviceScaleFactor: 1 }); await setup(phone);
     const mobile = await phone.newPage(); await mobile.goto(origin + '/login');
     check('phone password form fits viewport', await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
@@ -92,7 +95,7 @@ async function run() {
     check('no script errors', errors.length === 0);
     console.log(JSON.stringify({ passed: cases.length, cases, errors }));
   } finally {
-    if (phone) await phone.close(); if (restored) await restored.close(); if (context) await context.close(); await browser.close();
+    if (phone) await phone.close(); if (context) await context.close(); await browser.close();
     server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
   }
 }
