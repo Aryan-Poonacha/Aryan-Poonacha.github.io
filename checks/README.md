@@ -83,6 +83,13 @@ preview fails the five preview cases.
 
 ## Drafts and publication
 
+`node --test checks/private-admin.cjs` checks password/session protection, CSRF rejection, proxy
+headers, rate limits, password rotation and constrained publishing with stale-version protection.
+`node checks/password-flow.cjs` drives the real password form and editor through HTTPS-origin
+request routing into the isolated backend fixture. It checks remembered cookies, draft save/reload,
+recovery, phone layout and logout; it cannot reach production GitHub. Both use deliberate fixture
+passwords. `PORTFOLIO_EVIDENCE_DIR` captures this flow outside Git when supplied.
+
 `access.js` verifies the hosted editor stays locked for anonymous visitors, forged browser flags,
 another account (even with a spoofed owner name), expired/read-only tokens, rate limits and network
 failures. It covers owner sign-in, tab-only and remembered sessions, GitHub-only credential headers,

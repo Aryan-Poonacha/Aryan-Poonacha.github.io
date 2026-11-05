@@ -5,6 +5,7 @@ async (page) => {
   let mode = 'owner', writes = 0, repositoryReads = 0;
   const requests = [];
   async function routes(p) {
+    await p.route('**/content/publishing.json', r => r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/' } }));
     p.on('pageerror', e => errors.push(e.message));
     p.on('dialog', d => d.accept());
     p.on('request', r => requests.push({ url: r.url(), method: r.method(), authorization: r.headers().authorization }));

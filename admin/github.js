@@ -1,5 +1,5 @@
 /* GitHub is the durable store. Each operation is one commit with an expected parent.
-   A rejected ref update never overwrites another device's changes. No build service or secret backend. */
+   A rejected ref update never overwrites another device's changes. Managed auth keeps tokens on the server. */
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory(require("../js/schema.js"));
   else root.PortfolioGitHub = factory(root.GalaxySchema);
@@ -47,13 +47,41 @@
   }
   class Client {
     constructor(config, token, fetcher) {
-      this.config = config; this.token = token; this.fetcher = fetcher || fetch.bind(globalThis);
+      this.config = config; this.managedAuth = config.managedAuth === true;
+      this.token = this.managedAuth ? "" : token; this.fetcher = fetcher || fetch.bind(globalThis);
       this.api = "https://api.github.com/repos/" + config.repository.split("/").map(encodeURIComponent).join("/");
       this.draft = null; this.live = null;
       this.abort = new AbortController(); this.disconnected = false;
     }
     disconnect() { this.disconnected = true; this.token = ""; this.abort.abort(); }
+    async managedAction(action, input) {
+      const out = await this.managedRequest("/actions/" + action, "POST", {
+        ...input, expectedDraft: this.draft?.sha, expectedLive: this.live?.sha
+      });
+      for (const key of ["draft", "live"]) if (out[key]) this[key] = { ...out[key], files: new Map(out[key].files.map(f => [f.path, f])) };
+      return out;
+    }
+    async managedRequest(path, method = "GET", body) {
+      if (this.disconnected) throw new Error("This device is disconnected. Open the editor again.");
+      const res = await this.fetcher("/__admin" + path, {
+        method, cache: "no-store", credentials: "same-origin", redirect: "error",
+        signal: AbortSignal.any([this.abort.signal, AbortSignal.timeout(60000)]),
+        headers: { "X-Portfolio-Request": "1", ...(body ? { "Content-Type": "application/json" } : {}) },
+        ...(body ? { body: JSON.stringify(body) } : {})
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const error = new Error(data.message || "Private editor connection is unavailable."); error.status = res.status;
+        if ([401, 403].includes(res.status) && typeof window !== "undefined") window.dispatchEvent(new CustomEvent("portfolio-auth-required", { detail: error.message }));
+        throw error;
+      }
+      return data;
+    }
     async request(path, method, body, api = this.api) {
+      if (this.managedAuth) {
+        if (method && method !== "GET") throw new Error("Use a publishing action to save on this device.");
+        return this.managedRequest("/github/repos/" + this.config.repository + path);
+      }
       if (this.disconnected) throw new Error("This device is disconnected. Connect GitHub again to continue.");
       const res = await this.fetcher(api + path, {
         method: method || "GET", cache: "no-store", signal: AbortSignal.any([this.abort.signal, AbortSignal.timeout(30000)]),
@@ -89,6 +117,11 @@
       return decode(blob.content);
     }
     async authorize() {
+      if (this.managedAuth) {
+        const session = await this.managedRequest("/session");
+        if (session.owner?.id !== 25931656 || !session.managedAuth) throw new Error("This device could not be verified.");
+        return;
+      }
       const owner = await this.request("/user", "GET", undefined, "https://api.github.com");
       // Immutable GitHub account ID, not a browser flag or an editable configuration value.
       if (owner.id !== 25931656) throw new Error("This editor is restricted to Aryan-Poonacha's GitHub account.");
@@ -96,6 +129,7 @@
       if (!repo.permissions || !repo.permissions.push) throw new Error("This token cannot edit this repository. Select this repository and grant Contents: read and write.");
     }
     async connect() {
+      if (this.managedAuth) { const out = await this.managedAction("connect", {}); return { draft: out.text, release: out.release }; }
       await this.authorize();
       if (this.config.liveBranch === this.config.draftBranch || [this.config.liveBranch, this.config.draftBranch].includes("main")) {
         throw new Error("Draft and live branches must be separate and cannot be main.");
@@ -118,6 +152,7 @@
       return { ...snapshot, sha: commit.sha, tree: tree.sha };
     }
     async save(text) {
+      if (this.managedAuth) return (await this.managedAction("save", { text })).result;
       const next = await this.commit(this.draft, [{ path: CONTENT, mode: "100644", type: "blob", content: text }], "Save portfolio draft");
       this.draft = await this.snapshotAt(next);
       return next.sha;
@@ -131,6 +166,11 @@
     async upload(blob, name) {
       if (blob.size > 24 * 1024 * 1024) throw new Error("Choose a file under 24 MB (short MP4 or compressed image).");
       if (!/\.(mp4|webm|webp|jpg|jpeg|png|gif|avif|pdf)$/i.test(name)) throw new Error("Use MP4, WebM, WebP, JPG, PNG, GIF, AVIF or PDF.");
+      if (this.managedAuth) {
+        const bytes = new Uint8Array(await blob.arrayBuffer()); let raw = "";
+        for (let i = 0; i < bytes.length; i += 32768) raw += String.fromCharCode.apply(null, bytes.subarray(i, i + 32768));
+        return (await this.managedAction("upload", { name, data: btoa(raw) })).result;
+      }
       const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", await blob.arrayBuffer())), b => b.toString(16).padStart(2, "0")).join("");
       const safe = name.toLowerCase().replace(/[^a-z0-9._-]/g, "-").slice(-100);
       const path = "assets/media/" + hash.slice(0, 16) + "-" + safe;
@@ -145,6 +185,7 @@
     }
     async publish(view, text) {
       if (!["legacy", "galaxy"].includes(view)) throw new Error("Choose legacy or galaxy.");
+      if (this.managedAuth) return (await this.managedAction("publish", { view, text })).result;
       // Galaxy releases always use the exact saved draft snapshot, not unsaved form values.
       if (view === "galaxy") {
         const head = await this.request("/git/ref/heads/" + encodeURIComponent(this.config.draftBranch));
