@@ -5,7 +5,6 @@
   const $ = id => document.getElementById(id), GH = window.PortfolioGitHub;
   const TOKEN = "portfolio:github:token", REMEMBER = "portfolio:github:remember";
   let editor, config, client = null, busy = false, cloudText = "", release = null, served = null, liveError = "", authGeneration = 0;
-  const LOGOUT = "portfolio:github:logout", authChannel = window.BroadcastChannel ? new BroadcastChannel("portfolio-admin-auth") : null;
   const connectingClients = new Set();
   const media = new Map(), mediaLoading = new Map(), servedAssets = new Map();
   const dialog = $("publishing-dialog");
@@ -15,6 +14,7 @@
   }
   function open() { if (!dialog.open) dialog.showModal(); update(); }
   function readToken() {
+    if (window.PortfolioAccess?.session) return window.PortfolioAccess.session.token;
     try { return sessionStorage.getItem(TOKEN) || localStorage.getItem(TOKEN) || ""; } catch (e) { return ""; }
   }
   function storeToken(token, remember) {
@@ -56,7 +56,10 @@
     if (busy) return;
     busy = true; update();
     try { await fn(); }
-    catch (e) { message(e.message, true); editor.status(e.message, true); open(); }
+    catch (e) {
+      message(e.message, true); editor.status(e.message, true);
+      if (editor.local() || window.PortfolioAccess?.session) open();
+    }
     finally { busy = false; update(); }
   }
   function canonical(text) {
@@ -107,7 +110,9 @@
     const generation = authGeneration, candidate = new GH.Client(config, token);
     connectingClients.add(candidate);
     let out;
-    try { out = await candidate.connect(); } finally { connectingClients.delete(candidate); }
+    try { out = await candidate.connect(); }
+    catch (e) { candidate.disconnect(); throw e; }
+    finally { connectingClients.delete(candidate); }
     if (generation !== authGeneration) { candidate.disconnect(); return; }
     const text = canonical(out.draft);
     cloudText = text; client = candidate; release = out.release;
@@ -152,8 +157,11 @@
     $("connect-token").value = ""; $("connect-remember").checked = false;
     if (editor) { editor.disconnected(); message("Disconnected on this device. Your browser changes are still here."); update(); }
   }
-  if (authChannel) authChannel.onmessage = e => { if (e.data === "disconnect") disconnectHere(); };
-  window.addEventListener("storage", e => { if (e.key === LOGOUT) disconnectHere(); });
+  window.addEventListener("portfolio-admin-locked", disconnectHere);
+  window.addEventListener("portfolio-admin-unlocked", () => {
+    const session = window.PortfolioAccess.session;
+    if (editor && session) operation(() => connect(session.token, session.remember));
+  });
   window.PortfolioPublishing = {
     connected: () => !!client,
     busy: () => busy,
@@ -185,9 +193,7 @@
       operation(() => connect(token, $("connect-remember").checked));
     };
     $("disconnect").onclick = () => {
-      disconnectHere();
-      if (authChannel) authChannel.postMessage("disconnect");
-      try { localStorage.setItem(LOGOUT, String(Date.now()) + Math.random()); } catch (e) { /* BroadcastChannel also handles this */ }
+      window.PortfolioAccess.lock("", true);
     };
     $("cloud-reload").onclick = () => {
       if ((editor.dirty() || editor.hasRecovery()) && !confirm("Load the cloud draft? Browser changes will remain available with Undo. Download a copy first if you want a separate backup.")) return;
@@ -221,7 +227,11 @@
       $("token-link").href = "https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&contents=write&expires_in=366&target_name=" + encodeURIComponent(config.repository.split("/")[0]);
       await checkLive(); update();
       const token = readToken();
-      if (token) await operation(() => connect(token, localStorage.getItem(REMEMBER) === "yes"));
+      let remember = window.PortfolioAccess?.session?.remember || false;
+      if (!window.PortfolioAccess?.session) {
+        try { remember = localStorage.getItem(REMEMBER) === "yes"; } catch (e) { /* optional persistence */ }
+      }
+      if (token) await operation(() => connect(token, remember));
     } catch (e) { message(e.message, true); update(); }
   }, { once: true });
 })();

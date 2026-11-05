@@ -12,6 +12,25 @@
   <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
+<main class="access" id="access" aria-labelledby="access-title">
+  <form class="access__form" id="access-form">
+    <p class="access__eyebrow">ARYAN POONACHA · OWNER ACCESS</p>
+    <h1 id="access-title">Private editor</h1>
+    <p class="help">Sign in with your GitHub token to open the editor. Access is restricted to Aryan-Poonacha.</p>
+    <label class="field"><span class="field__l">GitHub token</span><input id="access-token" name="password" type="password" autocomplete="current-password" required spellcheck="false" autocapitalize="none" /></label>
+    <label class="check"><input type="checkbox" id="access-remember" /> Keep me signed in on this trusted device</label>
+    <button type="submit" class="primary" id="access-go" disabled>Open editor</button>
+    <p id="access-status" class="help" role="status" aria-live="polite">Checking access…</p>
+    <details>
+      <summary>Get a GitHub token</summary>
+      <p class="help"><a href="https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&amp;contents=write&amp;expires_in=366&amp;target_name=Aryan-Poonacha" target="_blank" rel="noopener noreferrer">Create a repository token</a> while signed in as Aryan-Poonacha. Choose Only select repositories → Aryan-Poonacha.github.io, then Contents → Read and write. Your password manager can save it.</p>
+    </details>
+    <a class="access__back" href="../">Back to the public site ↗</a>
+    <noscript><p>JavaScript is required to verify your GitHub account and open the editor.</p></noscript>
+  </form>
+</main>
+<div id="admin-app" hidden inert></div>
+<template id="editor-template">
 <header class="top">
   <a class="top__site" href="../" target="_blank" rel="noopener">Open the site ↗</a>
   <h1 class="top__title">Content editor</h1>
@@ -115,9 +134,9 @@
     <p class="dialog__msg" id="publishing-msg" role="status" aria-live="polite"></p>
   </div>
 </dialog>
+</template>
 <script src="../js/schema.js"></script>
-<script src="github.js"></script>
-<script src="publishing.js"></script>
-<script src="admin.js"></script>
+<script src="github.js?v=owner-access-1"></script>
+<script src="access.js"></script>
 </body>
 </html>

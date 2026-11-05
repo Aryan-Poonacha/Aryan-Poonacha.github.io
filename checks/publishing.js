@@ -19,7 +19,7 @@ async (page) => {
   const file = (branch, path) => blobs.get(trees.get(commits.get(refs.get(branch)).tree.sha).get(path));
   const atFile = (commit, path) => blobs.get(trees.get(commits.get(commit).tree.sha).get(path));
   async function routes(p) {
-    p.on('pageerror', e => errors.push(e.message));
+    p.on('pageerror', e => errors.push(e.stack || e.message));
     p.on('dialog', d => d.accept());
     await p.route('**/__admin/ping', r => r.fulfill({ status: 404, body: '{}' }));
     await p.route('**/content/release.json*', r => r.fulfill({ status: failLive ? 503 : 200, contentType: 'application/json', body: failLive ? '{}' : atFile(servedHead, 'content/release.json') }));
@@ -31,6 +31,7 @@ async (page) => {
       const req = route.request(), url = new URL(req.url()), path = decodeURIComponent(url.pathname.replace(/^\/repos\/[^/]+\/[^/]+/, ''));
       const body = req.postDataJSON(); let out = {}, status = 200;
       if (failAuth) { status = 401; out = { message: 'Bad credentials' }; }
+      else if (path === '/user') out = { id: 25931656, login: 'Aryan-Poonacha' };
       else if (!path) out = { permissions: { push: true } };
       else if (path.startsWith('/git/ref/heads/')) {
         const sha = refs.get(path.slice('/git/ref/heads/'.length));
@@ -58,20 +59,27 @@ async (page) => {
       await route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(out) });
     });
   }
-  const wait = async (p, expression) => { try { return await p.waitForFunction(expression, null, { timeout: 12000 }); } catch (e) { throw new Error('After ' + cases.map(c => c.name).join(', ') + ': ' + expression.toString() + ': ' + await p.locator('#publishing-msg').textContent() + '; status=' + await p.locator('#status').textContent()); } };
+  const wait = async (p, expression) => { try { return await p.waitForFunction(expression, null, { timeout: 12000 }); } catch (e) { throw new Error('After ' + cases.map(c => c.name).join(', ') + ': ' + expression.toString() + ': ' + await p.locator('#publishing-msg').textContent() + '; status=' + await p.locator('#status').textContent() + '; page errors=' + JSON.stringify(errors)); } };
   const pick = async (p, id) => { await p.locator('#find').fill(id); await p.locator('#tree .row[data-id="' + id + '"]').first().click(); await p.locator('#find').fill(''); };
   const summary = p => p.locator('#edit [data-field="summary"] textarea');
   const close = async p => { if (await p.locator('#publishing-dialog').evaluate(e => e.open)) await p.locator('#publishing-close').click(); };
   const connect = async (p, remember = false) => {
+    if (await p.locator('#access').isVisible()) {
+      await p.locator('#access-token').fill('fixture-token');
+      if (remember) await p.locator('#access-remember').check();
+      await p.locator('#access-go').click();
+      await wait(p, () => document.querySelector('#connected-info')?.hidden === false && !document.querySelector('#disconnect')?.disabled);
+      return;
+    }
     await p.locator('#connect-shortcut').click();
     await p.locator('#connect-token').fill('fixture-token');
     if (remember) await p.locator('#connect-remember').check();
     await p.locator('#connect-go').click();
-    await wait(p, () => document.querySelector('#connected-info').hidden === false && !document.querySelector('#disconnect').disabled);
+    await wait(p, () => document.querySelector('#connected-info').hidden === false && !document.querySelector('#disconnect')?.disabled);
     await close(p);
   };
   await routes(page); await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto(base + 'admin/'); await wait(page, () => document.querySelector('#tree .row[data-id="tomex"]'));
+  await page.goto(base + 'admin/'); await page.locator('#access-go:enabled').waitFor();
   rec('legacy-is-default-homepage', (await (await page.request.get(base)).text()) === legacy);
   await connect(page, true);
   const tokenUrl = new URL(await page.locator('#token-link').getAttribute('href'));
@@ -83,7 +91,7 @@ async (page) => {
   rec('draft-save-does-not-publish', /Carefully edited draft/.test(file('portfolio-drafts', 'content/galaxy.json')) && refs.get('portfolio-live') === c0);
   const context2 = await page.context().browser().newContext(); const p2 = await context2.newPage(); await routes(p2);
   try {
-    await p2.goto(base + 'admin/'); await wait(p2, () => document.querySelector('#tree .row[data-id="tomex"]')); await connect(p2);
+    await p2.goto(base + 'admin/'); await p2.locator('#access-go:enabled').waitFor(); await connect(p2);
     await pick(p2, 'tomex'); rec('other-device-loads-saved-draft', await summary(p2).inputValue() === 'Carefully edited draft.');
     await pick(page, 'tomex'); await summary(page).fill('Newer device-one edit.'); await page.locator('#save').click();
     await wait(page, () => /Draft synced at/.test(document.querySelector('#status').textContent) && /All changes saved/.test(document.querySelector('#status').textContent));
@@ -103,19 +111,19 @@ async (page) => {
   // Unsaved edits in two tabs must retain independent recovery records.
   await pick(page, 'tomex'); await summary(page).fill('Tab A unsaved.'); await page.waitForTimeout(350);
   const p3 = await page.context().newPage(); await routes(p3); await p3.goto(base + 'admin/');
-  await wait(p3, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await wait(p3, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#disconnect')?.disabled);
   await pick(p3, 'lightfield'); await summary(p3).fill('Tab B unsaved.'); await p3.waitForTimeout(350);
-  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden);
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#banner')?.hidden);
   await page.locator('#banner button', { hasText: 'Restore them' }).click(); await pick(page, 'tomex');
   const tabA = await summary(page).inputValue();
-  await p3.reload(); await wait(p3, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden);
+  await p3.reload(); await wait(p3, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#banner')?.hidden);
   await p3.locator('#banner button', { hasText: 'Restore them' }).click(); await pick(p3, 'lightfield');
   rec('two-tabs-recover-their-own-unsaved-edits', tabA === 'Tab A unsaved.' && await summary(p3).inputValue() === 'Tab B unsaved.');
   await p3.locator('#undo').click(); await p3.waitForTimeout(300); await p3.close();
   const popupPromise = page.context().waitForEvent('page');
   await page.evaluate(() => window.open('about:blank', '_blank'));
   const clone = await popupPromise; await routes(clone); await clone.goto(base + 'admin/');
-  await wait(clone, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await wait(clone, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#disconnect')?.disabled);
   const originalId = await page.evaluate(() => sessionStorage.getItem('galaxy:admin:preview-id'));
   const cloneId = await clone.evaluate(() => sessionStorage.getItem('galaxy:admin:preview-id'));
   await pick(clone, 'lightfield'); await summary(clone).fill('Copied-tab independent change.'); await clone.waitForTimeout(300);
@@ -131,15 +139,15 @@ async (page) => {
   await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
   const uploadedPath = await page.locator('#edit [data-field="media.src"] input:not([type="file"])').inputValue();
   await page.locator('#edit [data-field="notes"] textarea').fill('EDITOR_ONLY_BROWSER_PROOF');
-  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden && !document.querySelector('#disconnect').disabled);
-  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden && !document.querySelector('#disconnect').disabled);
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#banner')?.hidden && !document.querySelector('#disconnect')?.disabled);
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#banner')?.hidden && !document.querySelector('#disconnect')?.disabled);
   rec('unresolved-recovery-survives-repeated-reload', await page.locator('#banner').isVisible());
   await page.locator('#banner button', { hasText: 'Restore them' }).click(); await pick(page, 'future-project');
   await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
   rec('unsaved-upload-recovery-hydrates-inline-media', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('blob:') && e.naturalWidth > 0));
   await page.locator('#save').click(); await wait(page, () => /All changes saved/.test(document.querySelector('#status').textContent) && !document.querySelector('#save').disabled);
   rec('new-card-and-immutable-media-sync-only-to-draft', file('portfolio-drafts', 'content/galaxy.json').includes('future-project') && !trees.get(commits.get(refs.get('portfolio-live')).tree.sha).has(uploadedPath));
-  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#disconnect')?.disabled);
   await pick(page, 'future-project');
   await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
   rec('saved-upload-reload-hydrates-inline-media', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('blob:') && e.naturalWidth > 0));
@@ -203,7 +211,7 @@ async (page) => {
   await summary(page).fill('Typed while saving.'); delayResolve();
   await wait(page, () => /Draft synced at/.test(document.querySelector('#status').textContent) && /Unsaved changes/.test(document.querySelector('#status').textContent) && !document.querySelector('#save').disabled);
   rec('typing-during-cloud-save-remains-unsaved', /Snapshot during save/.test(file('portfolio-drafts', 'content/galaxy.json')) && await summary(page).inputValue() === 'Typed while saving.', { summary: await summary(page).inputValue(), status: await page.locator('#status').textContent() });
-  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#banner').hidden);
+  await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#banner')?.hidden);
   await page.locator('#banner button', { hasText: 'Restore them' }).click(); await pick(page, 'tomex');
   rec('cloud-sign-in-and-unsaved-work-survive-reload', await summary(page).inputValue() === 'Typed while saving.', { summary: await summary(page).inputValue(), status: await page.locator('#status').textContent() });
   await page.locator('#save').click(); await wait(page, () => /All changes saved/.test(document.querySelector('#status').textContent));
@@ -212,12 +220,12 @@ async (page) => {
   await wait(page, () => /Another save changed/.test(document.querySelector('#publishing-msg').textContent));
   rec('failed-release-preserves-live-and-draft', refs.get('portfolio-live') === c0 && /Typed while saving/.test(file('portfolio-drafts', 'content/galaxy.json')));
   rejectLive = false; await page.locator('#release-confirm').check(); await page.locator('#publish-go').click();
-  await wait(page, () => /Release .* queued/.test(document.querySelector('#publishing-msg').textContent) && !document.querySelector('#disconnect').disabled);
+  await wait(page, () => /Release .* queued/.test(document.querySelector('#publishing-msg').textContent) && !document.querySelector('#disconnect')?.disabled);
   rec('galaxy-release-is-one-snapshot', file('portfolio-live', 'index.html').includes('id="sky"') && /Typed while saving/.test(file('portfolio-live', 'content/galaxy.json')) && JSON.parse(file('portfolio-live', 'content/release.json')).view === 'galaxy');
   rec('release-publishes-media-and-metadata-without-editor-notes', trees.get(commits.get(refs.get('portfolio-live')).tree.sha).has(uploadedPath) && file('portfolio-live', 'index.html').includes('Updated &amp; reviewed portfolio') && !file('portfolio-live', 'content/galaxy.json').includes('EDITOR_ONLY_BROWSER_PROOF'));
   rec('live-label-waits-for-served-release', /Live: Legacy/.test(await page.locator('#release-state').textContent()) && /Waiting for deployment: Galaxy/.test(await page.locator('#release-pending').textContent()));
   await close(page); await page.reload();
-  await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#disconnect')?.disabled);
   await pick(page, 'future-project');
   await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
   rec('queued-publication-keeps-draft-media-preview-working', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('blob:') && e.naturalWidth > 0));
@@ -230,7 +238,7 @@ async (page) => {
   rec('failed-live-verification-stays-unverified-during-edit', /Live: unverified/.test(await page.locator('#live-state').textContent()));
   await page.locator('#undo').click(); failLive = false;
   await page.locator('#publishing').click(); await page.locator('#check-live').click(); await wait(page, () => /^Live: Galaxy/.test(document.querySelector('#live-state').textContent));
-  await close(page); await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await close(page); await page.reload(); await wait(page, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#disconnect')?.disabled);
   await pick(page, 'future-project'); await wait(page, () => { const img = document.querySelector('.media-ed__preview img'); return img && img.complete && img.naturalWidth > 0; });
   rec('local-connected-editor-resolves-served-production-media', await page.locator('.media-ed__preview img').evaluate(e => e.src.startsWith('https://aryan-poonacha.github.io/') && e.naturalWidth > 0));
   await page.locator('#publishing').click();
@@ -241,16 +249,17 @@ async (page) => {
   await wait(page, () => /Waiting for deployment: Legacy/.test(document.querySelector('#release-pending').textContent));
   rec('legacy-switch-keeps-galaxy-draft-and-publication', file('portfolio-live', 'index.html') === legacy && refs.get('portfolio-drafts') === draftBeforeRollback && file('portfolio-live', 'content/galaxy.json') === publishedBeforeRollback);
   const sibling = await page.context().newPage(); await routes(sibling); await sibling.goto(base + 'admin/');
-  await wait(sibling, () => /GitHub connected/.test(document.querySelector('#connect-shortcut').textContent) && !document.querySelector('#disconnect').disabled);
+  await wait(sibling, () => /GitHub connected/.test(document.querySelector('#connect-shortcut')?.textContent) && !document.querySelector('#disconnect')?.disabled);
   const beforeLogout = refs.get('portfolio-drafts');
   await page.locator('#disconnect').click();
-  await wait(sibling, () => !window.PortfolioPublishing.connected()); await sibling.locator('#save').click();
-  rec('device-disconnect-clears-sibling-access', !await sibling.evaluate(() => window.PortfolioPublishing.connected()) && refs.get('portfolio-drafts') === beforeLogout && await sibling.locator('#connection-form').isVisible());
+  await wait(sibling, () => !window.PortfolioPublishing.connected());
+  rec('device-disconnect-clears-sibling-access', !await sibling.evaluate(() => window.PortfolioPublishing.connected()) && refs.get('portfolio-drafts') === beforeLogout && await sibling.locator('#access').isVisible() && await sibling.locator('#admin-app').isHidden());
   await close(sibling); await sibling.close();
   rec('disconnect-clears-credentials', await page.evaluate(() => !localStorage.getItem('portfolio:github:token') && !sessionStorage.getItem('portfolio:github:token')));
-  failAuth = true; await page.locator('#connect-token').fill('expired-fixture'); await page.locator('#connect-go').click();
-  await wait(page, () => /sign-in expired/.test(document.querySelector('#publishing-msg').textContent));
+  failAuth = true; await page.locator('#access-token').fill('expired-fixture'); await page.locator('#access-go').click();
+  await wait(page, () => /sign-in expired/.test(document.querySelector('#access-status').textContent));
   rec('expired-token-never-connects-or-publishes', !(await page.locator('#connected-info').isVisible()) && await page.locator('#publish-go').isDisabled());
+  failAuth = false; await connect(page);
   await close(page); await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#publishing').click();
   rec('phone-controls-fit-and-scroll', await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth && document.querySelector('#publishing-dialog').scrollHeight > 0));

@@ -83,6 +83,15 @@ preview fails the five preview cases.
 
 ## Drafts and publication
 
+`access.js` verifies the hosted editor stays locked for anonymous visitors, forged browser flags,
+another account (even with a spoofed owner name), expired/read-only tokens, rate limits and network
+failures. It covers owner sign-in, tab-only and remembered sessions, GitHub-only credential headers,
+cross-tab logout, keyboard access while locked, token revalidation, phone layout and JavaScript
+disabled. It makes no repository writes. The loopback-only server remains available to local checks.
+Use `PORTFOLIO_CHECK_OUTPUT=/absolute/external/directory npm test` to keep check reports outside Git;
+`PORTFOLIO_EVIDENCE_DIR=/absolute/external/directory` records the access check and captures its sign-in
+screen. The recording uses isolated fixture credentials and never reaches GitHub.
+
 `publishing.js` checks the hosted admin using an isolated GitHub API fixture with
 immutable trees, commits, blobs and guarded ref updates. It covers separate draft initialization,
 cross-device sync, stale saves, two-tab recovery, upload/create/duplicate/delete, typing during
