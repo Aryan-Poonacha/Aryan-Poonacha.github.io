@@ -467,13 +467,29 @@
   }
   function mediaEditor(b) {
     var box = el("div", { class: "media-ed" });
+    function attachment(m, key) { return { id: b.id, type: m.type, key: key, value: m[key] || "", source: key === "poster" ? m.src : null }; }
+    function attach(path, target, message) {
+      var current = find(target.id), m = current && current.body.media;
+      if (!m || m.type !== target.type || (m[target.key] || "") !== target.value || (target.source != null && m.src !== target.source)) {
+        setStatus("Uploaded " + path + " but not attached: the card or media changed. Paste this path into the file field to use it.", true);
+        return;
+      }
+      var active = document.activeElement, controls = edit.querySelectorAll("input, textarea, select");
+      var focusAt = Array.prototype.indexOf.call(controls, active), start = active.selectionStart, end = active.selectionEnd, direction = active.selectionDirection;
+      before(); m[target.key] = path; setStatus(message + path); changed(true);
+      if (focusAt >= 0) {
+        var replacement = edit.querySelectorAll("input, textarea, select")[focusAt];
+        if (replacement) { replacement.focus({ preventScroll: true }); if (typeof start === "number") replacement.setSelectionRange(start, end, direction); }
+      }
+    }
     function fileRow(m, key, title, help, accept) {
       var input = text(m, key, { code: true, placeholder: "assets/media/name" + (accept.indexOf("video") >= 0 ? ".mp4" : ".webp"), list: "media-files", onInput: function () { drawPreview(); } });
       var pick = el("input", { type: "file", accept: accept, hidden: true });
       pick.addEventListener("change", function () {
         var file = pick.files[0]; if (!file) return;
+        var target = attachment(m, key);
         setStatus("Uploading " + file.name + "…");
-        upload(file).then(function (path) { before(); m[key] = path; input.value = path; setStatus("Uploaded " + path); changed(false); drawPreview(); })
+        upload(file).then(function (path) { attach(path, target, "Uploaded "); })
           .catch(function (e) { setStatus("Upload failed: " + e.message, true); });
         pick.value = "";
       });
@@ -505,9 +521,10 @@
         var posterRow = fileRow(m, "poster", "Poster image", "Shown before the video plays and with reduced motion.", "image/*");
         posterRow.appendChild(btn("Make a poster from the video", function () {
           if (!m.src) return setStatus("Choose the video first", true);
+          var target = attachment(m, "poster"), source = m.src;
           setStatus("Making a poster…");
-          posterFrom(m.src).then(function (blob) { return upload(blob, m.src.split("/").pop().replace(/\.[a-z0-9]+$/i, "") + ".webp"); })
-            .then(function (path) { before(); m.poster = path; setStatus("Poster saved as " + path); changed(false); draw(); })
+          posterFrom(source).then(function (blob) { return upload(blob, source.split("/").pop().replace(/\.[a-z0-9]+$/i, "") + ".webp"); })
+            .then(function (path) { attach(path, target, "Poster saved as "); })
             .catch(function (e) { setStatus("Poster failed: " + e.message, true); });
         }, { cls: "small ghost" }));
         box.appendChild(posterRow);
@@ -560,7 +577,12 @@
     return el("header", { class: "ed__head", style: "--c:" + color },
       el("p", { class: "ed__kicker" }, kicker), el("h2", { class: "ed__title", id: "ed-title" }, title), actions ? el("div", { class: "ed__actions" }, actions) : null);
   }
-  function showIn(mode) { return btn(mode === "hover" ? "Show hover card" : mode === "card" ? "Show card" : "Show on map", function () { ui.mode = mode; ui.preview = true; saveUi(); syncPreviewUi(); preview(); }, { cls: "small ghost" }); }
+  function revealOnPhone(element) {
+    if (window.matchMedia("(max-width: 760px)").matches) {
+      window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - document.querySelector(".top").getBoundingClientRect().height, behavior: "auto" });
+    }
+  }
+  function showIn(mode) { return btn(mode === "hover" ? "Show hover card" : mode === "card" ? "Show card" : "Show on map", function () { ui.mode = mode; ui.preview = true; saveUi(); syncPreviewUi(); preview(); revealOnPhone($("preview")); }, { cls: "small ghost" }); }
 
   var BODY_HELP = {
     title: "The card’s heading.",
@@ -954,7 +976,8 @@
     $("preview-auto").checked = ui.auto;
     fit();
   }
-  $("toggle-preview").addEventListener("click", function () { ui.preview = !ui.preview; saveUi(); syncPreviewUi(); if (ui.preview) preview(); });
+  $("toggle-preview").addEventListener("click", function () { ui.preview = !ui.preview; saveUi(); syncPreviewUi(); if (ui.preview) { preview(); revealOnPhone($("preview")); } });
+  $("preview-back").addEventListener("click", function () { revealOnPhone(edit); });
   $("preview-mode").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; ui.mode = b.dataset.mode; saveUi(); syncPreviewUi(); preview(); });
   $("preview-device").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; ui.device = b.dataset.device; saveUi(); syncPreviewUi(); shown.query = null; preview(); });
   $("preview-auto").addEventListener("change", function () { ui.auto = this.checked; saveUi(); if (ui.auto) preview(); });
@@ -999,15 +1022,16 @@
     file.text().then(function (t) {
       var c = JSON.parse(t);
       if (!c || typeof c !== "object" || !c.core || !c.domains) throw new Error("this is not a galaxy content file (no core or domains)");
+      c = ensureShape(c); S.format(c); S.check(c);
       if (doc) before();
-      doc = ensureShape(c); sel = { type: "overview" }; changed(true); preview();
+      doc = c; sel = { type: "overview" }; changed(true); preview();
       setStatus("Opened " + file.name + " (not saved yet)"); closeDialog();
     }).catch(function (e) { dialogMsg("Could not open it: " + e.message, true); });
   }
   var dialog = $("save-dialog");
   function dialogMsg(m, bad) { var p = $("save-msg"); p.textContent = m || ""; p.classList.toggle("is-bad", !!bad); }
   function openDialog() {
-    $("save-disk").hidden = !server;
+    $("save-disk").hidden = !server || (P && P.connected());
     if (server) $("save-disk-help").textContent = "Writes " + (server.root ? server.root + "/" : "") + "content/galaxy.json in this checkout; the previous version goes to content/.backups/. Commit and push it with git when you are ready.";
     dialogMsg("");
     if (dialog.showModal) dialog.showModal(); else dialog.setAttribute("open", "");

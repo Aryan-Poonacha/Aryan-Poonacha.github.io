@@ -218,7 +218,7 @@
       if (!response.ok) throw new Error("Publishing configuration is unavailable.");
       config = await response.json();
       if (!/^[\w.-]+\/[\w.-]+$/.test(config.repository || "")) throw new Error("Invalid repository configuration.");
-      $("token-link").href = "https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&contents=write&target_name=" + encodeURIComponent(config.repository.split("/")[0]) + "&repository_ids=" + encodeURIComponent(config.repositoryId || "");
+      $("token-link").href = "https://github.com/settings/personal-access-tokens/new?name=Portfolio+editor&contents=write&expires_in=366&target_name=" + encodeURIComponent(config.repository.split("/")[0]);
       await checkLive(); update();
       const token = readToken();
       if (token) await operation(() => connect(token, localStorage.getItem(REMEMBER) === "yes"));
