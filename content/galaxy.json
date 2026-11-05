@@ -37,7 +37,7 @@
       },
       {
         "label": "CV",
-        "url": "assets/Aryan-Poonacha-Resume.pdf"
+        "url": "https://docs.google.com/document/d/1O0Ns0q2g2S8Nf97FXk1V7Z0ypxnBqUvk/edit?usp=sharing&ouid=116670210410591893795&rtpof=true&sd=true"
       }
     ],
     "moreLinks": [
@@ -145,7 +145,7 @@
       },
       {
         "label": "CV",
-        "url": "assets/Aryan-Poonacha-Resume.pdf"
+        "url": "https://docs.google.com/document/d/1O0Ns0q2g2S8Nf97FXk1V7Z0ypxnBqUvk/edit?usp=sharing&ouid=116670210410591893795&rtpof=true&sd=true"
       },
       {
         "label": "GitHub",
@@ -257,7 +257,7 @@
           "links": [
             {
               "label": "CV",
-              "url": "assets/Aryan-Poonacha-Resume.pdf"
+              "url": "https://docs.google.com/document/d/1O0Ns0q2g2S8Nf97FXk1V7Z0ypxnBqUvk/edit?usp=sharing&ouid=116670210410591893795&rtpof=true&sd=true"
             }
           ],
           "planets": [
@@ -1592,6 +1592,26 @@
               "label": "Read",
               "url": "notes/empire-earth-in-the-browser.html"
             }
+          ],
+          "body": [
+            "Draft · not yet published · facts taken from the pull request and repository; edit before publishing",
+            "October 2026 · about 5 minutes",
+            "Empire Earth was the first game I played seriously, at about five. Twenty-odd years later I wanted to play it with friends without anyone installing anything, so I got the 2001 release and its expansion, The Art of Conquest, running in desktop Chrome. You bring your own copy of the game, attest that you own it, download the edition once, and play; saves stay in the browser.",
+            "**How it runs**",
+            "The game is unmodified. It runs on [BottleShip](https://github.com/jenissimo/bottleship), an open-source high-level emulator that boots real x86 Windows executables in the browser and reimplements the operating-system surface a game talks to: Win32, COM, DirectDraw and Direct3D 7, on top of WebGPU, WebAudio and the Origin Private File System. Most of the graphics work existed when I started. What Empire Earth needed was the long tail of Win32 behaviour that a 2001 game assumes and nobody had hit yet.",
+            "**What was missing**",
+            "**The C runtime.** Empire Earth links against the Visual C++ 6 runtime. It needed C-locale helpers, bad_cast, _Lockit assignment, wide stdio, the counted _mbs* functions, _utime, tmpfile, and 64-bit fpos_t semantics for fgetpos and fsetpos. Without these the DLLs would not bind at all.",
+            "**A Direct3D 7 module.** The game loads d3dim700.dll at startup. I added a load-only module whose exports are stubs; if the game ever calls one, the process halts rather than returning a fabricated result, which is what you want while chasing compatibility bugs.",
+            "**Menu backgrounds.** GetDC on a DirectDraw surface returned a blank device context, so GDI labels drew over black. Seeding the DC from the surface's current pixels brought the painted menus back.",
+            "**GetTempFileName.** It always failed, so the game waited forever at the point where it wanted a scratch file.",
+            "**The quit crash.** About one quit in three faulted. DestroyWindow re-queued messages without their target thread, so a PostThreadMessage meant for the UI thread could be consumed by the game thread, which then ran one more tick against a world that had already been freed. Keeping the thread id on the re-queued message fixed it.",
+            "**The first move order.** In the first tutorial the world stopped rendering after the first unit was told to move. The WebGPU backend reused a binding across partial depth clears; giving each clear its own immutable binding until command submission fixed it.",
+            "I also added a regression harness that boots both editions headless and checks that they reach their menus, with focused tests for each fix. The changes were merged upstream on 21 October 2026 as [twelve commits](https://github.com/jenissimo/bottleship/pull/38); BottleShip's full gate passed with 5,987 tests.",
+            "**Multiplayer and hosting**",
+            "The [playable site](https://empire-earth.pages.dev/), the game-file delivery and a two-player relay run on Cloudflare Pages plus one small Render service, at a fixed cost of about seven dollars a month. Two players can play through the relay from anywhere; three to eight players need a direct WebRTC connection to the host, which has held up in Huge-map matches run across two Macs with native chat and unit training.",
+            "**What is still open**",
+            "Reconnect and host migration, strict-NAT traversal, browsers other than desktop Chrome, and the rest of the original release checklist. The single-player fixes are upstream; the multiplayer layer is mine and lives in a private repository for now.",
+            "Play it at [empire-earth.pages.dev](https://empire-earth.pages.dev/), in desktop Chrome, with your own copy of the game."
           ]
         },
         {
