@@ -60,6 +60,7 @@
   }
   async function boot() {
     if (!app.childElementCount) app.appendChild($("editor-template").content.cloneNode(true));
+    if (config?.managedAuth) app.querySelector(".top__site").href = config.siteUrl;
     await script("publishing.js?v=owner-access-1");
     await script("admin.js?v=owner-access-1");
     started = true;

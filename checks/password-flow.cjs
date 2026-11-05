@@ -57,6 +57,7 @@ async function run() {
     if (evidence) await page.screenshot({ path: path.join(evidence, 'password-desktop.png') });
     await login(page);
     check('password opens connected editor without token setup', await page.locator('#shell').isVisible() && await page.locator('#connection-form').isHidden());
+    check('open site leads to public homepage', await page.locator('.top__site').getAttribute('href') === 'https://aryan-poonacha.github.io/');
     const cookies = await context.cookies(), session = cookies.find(c => c.name === '__Host-portfolio-admin');
     check('30-day secure HttpOnly same-site session', session?.httpOnly && session.secure && session.sameSite === 'Strict' && session.expires > Date.now() / 1000 + 29 * 86400);
     check('no browser credential storage', await page.evaluate(() => !document.cookie.includes('portfolio-admin') && !localStorage.getItem('portfolio:github:token') && !sessionStorage.getItem('portfolio:github:token') && !JSON.stringify(window.PortfolioAccess.session).includes('deliberate-test-password')));
