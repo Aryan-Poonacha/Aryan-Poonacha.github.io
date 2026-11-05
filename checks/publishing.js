@@ -19,7 +19,6 @@ async (page) => {
   const file = (branch, path) => blobs.get(trees.get(commits.get(refs.get(branch)).tree.sha).get(path));
   const atFile = (commit, path) => blobs.get(trees.get(commits.get(commit).tree.sha).get(path));
   async function routes(p) {
-    await p.route('**/content/publishing.json', r => r.fulfill({ json: { repository: 'Aryan-Poonacha/Aryan-Poonacha.github.io', draftBranch: 'portfolio-drafts', liveBranch: 'portfolio-live', siteUrl: 'https://aryan-poonacha.github.io/' } }));
     p.on('pageerror', e => errors.push(e.stack || e.message));
     p.on('dialog', d => d.accept());
     await p.route('**/__admin/ping', r => r.fulfill({ status: 404, body: '{}' }));
