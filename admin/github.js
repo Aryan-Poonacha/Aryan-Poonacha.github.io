@@ -53,9 +53,9 @@
       this.abort = new AbortController(); this.disconnected = false;
     }
     disconnect() { this.disconnected = true; this.token = ""; this.abort.abort(); }
-    async request(path, method, body) {
+    async request(path, method, body, api = this.api) {
       if (this.disconnected) throw new Error("This device is disconnected. Connect GitHub again to continue.");
-      const res = await this.fetcher(this.api + path, {
+      const res = await this.fetcher(api + path, {
         method: method || "GET", cache: "no-store", signal: AbortSignal.any([this.abort.signal, AbortSignal.timeout(30000)]),
         headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + this.token,
           "X-GitHub-Api-Version": "2022-11-28", ...(body ? { "Content-Type": "application/json" } : {}) },
@@ -67,7 +67,9 @@
           : res.status === 403 ? "GitHub refused access. Check this repository's Contents permission or rate limit."
           : res.status === 409 || res.status === 422 ? "Another save changed this branch. Reload the cloud draft before saving again. Your browser changes are still here."
           : "GitHub: " + (data.message || "HTTP " + res.status));
-        error.status = res.status; throw error;
+        error.status = res.status;
+        if (res.status === 401 && typeof window !== "undefined") window.dispatchEvent(new CustomEvent("portfolio-auth-required", { detail: error.message }));
+        throw error;
       }
       return data;
     }
@@ -86,9 +88,15 @@
       if (blob.encoding !== "base64") throw new Error("Unsupported GitHub file encoding.");
       return decode(blob.content);
     }
-    async connect() {
+    async authorize() {
+      const owner = await this.request("/user", "GET", undefined, "https://api.github.com");
+      // Immutable GitHub account ID, not a browser flag or an editable configuration value.
+      if (owner.id !== 25931656) throw new Error("This editor is restricted to Aryan-Poonacha's GitHub account.");
       const repo = await this.request("");
       if (!repo.permissions || !repo.permissions.push) throw new Error("This token cannot edit this repository. Select this repository and grant Contents: read and write.");
+    }
+    async connect() {
+      await this.authorize();
       if (this.config.liveBranch === this.config.draftBranch || [this.config.liveBranch, this.config.draftBranch].includes("main")) {
         throw new Error("Draft and live branches must be separate and cannot be main.");
       }
