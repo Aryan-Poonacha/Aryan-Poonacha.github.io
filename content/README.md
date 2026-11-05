@@ -5,15 +5,16 @@ with a live preview of the real site. You can also edit the file by hand.
 
 ## Edit from any device
 
-Open [the admin](https://aryan-poonacha.github.io/admin/). **Publish & live state** connects your
-GitHub repository token (Contents: read and write, this repository only). A password manager can
+Open [the admin](https://aryan-poonacha.github.io/admin/) and sign in with Aryan-Poonacha's
+GitHub repository token (Contents: read and write, this repository only). GitHub verifies the
+account's immutable ID and repository write access before the editor starts. A password manager can
 keep the token across devices. Remember sign-in only on a trusted device; Disconnect removes it and disconnects other open admin tabs on that device.
 The public admin cannot write anything without a token authorized to edit the repository.
 On GitHub, explicitly choose **Only select repositories → Aryan-Poonacha.github.io** and
 **Contents → Read and write**. GitHub cannot preselect an individual repository from the link.
 The setup link suggests a one-year expiry; change it on GitHub if preferred.
 
-1. Connect GitHub. The editor loads the latest **cloud draft**.
+1. Sign in. The editor connects GitHub and loads the latest **cloud draft**.
 2. Edit the cards, domains, organisation, site text, card sections and page/share metadata.
    Add, duplicate, delete or move cards with buttons or drag and drop. Undo restores deletions.
 3. **Save draft** / Ctrl+S syncs to `portfolio-drafts`. It never changes the live branch.
@@ -41,6 +42,12 @@ This repository is public: draft JSON and uploads on its branches are **not priv
 and review flags are removed from published galaxy JSON, but remain in repository draft history.
 The admin's access control is GitHub's token permission, not a hidden URL. Drafts are excluded from
 the default homepage until explicitly published.
+GitHub Pages serves static public files: the sign-in screen gates the editor interface, while
+GitHub enforces authorization on every save, upload and publication. This does not make repository
+files or draft branches private. No shared password is embedded in the website. Remembered tokens
+are reverified on every load, and access is checked each minute and when returning to the tab.
+Disconnect or an expired token locks the hosted editor, including other open tabs on that device.
+The loopback-only local editor server still opens without a token.
 
 ## Local editing and maintenance
 

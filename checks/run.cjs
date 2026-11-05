@@ -2,7 +2,7 @@
 const fs = require('node:fs'), path = require('node:path');
 const { spawn, execFileSync } = require('node:child_process');
 const { chromium } = require('playwright');
-const root = path.resolve(__dirname, '..'), output = path.join(root, 'test-results');
+const root = path.resolve(__dirname, '..'), output = process.env.PORTFOLIO_CHECK_OUTPUT || path.join(root, 'test-results');
 const base = 'http://127.0.0.1:4187';
 async function serverRoot() {
   try { const r = await fetch(base + '/__admin/ping', { signal: AbortSignal.timeout(1000) }); return r.ok ? (await r.json()).root : 'other'; }
@@ -28,7 +28,8 @@ async function serverRoot() {
     const requested = process.argv.slice(2), names = requested.length ? requested : available;
     for (const name of names) {
       if (!available.includes(name)) throw new Error('Unknown check: ' + name);
-      const context = await browser.newContext(), page = await context.newPage();
+      const context = await browser.newContext(process.env.PORTFOLIO_EVIDENCE_DIR && name === 'access.js'
+        ? { recordVideo: { dir: process.env.PORTFOLIO_EVIDENCE_DIR, size: { width: 1000, height: 750 } } } : {}), page = await context.newPage();
       try {
         const check = eval('(' + fs.readFileSync(path.join(__dirname, name), 'utf8') + ')');
         const data = await check(page), failed = data.cases.filter(c => !c.ok);

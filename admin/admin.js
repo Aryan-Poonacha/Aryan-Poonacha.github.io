@@ -1047,6 +1047,7 @@
   $("undo").addEventListener("click", undo);
   $("redo").addEventListener("click", redo);
   document.addEventListener("keydown", function (e) {
+    if (!window.PortfolioAccess.allowed()) return;
     var mod = e.metaKey || e.ctrlKey, k = (e.key || "").toLowerCase();
     if (mod && k === "s") { e.preventDefault(); saveNow(); }
     else if (mod && k === "z" && !inField(e.target)) { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
@@ -1126,7 +1127,7 @@
           });
         },
         connected: refreshStatus,
-        disconnected: refreshStatus,
+        disconnected: function () { keepWork(); refreshStatus(); },
         remote: function (text, initial) {
           if (initial) { start(text); return; }
           if (pendingRecovery && pendingRecovery.key === KEY.work) {
