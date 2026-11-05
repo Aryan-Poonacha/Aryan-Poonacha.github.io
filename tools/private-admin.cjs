@@ -45,7 +45,9 @@ function passwordAuth(policy, readPassword) {
     async cookie() {
       const data = Buffer.from(JSON.stringify({ expires: Math.floor(Date.now() / 1000) + LIFETIME })).toString('base64url');
       const signature = crypto.createHmac('sha256', await key()).update(data).digest('base64url');
-      return COOKIE + '=' + data + '.' + signature + '; Path=/; Max-Age=' + LIFETIME + '; Secure; HttpOnly; SameSite=Strict';
+      // Top-level navigation from the public site must retain the remembered session.
+      // Exact Origin and custom-header checks still protect every write.
+      return COOKIE + '=' + data + '.' + signature + '; Path=/; Max-Age=' + LIFETIME + '; Secure; HttpOnly; SameSite=Lax';
     },
     async verified(req) {
       const values = (req.headers.cookie || '').split(';').map(v => v.trim()).filter(v => v.startsWith(COOKIE + '='));
@@ -143,7 +145,7 @@ function createHandler({ root, policy, passwordProvider, clientFactory }) {
       }
       authorizeWrite(req, policy);
       if (pathname === '/__admin/logout' && req.method === 'POST') {
-        res.setHeader('Set-Cookie', COOKIE + '=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Strict');
+        res.setHeader('Set-Cookie', COOKIE + '=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax');
         return send(200, { ok: true });
       }
       if (req.method === 'POST' && pathname.startsWith('/__admin/actions/')) {

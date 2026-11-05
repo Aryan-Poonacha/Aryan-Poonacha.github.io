@@ -59,7 +59,7 @@ async function run() {
     check('password opens connected editor without token setup', await page.locator('#shell').isVisible() && await page.locator('#connection-form').isHidden());
     check('open site leads to public homepage', await page.locator('.top__site').getAttribute('href') === 'https://aryan-poonacha.github.io/');
     const cookies = await context.cookies(), session = cookies.find(c => c.name === '__Host-portfolio-admin');
-    check('30-day secure HttpOnly same-site session', session?.httpOnly && session.secure && session.sameSite === 'Strict' && session.expires > Date.now() / 1000 + 29 * 86400);
+    check('30-day secure HttpOnly same-site session', session?.httpOnly && session.secure && session.sameSite === 'Lax' && session.expires > Date.now() / 1000 + 29 * 86400);
     check('no browser credential storage', await page.evaluate(() => !document.cookie.includes('portfolio-admin') && !localStorage.getItem('portfolio:github:token') && !sessionStorage.getItem('portfolio:github:token') && !JSON.stringify(window.PortfolioAccess.session).includes('deliberate-test-password')));
     await pick(page); await page.locator('#edit [data-field=summary] textarea').fill('Password flow saved draft.');
     const live = state.live;
@@ -75,6 +75,9 @@ async function run() {
     context = await browser.newContext({ ignoreHTTPSErrors: true, storageState: remembered }); await setup(context);
     page = await context.newPage(); await page.goto(origin + '/admin/'); await ready(page);
     check('remembered cookie survives a fresh browser context', await page.locator('#shell').isVisible());
+    await page.route('https://aryan-poonacha.github.io/remembered-entry', route => route.fulfill({ contentType: 'text/html', body: '<a id="return" href="' + origin + '/admin/">Open editor</a>' }));
+    await page.goto('https://aryan-poonacha.github.io/remembered-entry'); await page.locator('#return').click(); await ready(page);
+    check('public-site navigation reuses remembered sign-in', await page.locator('#shell').isVisible());
     const second = await context.newPage(); await second.goto(origin + '/admin/'); await ready(second);
     await page.locator('#publishing').click(); await page.locator('#disconnect').click();
     await page.waitForURL('**/login'); await second.waitForURL('**/login');
